@@ -3,28 +3,36 @@ import {
   AppRegistry,
   StyleSheet,
   Text,
-  View
+  View,
+  Navigator
 } from 'react-native';
 
 import Style from './src/Style.js';
+import Login from './components/loginView.js';
 
 class SUTA extends Component {
-  render() {
-    return (
-      <View style={Style.container}>
-        <Text style={Style.welcome}>
-          ĐỒ ÁN
-        </Text>
-        <Text style={Style.instructions}>
-          To get started, edit index.android.js
-        </Text>
-        <Text style={Style.instructions}>
-          Hello
-        </Text>
+  renderScene(route, navigator){
+    if(route.name == 'login'){
+      return <Login navigator = {navigator}/>
+    }
+  }
+
+  render(){
+    return(
+      <View style={style.container}>
+        <Navigator
+          initialRoute={{name: 'login'}}
+          renderScene={this.renderScene.bind(this)}
+        />
       </View>
     );
   }
 }
-
+var style = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#F5FCFF'
+  },
+})
 
 module.exports = SUTA;
