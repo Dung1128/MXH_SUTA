@@ -7,20 +7,31 @@ import {
 } from 'react-native';
 
 import Style from './src/Style.js';
-
+import Login from './components/loginView.js';
+import Register from './components/registerView.js';
+import Profile from './components/profileView.js';
+import Home from './components/homeView.js';
 class SUTA extends Component {
+  renderScene(route, navigator){
+    if(route.name == 'home'){
+      return <Home navigator = {navigator} {...route.passProps}/>
+    }
+    if(route.name == 'login'){
+      return <Login navigator = {navigator} {...route.passProps}/>
+    }
+    if(route.name == 'register'){
+      return <Profile navigator = {navigator} {...route.passProps}/>
+    }
+
+  }
+
   render() {
     return (
-      <View style={Style.container}>
-        <Text style={Style.welcome}>
-          ĐỒ ÁN
-        </Text>
-        <Text style={Style.instructions}>
-          To get started, edit index.android.js
-        </Text>
-        <Text style={Style.instructions}>
-          Hello
-        </Text>
+      <View style={style.container}>
+        <Navigator
+          initialRoute={{name:'login'}}
+          renderScene={this.renderScene.bind(this)}
+        />
       </View>
     );
   }
