@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
 
 } from 'react-native';
-import Style from 'Style.js';
+// import Style from 'Style.js';
 export default class Chat extends Component {
 
   onBack(routeName){

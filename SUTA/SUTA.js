@@ -32,12 +32,11 @@ class SUTA extends Component {
 
   render(){
     return(
-      <View style={Style.container}>
         <Navigator
           initialRoute={{name: 'login'}}
           renderScene={this.renderScene.bind(this)}
         />
-      </View>
+
     );
   }
 }
