@@ -33,8 +33,8 @@ class loginView extends Component{
 <Image source={{uri:'https://mir-s3-cdn-cf.behance.net/project_modules/disp/496ecb14589707.562865d064f9e.png'}} style={styles.container}>
         <View style={styles.logo}>
           <Image
-            style={{width: 150, height: 150}}
-            source={require('../images/logo.png')}
+            style={{width: 145, height: 86}}
+            source={require('../images/logo3.png')}
             />
         </View>
         <View style={styles.contentLogin}>
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     justifyContent:'center'
   },
   contentLogin:{
-    flex:1,
+    flex:2,
   },
   button: {
       marginTop:10,

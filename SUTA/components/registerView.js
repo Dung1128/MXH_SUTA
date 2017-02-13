@@ -39,8 +39,8 @@ class loginView extends Component{
       </View>
       <View style={styles.logo}>
         <Image
-          style={{width: 120, height: 120}}
-          source={require('../images/logo.png')}
+          style={{width: 145, height: 86}}
+          source={require('../images/logo3.png')}
           />
       </View>
 
