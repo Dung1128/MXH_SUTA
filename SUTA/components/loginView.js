@@ -33,8 +33,8 @@ class loginView extends Component{
           <View style={{flex:1}}>
             <View style={{flexDirection:'row', justifyContent:'center'}}>
               <View style={{flex:1,alignItems:'center'}}>
-                <Image style={{marginTop:30}}
-                  source={require('../images/phone_5_32.png')}
+                <Image style={{marginTop:35}}
+                  source={require('../images/phone_4_24.png')}
                   />
               </View>
               <View style={{flex:6,marginLeft:5}}>
@@ -44,8 +44,8 @@ class loginView extends Component{
             </View>
             <View style={{flexDirection:'row', justifyContent:'center'}}>
               <View style={{flex:1,alignItems:'center'}}>
-                <Image style={{marginTop:30}}
-                  source={require('../images/lock_2_32.png')}
+                <Image style={{marginTop:35}}
+                  source={require('../images/lock_24.png')}
                   />
               </View>
               <View style={{flex:6, marginLeft:5}}>
