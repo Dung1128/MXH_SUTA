@@ -6,13 +6,11 @@ import {
   View,
   Navigator
 } from 'react-native';
-
 import Style from './src/Style.js';
 import Home from './components/homeView.js';
 import Login from './components/loginView.js';
 import Register from './components/registerView.js';
 import Profile from './components/profileView.js';
-
 
 class SUTA extends Component {
   renderScene(route, navigator){

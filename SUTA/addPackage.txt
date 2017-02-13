@@ -1,2 +1,3 @@
 react-native-md-textinput
 react-native-vector-icons
+react-native-hr

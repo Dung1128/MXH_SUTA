@@ -13,6 +13,7 @@ import{
   AsyncStorage,
 }from 'react-native';
 import TextField from 'react-native-md-textinput';
+import Hr from 'react-native-hr';
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -38,47 +39,58 @@ class loginView extends Component{
             />
         </View>
         <View style={styles.contentLogin}>
-          <View style={{flex:1}}>
-            <View style={{flexDirection:'row', justifyContent:'center'}}>
+          <View>
+            <View style={{flexDirection:'row', justifyContent:'center',marginTop:-15}}>
               <View style={{flex:1,alignItems:'center'}}>
-                <Image style={{marginTop:35}}
-                  source={require('../images/phone_4_24.png')}
-                  />
+                <Icon name="md-contact" size={24} style={{marginTop:35}} color="#F5F5F5"/>
               </View>
               <View style={{flex:6,marginLeft:5}}>
-              <TextField label={'Số điện thoại'} highlightColor={'#333333'}/>
+                <TextField labelColor={'#F5F5F5'} label={'Tên tài khoản'} textColor={'#F5F5F5'} highlightColor={'#BDBDBD'} />
               </View>
-
             </View>
-            <View style={{flexDirection:'row', justifyContent:'center'}}>
+
+            <View style={{flexDirection:'row', justifyContent:'center',marginTop:-15}}>
               <View style={{flex:1,alignItems:'center'}}>
-                <Image style={{marginTop:35}}
-                  source={require('../images/lock_24.png')}
-                  />
+                <Icon name="md-key" size={24} color="#F5F5F5" style={{marginTop:35}} />
               </View>
               <View style={{flex:6, marginLeft:5}}>
-              <TextField label={'Mật khẩu'} highlightColor={'#333333'} secureTextEntry= {true}/>
+              <TextField label={'Mật khẩu'} labelColor={'#F5F5F5'} textColor={'#F5F5F5'} highlightColor={'#BDBDBD'} secureTextEntry= {true}/>
               </View>
+            </View>
 
-            </View>
           </View>
-          <View style={{flex:1, alignItems:'center',marginTop:50}}>
+          <View style={{alignItems:'center'}}>
             <TouchableOpacity style={styles.button}>
-              <Text style={styles.text}>ĐĂNG NHẬP</Text>
+              <Text style={{color:'#F5F5F5'}}>ĐĂNG NHẬP</Text>
             </TouchableOpacity>
-            <TouchableOpacity>
-              <Text style={{marginTop:5}}>
-                Đăng nhập bằng facebook?
-              </Text>
-            </TouchableOpacity>
+          </View>
+
+          <View style={{padding:20}}>
+            <Hr lineColor='#BDBDBD' text='OR' textColor='#F5F5F5'/>
+          </View>
+
+          <TouchableOpacity>
+            <View style={{flexDirection:'row', justifyContent:'center'}}>
+                <Icon name="logo-facebook" size={22} color="#F5F5F5" style={{marginTop:-1}} />
+                <Text style={{color:'#F5F5F5', fontWeight:'bold', paddingLeft:5}} >
+                  Đăng nhập bằng Facebook
+                </Text>
             </View>
+          </TouchableOpacity>
 
         </View>
+
         <View style={{alignItems:'center'}}>
         <TouchableOpacity onPress={this.redirect.bind(this,'register')}>
-          <Text>
-                Bạn chưa có tài khoản? Đăng ký
-          </Text>
+          <View style={{flexDirection:'row', justifyContent:'center'}}>
+            <Text style={{color:'#F5F5F5'}}>
+                  Bạn chưa có tài khoản?
+            </Text>
+            <Text style={{color:'#F5F5F5', fontWeight:'bold', paddingLeft:5}} >
+              Đăng ký.
+            </Text>
+          </View>
+
           </TouchableOpacity>
         </View>
       </Image>
@@ -103,14 +115,14 @@ const styles = StyleSheet.create({
     flex:2,
   },
   button: {
-      marginTop:10,
-      width:deviceWidth/2,
-      borderColor: '#333333',
-      height: 40,
-      alignItems: 'center',
-      justifyContent: 'center',
-      borderRadius:20,
-      borderWidth:1
+    marginTop:10,
+    width:deviceWidth/2,
+    borderColor: '#F5F5F5',
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius:20,
+    borderWidth:1
     },
 });
 module.exports = loginView;
