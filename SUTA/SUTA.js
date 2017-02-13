@@ -3,14 +3,19 @@ import {
   AppRegistry,
   StyleSheet,
   Text,
-  View
+  View,
+  Navigator
 } from 'react-native';
 
 import Style from './src/Style.js';
+
+import Home from './components/homeView.js';
 import Login from './components/loginView.js';
 import Register from './components/registerView.js';
 import Profile from './components/profileView.js';
-import Home from './components/homeView.js';
+
+
+
 class SUTA extends Component {
   renderScene(route, navigator){
     if(route.name == 'home'){
@@ -20,9 +25,11 @@ class SUTA extends Component {
       return <Login navigator = {navigator} {...route.passProps}/>
     }
     if(route.name == 'register'){
+      return <Register navigator = {navigator} {...route.passProps}/>
+    }
+    if(route.name == 'profile'){
       return <Profile navigator = {navigator} {...route.passProps}/>
     }
-
   }
 
   render() {
@@ -33,9 +40,9 @@ class SUTA extends Component {
           renderScene={this.renderScene.bind(this)}
         />
       </View>
+
     );
   }
 }
-
 
 module.exports = SUTA;
