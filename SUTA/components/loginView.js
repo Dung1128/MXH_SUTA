@@ -15,14 +15,22 @@ import{
 import TextField from 'react-native-md-textinput';
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
+import Icon from 'react-native-vector-icons/Ionicons';
 
 class loginView extends Component{
   constructor(props){
     super(props);
   }
+  redirect(routeName,data){
+  this.props.navigator.push({
+    name: routeName,
+    passProps: {
+    }
+  })
+}
   render(){
     return(
-      <View style={styles.container}>
+<Image source={{uri:'https://mir-s3-cdn-cf.behance.net/project_modules/disp/496ecb14589707.562865d064f9e.png'}} style={styles.container}>
         <View style={styles.logo}>
           <Image
             style={{width: 150, height: 150}}
@@ -67,13 +75,13 @@ class loginView extends Component{
 
         </View>
         <View style={{alignItems:'center'}}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={this.redirect.bind(this,'register')}>
           <Text>
                 Bạn chưa có tài khoản? Đăng ký
           </Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </Image>
     );
   }
 
@@ -84,7 +92,7 @@ class loginView extends Component{
 const styles = StyleSheet.create({
   container:{
     flex: 1,
-    margin:20
+    padding:10
   },
   logo:{
     flex:1,
