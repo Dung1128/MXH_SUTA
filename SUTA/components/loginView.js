@@ -14,6 +14,7 @@ import{
 }from 'react-native';
 import TextField from 'react-native-md-textinput';
 import Hr from 'react-native-hr';
+import SplashScreen from './splashScreen.js';
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -23,15 +24,17 @@ class loginView extends Component{
     super(props);
   }
   redirect(routeName,data){
-  this.props.navigator.push({
-    name: routeName,
-    passProps: {
-    }
-  })
-}
+    this.props.navigator.push({
+      name: routeName,
+      passProps: {
+      }
+    })
+  }
   render(){
     return(
-<Image source={{uri:'https://mir-s3-cdn-cf.behance.net/project_modules/disp/496ecb14589707.562865d064f9e.png'}} style={styles.container}>
+      <SplashScreen duration={3000} backgroundColor={'blue'}>
+
+      <Image source={require('../images/bgr2.png')} style={styles.container}>
         <View style={styles.logo}>
           <Image
             style={{width: 145, height: 86}}
@@ -60,7 +63,7 @@ class loginView extends Component{
 
           </View>
           <View style={{alignItems:'center'}}>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={this.redirect.bind(this,'home')}>
               <Text style={{color:'#F5F5F5'}}>ĐĂNG NHẬP</Text>
             </TouchableOpacity>
           </View>
@@ -94,6 +97,7 @@ class loginView extends Component{
           </TouchableOpacity>
         </View>
       </Image>
+      </SplashScreen>
     );
   }
 
@@ -104,7 +108,8 @@ class loginView extends Component{
 const styles = StyleSheet.create({
   container:{
     flex: 1,
-    padding:10
+    padding:10,
+    width:deviceWidth
   },
   logo:{
     flex:1,

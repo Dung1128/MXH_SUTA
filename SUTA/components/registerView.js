@@ -22,18 +22,18 @@ class loginView extends Component{
   constructor(props){
     super(props);
   }
-  redirect(routeName,data){
-  this.props.navigator.pop({
-    name: routeName,
-    passProps: {
-    }
-  })
-}
+  onBack(routeName,data){
+    this.props.navigator.pop({
+      name: routeName,
+      passProps: {
+      }
+    })
+  }
   render(){
     return(
-      <Image source={{uri:'https://mir-s3-cdn-cf.behance.net/project_modules/disp/496ecb14589707.562865d064f9e.png'}} style={styles.container}>
+      <Image source={require('../images/bgr2.png')} style={styles.container}>
       <View style={styles.toolbar}>
-        <TouchableOpacity style={styles.back} onPress={this.redirect.bind(this,'login')} >
+        <TouchableOpacity style={styles.back} onPress={this.onBack.bind(this,'login')} >
           <Icon name="md-arrow-back" size={34} color="#F5F5F5"/>
         </TouchableOpacity>
       </View>
@@ -106,6 +106,7 @@ const styles = StyleSheet.create({
   container:{
     flex: 1,
     padding:10,
+    width:deviceWidth
   },
   logo:{
     flex:1,
