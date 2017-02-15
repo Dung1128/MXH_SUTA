@@ -4,9 +4,6 @@ var deviceHeight = Dimensions.get('window').height;
 var Style = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
   },
   welcome: {
     fontSize: 20,
@@ -29,6 +26,19 @@ var Style = StyleSheet.create({
     height: 40,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  title: {
+    color:'white',
+    fontSize: 20,
+    marginLeft:-10
+  },
+  toolbar: {
+    height:45,
+    width: null,
+    backgroundColor: "#ecf0f1",
+    flexDirection: 'row',
+    alignItems:'center',
+    justifyContent: 'space-between',
   },
 });
 
