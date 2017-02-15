@@ -7,6 +7,7 @@ import {
   Navigator
 } from 'react-native';
 import Style from './src/Style.js';
+
 import Home from './components/homeView.js';
 import Login from './components/loginView.js';
 import Register from './components/registerView.js';
@@ -28,12 +29,14 @@ class SUTA extends Component {
     }
   }
 
-  render(){
-    return(
+  render() {
+    return (
+      <View style={Style.container}>
         <Navigator
-          initialRoute={{name: 'login'}}
+          initialRoute={{name:'login'}}
           renderScene={this.renderScene.bind(this)}
         />
+      </View>
 
     );
   }
