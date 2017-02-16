@@ -8,6 +8,9 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
+import Anonymous from './anonymousView.js';
+import Public from './publicView.js';
+import DefaultTabBar from './tab/DefaultTabBar';
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
 export default class NewFeed extends Component{
@@ -36,13 +39,12 @@ export default class NewFeed extends Component{
           <Icon name="md-create" size={24} color="#F5F5F5" style={Style.ico}/>
         </TouchableOpacity>
       </View>
-      <ScrollableTabView>
-        <Text tabLabel="ẨN DANH">
-        OK
-        </Text>
-        <Text tabLabel="CÔNG KHAI">
-        OK2
-        </Text>
+      <ScrollableTabView
+      initialPage={0}
+      renderTabBar={() => <DefaultTabBar />}
+      >
+        <Anonymous tabLabel="ẨN DANH"/>
+        <Public tabLabel="CÔNG KHAI"/>
 
       </ScrollableTabView>
       </View>
