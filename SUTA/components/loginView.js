@@ -24,11 +24,47 @@ class loginView extends Component{
     super(props);
   }
   redirect(routeName,data){
-    this.props.navigator.push({
+    this.props.navigator.replace({
       name: routeName,
       passProps: {
       }
     })
+  }
+  async onLoginPressed(){
+    let formdata = new FormData();
+    formdata.append("username", this.state.username);
+    formdata.append("password", this.state.password);
+    try {
+      let response = await fetch('http://mangacha.esy.es/api/login.php', {
+        method: 'post',
+        headers: {
+        'Content-Type': 'multipart/form-data',
+        },
+        body: formdata
+
+      });
+      let res = await response.text(); //tra lai json
+       var jsonResponse = JSON.parse(res);
+      this.setState({
+        code: jsonResponse['code'],
+        message: jsonResponse['message'],
+        result: jsonResponse['result'],
+
+      });
+
+      if (response.status >= 200 && response.status < 300 && jsonResponse['code']==0) {
+          //Handle success
+          //On success we will store the access_token in the AsyncStorage
+          this.redirect('home');
+
+      }else {
+          Alert.alert('Thông báo',this.state.message);
+      }
+    } catch(error) {
+        //console.log("error " + error);
+      //  console.log(this.state.username + " & " + this.state.password);
+
+    }
   }
   render(){
     return(
@@ -48,7 +84,10 @@ class loginView extends Component{
                 <Icon name="md-contact" size={24} style={{marginTop:35}} color="#F5F5F5"/>
               </View>
               <View style={{flex:6,marginLeft:5}}>
-                <TextField labelColor={'#F5F5F5'} label={'Tên tài khoản'} textColor={'#F5F5F5'} highlightColor={'#BDBDBD'} />
+              <TextInput
+              underlineColorAndroid="#F5F5F5" placeholderTextColor= "#BDBDBD"
+              onChangeText={(val) => this.setState({username: val})}
+              style={{color:'#F5F5F5', marginTop:10}} placeholder='Tên Tài Khoản'/>
               </View>
             </View>
 
@@ -57,13 +96,17 @@ class loginView extends Component{
                 <Icon name="md-key" size={24} color="#F5F5F5" style={{marginTop:35}} />
               </View>
               <View style={{flex:6, marginLeft:5}}>
-              <TextField label={'Mật khẩu'} labelColor={'#F5F5F5'} textColor={'#F5F5F5'} highlightColor={'#BDBDBD'} secureTextEntry= {true}/>
+                <TextInput
+                secureTextEntry
+                underlineColorAndroid="#F5F5F5" placeholderTextColor= "#BDBDBD"
+                onChangeText={(val) => this.setState({password: val})}
+                style={{color:'#F5F5F5', marginTop:10}} placeholder='Mật Khẩu'/>
               </View>
             </View>
 
           </View>
           <View style={{alignItems:'center'}}>
-            <TouchableOpacity style={styles.button} onPress={this.redirect.bind(this,'home')}>
+            <TouchableOpacity onPress={()=>this.onLoginPressed()} style={styles.button}>
               <Text style={{color:'#F5F5F5'}}>ĐĂNG NHẬP</Text>
             </TouchableOpacity>
           </View>
