@@ -22,6 +22,11 @@ import Icon from 'react-native-vector-icons/Ionicons';
 class loginView extends Component{
   constructor(props){
     super(props);
+    this.state=({
+      warning_user: '',
+      warning_pass: '',
+
+    });
   }
   redirect(routeName,data){
     this.props.navigator.replace({
@@ -30,6 +35,7 @@ class loginView extends Component{
       }
     })
   }
+
   async onLoginPressed(){
     let formdata = new FormData();
     formdata.append("username", this.state.username);
@@ -88,6 +94,7 @@ class loginView extends Component{
               underlineColorAndroid="#F5F5F5" placeholderTextColor= "#BDBDBD"
               onChangeText={(val) => this.setState({username: val})}
               style={{color:'#F5F5F5', marginTop:10}} placeholder='Tên Tài Khoản'/>
+
               </View>
             </View>
 
