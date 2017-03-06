@@ -24,6 +24,22 @@ export default class profileView extends Component {
     super(props);
 
   }
+  redirect(routeName,data){
+    this.props.navigator.push({
+      name: routeName,
+      passProps: {
+      }
+    })
+  }
+  onBack(routeName){
+    this.props.navigator.pop({
+      name: routeName,
+      passProps: {
+
+      }
+    })
+  }
+
   openDrawer(){
     this.refs['DRAWER_REF'].openDrawer();
   }
@@ -63,7 +79,7 @@ export default class profileView extends Component {
 
       <Hr lineColor='#BDBDBD'/>
 
-      <TouchableOpacity>
+      <TouchableOpacity onPress={this.redirect.bind(this,'accountManager')}>
         <View style={{flexDirection:'row'}}>
           <Text style={{margin: 10, fontSize: 15, textAlign: 'left'}}> Quản lý tài khoản </Text>
           <TouchableOpacity>
