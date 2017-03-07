@@ -191,10 +191,15 @@ class loginView extends Component{
               </View>
               <View style={{flex:6,marginLeft:5}}>
               <TextInput
-              underlineColorAndroid="#F5F5F5" placeholderTextColor= "#BDBDBD"
+              underlineColorAndroid="#F5F5F5"
+              placeholderTextColor= "#BDBDBD"
               onEndEditing={()=>{this.checkvalue('username')}}
               onChangeText={(val) => this.setState({username: val})}
-              style={{color:'#F5F5F5', marginTop:10}} placeholder='Tên Tài Khoản'/>
+              style={{color:'#F5F5F5', marginTop:10}}
+              autoCapitalize="none"
+              autoCorrect={false}
+              returnKeyType="next"
+              placeholder='Tên Tài Khoản'/>
                 <Text style={{color:'#F5F5F5', fontSize:10}}>
                   {this.state.warning_user}
                 </Text>
@@ -207,10 +212,15 @@ class loginView extends Component{
               </View>
               <View style={{flex:6,marginLeft:5}}>
               <TextInput
-              underlineColorAndroid="#F5F5F5" placeholderTextColor= "#BDBDBD"
+              underlineColorAndroid="#F5F5F5"
+              placeholderTextColor= "#BDBDBD"
               onEndEditing={()=>{this.checkvalue('phone')}}
               onChangeText={(val) => this.setState({phone: val})}
-              style={{color:'#F5F5F5', marginTop:10}} placeholder='Số Điện Thoại'/>
+              style={{color:'#F5F5F5', marginTop:10}}
+              autoCapitalize="none"
+              autoCorrect={false}
+              returnKeyType="next"
+              placeholder='Số Điện Thoại'/>
 
               <Text style={{color:'#F5F5F5', fontSize:10}}>
                 {this.state.warning_phone}
@@ -226,10 +236,15 @@ class loginView extends Component{
               <View style={{flex:6, marginLeft:5}}>
                 <TextInput
                 secureTextEntry
-                underlineColorAndroid="#F5F5F5" placeholderTextColor= "#BDBDBD"
+                underlineColorAndroid="#F5F5F5"
+                placeholderTextColor= "#BDBDBD"
                 onEndEditing={()=>{this.checkpass('password')}}
                 onChangeText={(val) => this.setState({password: val})}
-                style={{color:'#F5F5F5', marginTop:10}} placeholder='Mật Khẩu'/>
+                style={{color:'#F5F5F5', marginTop:10}}
+                autoCapitalize="none"
+                autoCorrect={false}
+                returnKeyType="next"
+                placeholder='Mật Khẩu'/>
                 <Text style={{color:'#F5F5F5', fontSize:10}}>
                   {this.state.warning_pass}
                 </Text>
@@ -244,10 +259,15 @@ class loginView extends Component{
               <View style={{flex:6, marginLeft:5}}>
                 <TextInput
                 secureTextEntry
-                underlineColorAndroid="#F5F5F5" placeholderTextColor= "#BDBDBD"
+                underlineColorAndroid="#F5F5F5"
+                placeholderTextColor= "#BDBDBD"
                 onEndEditing={()=>{this.checkpass('repassword')}}
                 onChangeText={(val) => this.setState({repassword: val})}
-                style={{color:'#F5F5F5', marginTop:10}} placeholder='Nhập Lại Mật Khẩu'/>
+                style={{color:'#F5F5F5', marginTop:10}}
+                autoCapitalize="none"
+                autoCorrect={false}
+                returnKeyType="next"
+                placeholder='Nhập Lại Mật Khẩu'/>
                 <Text style={{color:'#F5F5F5', fontSize:10}}>
                   {this.state.warning_repass}
                 </Text>

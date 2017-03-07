@@ -36,6 +36,14 @@ class loginView extends Component{
     })
   }
 
+  navigate(routeName,data){
+    this.props.navigator.push({
+      name: routeName,
+      passProps: {
+      }
+    })
+  }
+
   async onLoginPressed(){
     let formdata = new FormData();
     formdata.append("username", this.state.username);
@@ -91,9 +99,14 @@ class loginView extends Component{
               </View>
               <View style={{flex:6,marginLeft:5}}>
               <TextInput
-              underlineColorAndroid="#F5F5F5" placeholderTextColor= "#BDBDBD"
+              underlineColorAndroid="#F5F5F5"
+              placeholderTextColor= "#BDBDBD"
               onChangeText={(val) => this.setState({username: val})}
-              style={{color:'#F5F5F5', marginTop:10}} placeholder='Tên Tài Khoản'/>
+              style={{color:'#F5F5F5', marginTop:10}}
+              autoCapitalize="none"
+              autoCorrect={false}
+              returnKeyType="next"
+              placeholder='Tên Tài Khoản'/>
 
               </View>
             </View>
@@ -105,9 +118,14 @@ class loginView extends Component{
               <View style={{flex:6, marginLeft:5}}>
                 <TextInput
                 secureTextEntry
-                underlineColorAndroid="#F5F5F5" placeholderTextColor= "#BDBDBD"
+                underlineColorAndroid="#F5F5F5"
+                placeholderTextColor= "#BDBDBD"
                 onChangeText={(val) => this.setState({password: val})}
-                style={{color:'#F5F5F5', marginTop:10}} placeholder='Mật Khẩu'/>
+                style={{color:'#F5F5F5', marginTop:10}}
+                autoCapitalize="none"
+                autoCorrect={false}
+                returnKeyType="done"
+                placeholder='Mật Khẩu'/>
               </View>
             </View>
 
@@ -134,7 +152,7 @@ class loginView extends Component{
         </View>
 
         <View style={{alignItems:'center'}}>
-        <TouchableOpacity onPress={this.redirect.bind(this,'register')}>
+        <TouchableOpacity onPress={this.navigate.bind(this,'register')}>
           <View style={{flexDirection:'row', justifyContent:'center'}}>
             <Text style={{color:'#F5F5F5'}}>
                   Bạn chưa có tài khoản?
