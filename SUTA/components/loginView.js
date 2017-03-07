@@ -29,7 +29,7 @@ class loginView extends Component{
     });
   }
   redirect(routeName,data){
-    this.props.navigator.replace({
+    this.props.navigator.push({
       name: routeName,
       passProps: {
       }

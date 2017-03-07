@@ -172,7 +172,7 @@ class loginView extends Component{
     return(
       <Image source={require('../images/bgr2.png')} style={styles.container}>
       <View style={styles.toolbar}>
-        <TouchableOpacity style={styles.back} onPress={this.onBack.bind(this,'login')} >
+        <TouchableOpacity style={styles.back} onPress={this.onBack.bind(this)} >
           <Icon name="md-arrow-back" size={34} color="#F5F5F5"/>
         </TouchableOpacity>
       </View>
