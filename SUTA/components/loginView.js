@@ -11,6 +11,7 @@ import{
   Dimensions,
   ScrollView,
   AsyncStorage,
+  KeyboardAvoidingView
 }from 'react-native';
 import TextField from 'react-native-md-textinput';
 import Hr from 'react-native-hr';
@@ -84,7 +85,9 @@ class loginView extends Component{
     return(
       <SplashScreen duration={3000} backgroundColor={'blue'}>
 
+
       <Image source={require('../images/bgr2.png')} style={styles.container}>
+      <KeyboardAvoidingView behavior="padding" style={{flex:1}}>
         <View style={styles.logo}>
           <Image
             style={{width: 145, height: 86}}
@@ -100,12 +103,13 @@ class loginView extends Component{
               <View style={{flex:6,marginLeft:5}}>
               <TextInput
               underlineColorAndroid="#F5F5F5"
-              placeholderTextColor= "#BDBDBD"
+              placeholderTextColor= 'rgba(255,255,255,0.7)'
               onChangeText={(val) => this.setState({username: val})}
-              style={{color:'#F5F5F5', marginTop:10}}
+              style={styles.input}
               autoCapitalize="none"
               autoCorrect={false}
               returnKeyType="next"
+              onSubmitEditing={()=>this.passwordInput.focus()}
               placeholder='Tên Tài Khoản'/>
 
               </View>
@@ -119,12 +123,13 @@ class loginView extends Component{
                 <TextInput
                 secureTextEntry
                 underlineColorAndroid="#F5F5F5"
-                placeholderTextColor= "#BDBDBD"
+                placeholderTextColor= 'rgba(255,255,255,0.7)'
                 onChangeText={(val) => this.setState({password: val})}
-                style={{color:'#F5F5F5', marginTop:10}}
+                style={styles.input}
                 autoCapitalize="none"
                 autoCorrect={false}
                 returnKeyType="done"
+                ref={(input)=>this.passwordInput = input}
                 placeholder='Mật Khẩu'/>
               </View>
             </View>
@@ -164,7 +169,9 @@ class loginView extends Component{
 
           </TouchableOpacity>
         </View>
+        </KeyboardAvoidingView>
       </Image>
+
       </SplashScreen>
     );
   }
@@ -197,5 +204,12 @@ const styles = StyleSheet.create({
     borderRadius:20,
     borderWidth:1
     },
+  input: {
+    height:40,
+    backgroundColor:'rgba(255,255,255,0.2)',
+    color:'#FFF',
+    paddingHorizontal:10,
+    marginTop:25,
+  }
 });
 module.exports = loginView;

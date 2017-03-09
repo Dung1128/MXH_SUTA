@@ -74,23 +74,41 @@ class loginView extends Component{
           //alert(this.state.message);
           if(value=='username')
           {
-            this.setState({warning_user: ''});
+            if(this.state.username!=null){
+              this.setState({warning_user: this.state.message});
+            }else {
+              this.setState({warning_user: "Bạn cần nhập tài khoản"});
+            }
+
           } if(value=='phone'){
-             this.setState({warning_phone: ''})
+            if(this.state.username!=null){
+              this.setState({warning_phone: this.state.message});
+            }else {
+              this.setState({warning_phone: "Bạn cần nhập số điện thoại"});
+            }
           }
 
         //  console.log(this.state.message);
       } else {
           //Handle error
 
-          if(value=='username')
-          {
-            this.setState({warning_user: this.state.message});
-            console.log(this.state.message);
-          } if(value=='phone'){
-             this.setState({warning_phone: this.state.message});
-             console.log(this.state.message);
-          }
+            if(value=='username')
+            {
+              if(this.state.username!=null){
+                this.setState({warning_user: this.state.message});
+              }else {
+                this.setState({warning_user: "Bạn cần nhập tài khoản"});
+              }
+
+            } if(value=='phone'){
+              if(this.state.username!=null){
+                this.setState({warning_phone: this.state.message});
+              }else {
+                this.setState({warning_phone: "Bạn cần nhập số điện thoại"});
+              }
+            }
+
+
           let error = res;
           throw error;
       }
@@ -104,12 +122,17 @@ class loginView extends Component{
     var password = this.state.password;
     if(value == 'password')
     {
-      if(password.length < 6)
-      {
-        this.setState({warning_pass: 'Mật khẩu cần lớn hơn 6 ký tự'});
+      if(password!=null){
+        if(password.length < 6)
+        {
+          this.setState({warning_pass: 'Mật khẩu cần lớn hơn 6 ký tự'});
+        }else {
+          this.setState({warning_pass: ''});
+        }
       }else {
-        this.setState({warning_pass: ''});
+        this.setState({warning_pass: 'Bạn cần nhập mật khẩu'});
       }
+
     }else {
       if(this.state.repassword != this.state.password)
       {
@@ -192,13 +215,14 @@ class loginView extends Component{
               <View style={{flex:6,marginLeft:5}}>
               <TextInput
               underlineColorAndroid="#F5F5F5"
-              placeholderTextColor= "#BDBDBD"
+              placeholderTextColor= 'rgba(255,255,255,0.7)'
               onEndEditing={()=>{this.checkvalue('username')}}
               onChangeText={(val) => this.setState({username: val})}
-              style={{color:'#F5F5F5', marginTop:10}}
+              style={styles.input}
               autoCapitalize="none"
               autoCorrect={false}
               returnKeyType="next"
+              onSubmitEditing={()=>this.phoneInput.focus()}
               placeholder='Tên Tài Khoản'/>
                 <Text style={{color:'#F5F5F5', fontSize:10}}>
                   {this.state.warning_user}
@@ -213,13 +237,16 @@ class loginView extends Component{
               <View style={{flex:6,marginLeft:5}}>
               <TextInput
               underlineColorAndroid="#F5F5F5"
-              placeholderTextColor= "#BDBDBD"
+              placeholderTextColor= 'rgba(255,255,255,0.7)'
               onEndEditing={()=>{this.checkvalue('phone')}}
               onChangeText={(val) => this.setState({phone: val})}
-              style={{color:'#F5F5F5', marginTop:10}}
+              style={styles.input}
               autoCapitalize="none"
               autoCorrect={false}
               returnKeyType="next"
+              keyboardType="phone-pad"
+              onSubmitEditing={()=>this.passwordInput.focus()}
+              ref={(input)=>this.phoneInput = input}
               placeholder='Số Điện Thoại'/>
 
               <Text style={{color:'#F5F5F5', fontSize:10}}>
@@ -237,13 +264,15 @@ class loginView extends Component{
                 <TextInput
                 secureTextEntry
                 underlineColorAndroid="#F5F5F5"
-                placeholderTextColor= "#BDBDBD"
+                placeholderTextColor= 'rgba(255,255,255,0.7)'
                 onEndEditing={()=>{this.checkpass('password')}}
                 onChangeText={(val) => this.setState({password: val})}
-                style={{color:'#F5F5F5', marginTop:10}}
+                style={styles.input}
                 autoCapitalize="none"
                 autoCorrect={false}
                 returnKeyType="next"
+                onSubmitEditing={()=>this.repasswordInput.focus()}
+                ref={(input)=>this.passwordInput = input}
                 placeholder='Mật Khẩu'/>
                 <Text style={{color:'#F5F5F5', fontSize:10}}>
                   {this.state.warning_pass}
@@ -260,13 +289,14 @@ class loginView extends Component{
                 <TextInput
                 secureTextEntry
                 underlineColorAndroid="#F5F5F5"
-                placeholderTextColor= "#BDBDBD"
+                placeholderTextColor= 'rgba(255,255,255,0.7)'
                 onEndEditing={()=>{this.checkpass('repassword')}}
                 onChangeText={(val) => this.setState({repassword: val})}
-                style={{color:'#F5F5F5', marginTop:10}}
+                style={styles.input}
                 autoCapitalize="none"
                 autoCorrect={false}
-                returnKeyType="next"
+                returnKeyType="done"
+                ref={(input)=>this.repasswordInput = input}
                 placeholder='Nhập Lại Mật Khẩu'/>
                 <Text style={{color:'#F5F5F5', fontSize:10}}>
                   {this.state.warning_repass}
@@ -316,5 +346,12 @@ const styles = StyleSheet.create({
       borderRadius:20,
       borderWidth:1
     },
+  input: {
+    height:40,
+    backgroundColor:'rgba(255,255,255,0.2)',
+    color:'#FFF',
+    paddingHorizontal:10,
+    marginTop:25,
+  }
 });
 module.exports = loginView;
