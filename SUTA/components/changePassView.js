@@ -31,7 +31,7 @@ export default class accountManagerView extends Component{
           <TouchableOpacity onPress={this.onBack.bind(this)}>
             <Iconn name="md-arrow-back" size={34} color="#F5F5F5"/>
           </TouchableOpacity>
-          <Text style={{fontSize:18, fontWeight:'bold', paddingLeft:15, paddingTop:3}}> Cập nhật mật khẩu
+          <Text style={{fontSize:18, fontWeight:'bold', paddingLeft:15, paddingTop:3, color:'#fff'}}> Cập nhật mật khẩu
           </Text>
         </View>
 
@@ -74,7 +74,7 @@ export default class accountManagerView extends Component{
 const styles = StyleSheet.create({
   _toolbar:{
     flex:1,
-    backgroundColor:'yellow',
+    backgroundColor:'rgb(117, 54, 96)',
     paddingLeft:10,
     paddingTop: (deviceHeight/14)/4,
     flexDirection:'row'
