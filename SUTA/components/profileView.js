@@ -150,7 +150,7 @@ export default class profileView extends Component {
 const styles = StyleSheet.create({
   _cover:{
     flex:1,
-    backgroundColor:'yellow',
+    backgroundColor:'rgb(117, 54, 96)',
     flexDirection:'row'
   },
   _content:{
