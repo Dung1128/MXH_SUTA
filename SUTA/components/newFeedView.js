@@ -21,15 +21,23 @@ export default class NewFeed extends Component{
     super(props);
     this.state = ({
       modalVisible: false,
-      radiochecked: 'md-radio-button-on',
-      radio: 'md-radio-button-off',
+      radio1: 'md-radio-button-off',
+      radio2: 'md-radio-button-off',
+      radio3: 'md-radio-button-off',
       check: 'md-radio-button-on',
     });
   }
-async onPostStatus(){
+  componentWillMount(){
+    this.setState({
+      radio1: 'md-radio-button-on'
+    })
+  }
+  async onPostStatus(){
+    this.setModalVisible(!this.state.modalVisible);
       let formdata = new FormData();
       formdata.append("id_user", this.state.id_user);
       formdata.append("content", this.state.content);
+      formdata.append("flagStatus", this.state.flagStatus);
       formdata.append("flagConfession", this.state.flagConfession);
       try {
         let response = await fetch('http://suta.esy.es/api/addstatus.php',{
@@ -48,7 +56,7 @@ async onPostStatus(){
 
         });
         console.log(this.state.message);
-        this.setModalVisible(!this.state.modalVisible);
+
         // alert(this.state.message);
         // if (this.state.code==0) {
         //     // show alert & moving screen
@@ -70,16 +78,17 @@ async onPostStatus(){
 
   }
   onChecked(value){
-    if(value==0&&this.state.radiochecked==this.state.check)
+    if(value==1&&this.state.radio1!=this.state.check)
     {
-      this.setState({radiochecked:this.state.radiochecked, radio: this.state.radio,flagConfession:0 })
+      this.setState({radio1:this.state.check, radio2: this.state.radio1,radio3: this.state.radio1,flagConfession:0,flagStatus:0 })
     }
-    if(value==1&&this.state.radio==this.state.check)
+    if(value==2&&this.state.radio2!=this.state.check)
     {
-      this.setState({radiochecked:this.state.radiochecked, radio: this.state.radio,flagConfession:1})
+      this.setState({radio1:this.state.radio2, radio2: this.state.check,radio3: this.state.radio2,flagConfession:1,flagStatus:0})
     }
-    else{
-      this.setState({radiochecked:this.state.radio, radio: this.state.radiochecked,flagConfession:1})
+    if(value==3&&this.state.radio3!=this.state.check)
+    {
+      this.setState({radio1:this.state.radio3, radio2: this.state.radio3,radio3: this.state.check,flagStatus:1})
     }
 
   }
@@ -129,16 +138,22 @@ async onPostStatus(){
                 placeholder='Bạn đang có tâm sự gì?'/>
               </View>
               <View style={Style.authorStatus}>
-                <TouchableOpacity  onPress={() => {this.onChecked(0)}} style={{flexDirection:'row',marginRight:20, alignItems:'center'}}>
-                  <Icon name={this.state.radiochecked} color="#3498db" style={Style.ico_radio}/>
+                <TouchableOpacity  onPress={() => {this.onChecked(1)}} style={{flexDirection:'row',marginRight:20, alignItems:'center'}}>
+                  <Icon name={this.state.radio1} color="#3498db" style={Style.ico_radio}/>
                   <Text>
                     Công Khai
                   </Text>
                 </TouchableOpacity>
-                <TouchableOpacity  onPress={() => {this.onChecked(1)}} style={{flexDirection:'row',alignItems:'center'}}>
-                  <Icon name={this.state.radio} color="#3498db" style={Style.ico_radio}/>
+                <TouchableOpacity  onPress={() => {this.onChecked(2)}} style={{flexDirection:'row',alignItems:'center'}}>
+                  <Icon name={this.state.radio2} color="#3498db" style={Style.ico_radio}/>
                   <Text>
                     Ẩn Danh
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity  onPress={() => {this.onChecked(3)}} style={{flexDirection:'row',alignItems:'center'}}>
+                  <Icon name={this.state.radio3} color="#3498db" style={Style.ico_radio}/>
+                  <Text>
+                    Chỉ Mình Tôi
                   </Text>
                 </TouchableOpacity>
               </View>
