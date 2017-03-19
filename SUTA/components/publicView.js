@@ -14,7 +14,7 @@ export default class Public extends Component{
 
   render(){
     return(
-      <View style={{flex:1,backgroundColor:'rgb(39, 191, 165)'}}>
+      <View style={{flex:1}}>
         <Text>
         Public
         </Text>
