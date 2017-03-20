@@ -26,6 +26,8 @@ class loginView extends Component{
     this.state=({
       warning_user: '',
       warning_pass: '',
+      username:'',
+      password:''
 
     });
   }
@@ -50,7 +52,7 @@ class loginView extends Component{
     formdata.append("username", this.state.username);
     formdata.append("password", this.state.password);
     try {
-      let response = await fetch('http://mangacha.esy.es/api/login.php', {
+      let response = await fetch('http://suta.esy.es/api/login.php', {
         method: 'post',
         headers: {
         'Content-Type': 'multipart/form-data',
@@ -81,6 +83,9 @@ class loginView extends Component{
 
     }
   }
+  test(){
+    alert(this.state.username +"-"+ this.state.password);
+  }
   render(){
     return(
       <SplashScreen duration={3000} backgroundColor={'blue'}>
@@ -95,46 +100,46 @@ class loginView extends Component{
             />
         </View>
         <View style={styles.contentLogin}>
-          <View>
-            <View style={{flexDirection:'row', justifyContent:'center',marginTop:-15}}>
-              <View style={{flex:1,alignItems:'center'}}>
-                <Icon name="md-contact" size={24} style={{marginTop:35}} color="#F5F5F5"/>
-              </View>
-              <View style={{flex:6,marginLeft:5}}>
-              <TextInput
-              underlineColorAndroid="#F5F5F5"
-              placeholderTextColor= 'rgba(255,255,255,0.7)'
-              onChangeText={(val) => this.setState({username: val})}
-              style={styles.input}
-              autoCapitalize="none"
-              autoCorrect={false}
+        <View>
+          <View style={{flexDirection:'row', justifyContent:'center'}}>
+            <View style={{flex:1,alignItems:'center'}}>
+              <Icon name="md-contact" size={24} style={{marginTop:35}} color="#F5F5F5"/>
+            </View>
+            <View style={{flex:6,marginLeft:5}}>
+              <TextField
+              labelColor={'#F5F5F5'}
+              label={'Tên tài khoản'}
+              textColor={'#F5F5F5'}
+              highlightColor={'#BDBDBD'}
               returnKeyType="next"
+              onChangeText={(text) => {
+                this.state.username = text;
+              }}
               onSubmitEditing={()=>this.passwordInput.focus()}
-              placeholder='Tên Tài Khoản'/>
-
-              </View>
+              dense={true}/>
             </View>
-
-            <View style={{flexDirection:'row', justifyContent:'center',marginTop:-15}}>
-              <View style={{flex:1,alignItems:'center'}}>
-                <Icon name="md-key" size={24} color="#F5F5F5" style={{marginTop:35}} />
-              </View>
-              <View style={{flex:6, marginLeft:5}}>
-                <TextInput
-                secureTextEntry
-                underlineColorAndroid="#F5F5F5"
-                placeholderTextColor= 'rgba(255,255,255,0.7)'
-                onChangeText={(val) => this.setState({password: val})}
-                style={styles.input}
-                autoCapitalize="none"
-                autoCorrect={false}
-                returnKeyType="done"
-                ref={(input)=>this.passwordInput = input}
-                placeholder='Mật Khẩu'/>
-              </View>
-            </View>
-
           </View>
+
+          <View style={{flexDirection:'row', justifyContent:'center'}}>
+            <View style={{flex:1,alignItems:'center'}}>
+              <Icon name="md-key" size={24} color="#F5F5F5" style={{marginTop:35}} />
+            </View>
+            <View style={{flex:6, marginLeft:5}}>
+            <TextField
+            label={'Mật khẩu'}
+            labelColor={'#F5F5F5'}
+            textColor={'#F5F5F5'}
+            highlightColor={'#BDBDBD'}
+            onChangeText={(text) => {
+            this.state.password = text;
+          }}
+          dense={true}
+            ref={(input)=>this.passwordInput = input}
+            secureTextEntry= {true}/>
+            </View>
+          </View>
+
+        </View>
           <View style={{alignItems:'center'}}>
             <TouchableOpacity onPress={()=>this.onLoginPressed()} style={styles.button}>
               <Text style={{color:'#F5F5F5'}}>ĐĂNG NHẬP</Text>

@@ -41,7 +41,7 @@ class SUTA extends Component {
     return (
       <View style={Style.container}>
         <Navigator
-          initialRoute={{name:'home'}}
+          initialRoute={{name:'login'}}
           renderScene={this.renderScene.bind(this)}
         />
       </View>
