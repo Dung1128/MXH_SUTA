@@ -26,7 +26,6 @@ class loginView extends Component{
     this.state=({
       warning_user: '',
       warning_pass: '',
-
     });
   }
   redirect(routeName,data){
@@ -50,7 +49,7 @@ class loginView extends Component{
     formdata.append("username", this.state.username);
     formdata.append("password", this.state.password);
     try {
-      let response = await fetch('http://mangacha.esy.es/api/login.php', {
+      let response = await fetch('http://suta.esy.es/api/login.php', {
         method: 'post',
         headers: {
         'Content-Type': 'multipart/form-data',
