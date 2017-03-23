@@ -150,7 +150,16 @@ class loginView extends Component{
             </TouchableOpacity>
           </View>
 
-          <View style={{padding:20}}>
+
+          <TouchableOpacity>
+            <View style={{justifyContent:'center', alignItems:'center', paddingTop: 20}}>
+                <Text style={{color:'#F5F5F5', paddingLeft:5}} >
+                  Quên mật khẩu
+                </Text>
+            </View>
+          </TouchableOpacity>
+
+          <View style={{padding:15}}>
             <Hr lineColor='#BDBDBD' text='OR' textColor='#F5F5F5'/>
           </View>
 
@@ -162,6 +171,7 @@ class loginView extends Component{
                 </Text>
             </View>
           </TouchableOpacity>
+
 
         </View>
 
