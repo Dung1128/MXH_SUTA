@@ -107,7 +107,7 @@ export default class profileView extends Component {
       <TouchableOpacity onPress={this.redirect.bind(this,'accountManager')}>
         <View style={{flexDirection:'row'}}>
           <Text style={{margin: 10, fontSize: 15, textAlign: 'left'}}> Quản lý tài khoản </Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={this.redirect.bind(this,'accountManager')}>
             <Iconn name="ios-arrow-forward" size={30} color="#BDBDBD" style={{marginTop:5, marginLeft: 100}}/>
           </TouchableOpacity>
         </View>

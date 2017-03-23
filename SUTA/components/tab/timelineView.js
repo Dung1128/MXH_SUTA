@@ -95,7 +95,11 @@ export default class timeLineView extends Component{
 
   _renderRow(data){
     return (
-        <View style={{flex:1,borderLeftColor:'#00BFFF',borderLeftWidth:1,borderStyle:'solid', paddingBottom:20}}>
+        <View style={{flex:1,
+          borderLeftColor:'#00BFFF',
+          borderLeftWidth:1,
+          borderStyle:'solid',
+          paddingBottom:20}}>
 
           <Image style={{width: 12, height: 12, marginLeft: -6}}
           source={require('../../images/icon_cham_to.png')}/>
