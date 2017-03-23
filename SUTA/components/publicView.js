@@ -66,7 +66,17 @@ export default class Public extends Component{
   _renderRow(data){
     var time = dateFormat(data.time, "H:M  dd/mm/yyyy ");
     return(
-      <View style={{flex:1,padding:10,borderLeftColor:'#00BFFF',borderLeftWidth:1,borderStyle:'solid',}}>
+      <View style={{flex:1,
+        marginLeft:5,
+        marginRight: 5,
+        marginTop: 5,
+        borderLeftColor:'#00BFFF',
+        borderLeftWidth:1,
+        borderStyle:'solid',
+        backgroundColor:'#fff',
+        borderRadius: 5
+      }}>
+      <View style={{padding: 10}}>
       <View style={{flex:1,flexDirection:'row'}}>
         <View style={styles.backgroundAvatar} >
           <Image style={styles.avatar} source={{uri: data.avatar}}/>
@@ -79,7 +89,8 @@ export default class Public extends Component{
             {time}
           </Text>
         </View>
-      </View>
+        </View>
+
         <Text style={{paddingTop:10,paddingBottom:10,fontSize:13,color:'#1d2129'}}>
          {data.content}
         </Text>
@@ -108,11 +119,12 @@ export default class Public extends Component{
           </TouchableOpacity>
         </View>
       </View>
+      </View>
     )
   }
   render(){
     return(
-      <View style={{flex:1,backgroundColor:'#fff'}}>
+      <View style={{flex:1,backgroundColor:'#F5F5F5'}}>
         <ListView
           refreshControl={
             <RefreshControl
