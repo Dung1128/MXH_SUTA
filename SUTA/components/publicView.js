@@ -32,6 +32,9 @@ export default class Public extends Component{
       this._onRefresh();
     }
   }
+  componentWillReceiveProps(){
+    this.fetchData();
+  }
   _onRefresh() {
     this.setState({refreshing: true});
     setTimeout(() => {
@@ -61,7 +64,7 @@ export default class Public extends Component{
     }
   }
   _renderRow(data){
-    var time = dateFormat(data.time, "h:MM TT dd/mm/yyyy ");
+    var time = dateFormat(data.time, "H:M  dd/mm/yyyy ");
     return(
       <View style={{flex:1,padding:10,borderLeftColor:'#00BFFF',borderLeftWidth:1,borderStyle:'solid',}}>
       <View style={{flex:1,flexDirection:'row'}}>

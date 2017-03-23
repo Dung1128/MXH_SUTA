@@ -16,6 +16,7 @@ import Public from './publicView.js';
 import DefaultTabBar from './tab/DefaultTabBar';
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
+var anonymousView = new Anonymous();
 export default class NewFeed extends Component{
   constructor(props){
     super(props);
@@ -58,21 +59,8 @@ export default class NewFeed extends Component{
            result: jsonResponse['result']
 
         });
-        console.log(this.state.message);
-        this.setState({
-          checkadd: true
-        });
-        // alert(this.state.message);
-        // if (this.state.code==0) {
-        //     // show alert & moving screen
-        //   //  console.log(this.state.message);
-        //     // this.redirect('login','OK');
-        // } else {
-        //     //Handle error
-        //     alert(this.state.message);
-        //     let error = res;
-        //     throw error;
-        // }
+      
+
       }
       catch(error)
       {
@@ -184,7 +172,7 @@ export default class NewFeed extends Component{
       initialPage={0}
       renderTabBar={() => <DefaultTabBar />}
       >
-        <Anonymous tabLabel="ẨN DANH" data={this.state.checkadd}/>
+        <Anonymous tabLabel="ẨN DANH" data={this.state.checkadd} />
         <Public tabLabel="CÔNG KHAI" data={this.state.checkadd}/>
 
       </ScrollableTabView>
