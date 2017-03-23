@@ -9,6 +9,7 @@ import {
   AsyncStorage,
   Image
 } from 'react-native';
+import dateFormat from 'dateformat';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 var deviceWidth = Dimensions.get('window').width;
@@ -94,66 +95,63 @@ export default class timeLineView extends Component{
 
 
   _renderRow(data){
+    var time = dateFormat(data.time, "H:M dd/mm/yyyy ");
     return (
         <View style={{flex:1,
-          borderLeftColor:'#00BFFF',
-          borderLeftWidth:1,
-          borderStyle:'solid',
-          paddingBottom:20}}>
-
-          <Image style={{width: 12, height: 12, marginLeft: -6}}
-          source={require('../../images/icon_cham_to.png')}/>
-          <View style={{paddingLeft:15}}>
-            <Text style={{fontWeight:'bold'}}>
-              {data.time}
-            </Text>
-            <View style={{flexDirection:'row'}}>
-              <Image style={{width: 10, height: 10, marginLeft: -21, marginTop: 5}}
-              source={require('../../images/icon_cham_to.png')}/>
-              <Text style={{paddingLeft: 15}}>
-                {data.content}
+          marginLeft:5,
+          marginRight: 5,
+          marginTop: 5,
+          backgroundColor:'#fff',
+          borderRadius: 5
+        }}>
+          <View style={{paddingTop: 10, paddingLeft: 15, paddingRight: 15}} >
+            <View>
+              <Text style={{fontWeight:'bold'}}>
+                {time}
               </Text>
+                <Text>
+                  {data.content}
+                </Text>
             </View>
+
+            <View style={{flexDirection:'row', paddingTop: 10}}>
+              <TouchableOpacity style={{flexDirection:'row'}}>
+                {
+                  data.checklike==1?
+                  <Icon name='md-heart-outline' color="rgba(0, 0, 0, 0.2)" size={20} />
+                  :
+                  <Icon name='md-heart-outline' color="rgba(0, 0, 0, 0.2)" size={20} />
+                }
+                <Text style={{fontSize:11,color:'#DCDCDC',marginTop:5,marginLeft:4}}>
+                  10
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={{flexDirection:'row',marginLeft:10}}>
+                <Icon name='md-text' color="rgba(0, 0, 0, 0.2)" size={20} />
+                <Text style={{fontSize:11,color:'#DCDCDC',marginTop:5,marginLeft:4}}>
+                  10
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity>
+                <Icon name="ios-more-outline" size={30} color="#BDBDBD" style={{marginLeft: deviceWidth/2 + 40}}/>
+              </TouchableOpacity>
+
           </View>
-
-          <View style={{flexDirection:'row', paddingLeft:15}}>
-            <TouchableOpacity style={{flexDirection:'row'}}>
-              {
-                data.checklike==1?
-                <Image style={Style.icon_like} source={this.state.like}/>
-                :
-                <Image style={Style.icon_like} source={this.state.unlike}/>
-              }
-              <Text style={{fontSize:11,color:'#DCDCDC',marginTop:5,marginLeft:4}}>
-                10
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={{flexDirection:'row',marginLeft:10}}>
-              <Image style={{width:15,height:15,marginTop:5}} source={require('../../images/ico_comment_2.png')}/>
-              <Text style={{fontSize:11,color:'#DCDCDC',marginTop:5,marginLeft:4}}>
-                10
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity>
-              <Icon name="ios-more-outline" size={30} color="#BDBDBD" style={{marginTop:5, marginLeft: deviceWidth/2 + 40}}/>
-            </TouchableOpacity>
-
+        </View>
         </View>
 
-        </View>
     )
 
   }
 
   render(){
     return(
-      <View style={{flex:1, paddingLeft:15, paddingRight:15, paddingTop:10}}>
+      <View style={{flex:1, backgroundColor:'#F5F5F5'}}>
       <Text>{this.state.user.username}
       </Text>
         <ListView
-        style={{flex:1}}
         dataSource={this.state.dataSource}
         renderRow={this._renderRow.bind(this)}
         enableEmptySections
@@ -176,8 +174,8 @@ var Style = StyleSheet.create({
     justifyContent: 'space-between',
   },
   icon_like:{
-        width:16,
-        height:15,
-        marginTop:5
-      },
+    width:16,
+    height:15,
+    marginTop:5
+  },
 });

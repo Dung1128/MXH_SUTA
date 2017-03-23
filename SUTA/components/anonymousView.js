@@ -208,7 +208,17 @@ export default class Anonymous extends Component{
   _renderRow(data){
     var time = dateFormat(data.time, "H:M dd/mm/yyyy ");
     return(
-      <View style={{flex:1,padding:10,borderTopWidth:0.5,borderTopColor:'rgba(143, 143, 143, 0.2)'}}>
+      <View style={{flex:1,
+        marginLeft:5,
+        marginRight: 5,
+        marginTop: 5,
+        borderTopWidth:0.5,
+        borderTopColor:'rgba(143, 143, 143, 0.2)',
+        backgroundColor:'#fff',
+        borderRadius: 5
+      }}>
+      <View style={{padding: 10}}>
+
       <View style={{flex:1,flexDirection:'row'}}>
         <View style={styles.backgroundAvatar} >
           <Image style={styles.avatar} source={require('../images/avatar_anonymous.png')}/>
@@ -249,6 +259,7 @@ export default class Anonymous extends Component{
             </Text>
           </TouchableOpacity>
         </View>
+        </View>
       </View>
     )
   }
@@ -261,7 +272,7 @@ export default class Anonymous extends Component{
 
 
     return(
-      <View style={{flex:1,backgroundColor:'#fff'}}>
+      <View style={{flex:1,backgroundColor:'#F5F5F5'}}>
         <ListView
           refreshControl={
             <RefreshControl
