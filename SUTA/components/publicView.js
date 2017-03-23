@@ -208,6 +208,7 @@ export default class Public extends Component{
   _renderRow(data){
     var time = dateFormat(data.time, "H:M dd/mm/yyyy ");
     return(
+
       <View style={{flex:1,paddingBottom:10,backgroundColor:'#e9ebee'}}>
         <View style={{flex:1,padding:10,backgroundColor:'#fff'}}>
         <View style={{flex:1,flexDirection:'row'}}>
@@ -217,6 +218,7 @@ export default class Public extends Component{
           <View style={{justifyContent:'center',marginLeft:10}}>
             <Text style={styles.textbold}>
               {data.username}
+
             </Text>
             <Text style={styles.textgray}>
               {time}
@@ -252,6 +254,7 @@ export default class Public extends Component{
           </View>
         </View>
       </View>
+      </View>
     )
   }
   render(){
@@ -263,7 +266,7 @@ export default class Public extends Component{
 
 
     return(
-      <View style={{flex:1,backgroundColor:'#fff'}}>
+      <View style={{flex:1,backgroundColor:'#F5F5F5'}}>
         <ListView
           refreshControl={
             <RefreshControl

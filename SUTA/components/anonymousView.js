@@ -251,6 +251,7 @@ export default class Anonymous extends Component{
             </TouchableOpacity>
           </View>
         </View>
+        </View>
       </View>
     )
   }
@@ -263,7 +264,7 @@ export default class Anonymous extends Component{
 
 
     return(
-      <View style={{flex:1,backgroundColor:'#fff'}}>
+      <View style={{flex:1,backgroundColor:'#F5F5F5'}}>
         <ListView
           refreshControl={
             <RefreshControl
