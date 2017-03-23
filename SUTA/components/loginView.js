@@ -28,7 +28,6 @@ class loginView extends Component{
       warning_pass: '',
       username:'',
       password:''
-
     });
   }
   redirect(routeName,data){

@@ -16,6 +16,7 @@ import Public from './publicView.js';
 import DefaultTabBar from './tab/DefaultTabBar';
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
+var anonymousView = new Anonymous();
 export default class NewFeed extends Component{
   constructor(props){
     super(props);
@@ -25,7 +26,10 @@ export default class NewFeed extends Component{
       radio2: 'md-radio-button-off',
       radio3: 'md-radio-button-off',
       check: 'md-radio-button-on',
+      flagConfession:0,
+      checkadd: false
     });
+
   }
   componentWillMount(){
     this.setState({
@@ -55,19 +59,8 @@ export default class NewFeed extends Component{
            result: jsonResponse['result']
 
         });
-        console.log(this.state.message);
+      
 
-        // alert(this.state.message);
-        // if (this.state.code==0) {
-        //     // show alert & moving screen
-        //   //  console.log(this.state.message);
-        //     // this.redirect('login','OK');
-        // } else {
-        //     //Handle error
-        //     alert(this.state.message);
-        //     let error = res;
-        //     throw error;
-        // }
       }
       catch(error)
       {
@@ -77,6 +70,7 @@ export default class NewFeed extends Component{
 
 
   }
+
   onChecked(value){
     if(value==1&&this.state.radio1!=this.state.check)
     {
@@ -178,8 +172,8 @@ export default class NewFeed extends Component{
       initialPage={0}
       renderTabBar={() => <DefaultTabBar />}
       >
-        <Anonymous tabLabel="ẨN DANH"/>
-        <Public tabLabel="CÔNG KHAI"/>
+        <Anonymous tabLabel="ẨN DANH" data={this.state.checkadd} />
+        <Public tabLabel="CÔNG KHAI" data={this.state.checkadd}/>
 
       </ScrollableTabView>
       </View>
