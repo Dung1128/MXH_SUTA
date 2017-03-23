@@ -208,46 +208,48 @@ export default class Anonymous extends Component{
   _renderRow(data){
     var time = dateFormat(data.time, "H:M dd/mm/yyyy ");
     return(
-      <View style={{flex:1,padding:10,borderTopWidth:0.5,borderTopColor:'rgba(143, 143, 143, 0.2)'}}>
-      <View style={{flex:1,flexDirection:'row'}}>
-        <View style={styles.backgroundAvatar} >
-          <Image style={styles.avatar} source={require('../images/avatar_anonymous.png')}/>
-        </View>
-        <View style={{justifyContent:'center',marginLeft:10}}>
-          <Text style={styles.textbold}>
-            Anonymous
-          </Text>
-          <Text style={styles.textgray}>
-            {time}
-          </Text>
-        </View>
-      </View>
-        <Text style={{paddingTop:10,paddingBottom:10,fontSize:13,color:'#1d2129'}}>
-         {data.content}
-        </Text>
-        <View style={{flexDirection:'row'}}>
-          <TouchableOpacity style={{flexDirection:'row'}}>
-            <Icon name='md-heart-outline' color="rgba(0, 0, 0, 0.2)" size={20} />
-            <Text style={[styles.textgray,{marginLeft:5}]}>
-               {
-                 data.likes!=null?
-                 data.likes + "Thích"
-                 :
-                 "Thích"
-               }
+      <View style={{flex:1,paddingBottom:10,backgroundColor:'#e9ebee'}}>
+        <View style={{flex:1,padding:10,backgroundColor:'#fff'}}>
+        <View style={{flex:1,flexDirection:'row'}}>
+          <View style={styles.backgroundAvatar} >
+            <Image style={styles.avatar} source={require('../images/avatar_anonymous.png')}/>
+          </View>
+          <View style={{justifyContent:'center',marginLeft:10}}>
+            <Text style={styles.textbold}>
+              Anonymous
             </Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={()=>this.onClickComment(data)} style={{flexDirection:'row',marginLeft:20}}>
-            <Icon name='md-text' color="rgba(0, 0, 0, 0.2)" size={20} />
-            <Text style={[styles.textgray,{marginLeft:5}]}>
-            {
-              data.comment!=null?
-              data.comment + "Bình Luận"
-              :
-              "Bình Luận"
-            }
+            <Text style={styles.textgray}>
+              {time}
             </Text>
-          </TouchableOpacity>
+          </View>
+        </View>
+          <Text style={{paddingTop:10,paddingBottom:10,fontSize:13,color:'#1d2129'}}>
+           {data.content}
+          </Text>
+          <View style={{flexDirection:'row'}}>
+            <TouchableOpacity style={{flexDirection:'row'}}>
+              <Icon name='md-heart-outline' color="rgba(0, 0, 0, 0.2)" size={20} />
+              <Text style={[styles.textgray,{marginLeft:5}]}>
+                 {
+                   data.likes!=null?
+                   data.likes + "Thích"
+                   :
+                   "Thích"
+                 }
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={()=>this.onClickComment(data)} style={{flexDirection:'row',marginLeft:20}}>
+              <Icon name='md-text' color="rgba(0, 0, 0, 0.2)" size={20} />
+              <Text style={[styles.textgray,{marginLeft:5}]}>
+              {
+                data.comment!=null?
+                data.comment + "Bình Luận"
+                :
+                "Bình Luận"
+              }
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     )
