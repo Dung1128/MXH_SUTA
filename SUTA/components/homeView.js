@@ -9,7 +9,7 @@ import {
 
 } from 'react-native';
 // import Style from 'Style.js';
-
+import Iconn from 'react-native-vector-icons/Ionicons';
 import NewFeed from './newFeedView.js';
 import Friends from './friendsView.js';
 import Message from './messageView.js';
@@ -20,6 +20,7 @@ export default class Chat extends Component {
     super(props);
     this.state = {
       selectedTab: 'feed',
+      data: this.props.data
     }
   }
 
@@ -36,6 +37,7 @@ export default class Chat extends Component {
     })
   }
 
+
   navigate(routeName, data){
     this.props.navigator.push({
       name: routeName,
@@ -46,6 +48,7 @@ export default class Chat extends Component {
   }
 
   render(){
+    //console.log(this.state.data.id_user);
     const { selectedTab } = this.state
     return(
       <View style={{flex:1}}>
@@ -84,8 +87,8 @@ export default class Chat extends Component {
             selected={selectedTab === 'menu'}
             renderIcon={() => <Icon containerStyle={{justifyContent: 'center', alignItems: 'center', marginTop: 12}} color={'#5e6977'} name='menu' size={30} />}
             renderSelectedIcon={() => <Icon color={'#6296f9'} name='menu' size={30} />}
-            onPress={() => this.changeTab('menu')}>
-            <Menu />
+            onPress={this.navigate.bind(this,'profile', this.state.data)}>
+
           </Tab>
         </Tabs>
       </View>

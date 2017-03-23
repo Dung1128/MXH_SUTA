@@ -35,6 +35,7 @@ class loginView extends Component{
     this.props.navigator.push({
       name: routeName,
       passProps: {
+        data: this.state.result
       }
     })
   }
@@ -66,12 +67,15 @@ class loginView extends Component{
         code: jsonResponse['code'],
         message: jsonResponse['message'],
         result: jsonResponse['result'],
-
+        id: jsonResponse['result'].id_user
       });
 
       if (response.status >= 200 && response.status < 300 && jsonResponse['code']==0) {
           //Handle success
           //On success we will store the access_token in the AsyncStorage
+          AsyncStorage.setItem("user",JSON.stringify(jsonResponse['result']));
+          alert("Đăng nhập thành công");
+          //console.log(this.state.id);
           this.redirect('home');
 
       }else {
@@ -161,9 +165,14 @@ class loginView extends Component{
 
         </View>
 
+
+        </KeyboardAvoidingView>
         <View style={{alignItems:'center'}}>
         <TouchableOpacity onPress={this.navigate.bind(this,'register')}>
-          <View style={{flexDirection:'row', justifyContent:'center'}}>
+          <View style={{flexDirection:'row',
+            justifyContent:'center',
+            width: deviceWidth,
+        }}>
             <Text style={{color:'#F5F5F5'}}>
                   Bạn chưa có tài khoản?
             </Text>
@@ -174,7 +183,6 @@ class loginView extends Component{
 
           </TouchableOpacity>
         </View>
-        </KeyboardAvoidingView>
       </Image>
 
       </SplashScreen>
