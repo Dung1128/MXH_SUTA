@@ -6,12 +6,14 @@ import {
   TouchableOpacity,
   StyleSheet,
   ListView,
+  AsyncStorage,
   Image
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
+var flag = true;
 var _data = [{
           _time : "03/05/2017",
           _content : "Dũng đẹp trai!."
@@ -29,39 +31,85 @@ export default class timeLineView extends Component{
       like: require('../../images/ico_like_2.png'),
       unlike: require('../../images/ico_unlike.png'),
       check: require('../../images/ico_like_2.png'),
+      user: '',
+      id: this.props.id
     }
+    // this._getUser();
+    flag = true;
+    console.disableYellowBox = true;
   }
 
   componentWillMount(){
-     this.getData();
 
   }
 
-  async getData(){
-       return fetch('http://suta.esy.es/api/getstatus_id.php')
-         .then((response) => response.json())
-         .then((responseJson) => {
-           this.setState({
-             dataSource: this.state.dataSource.cloneWithRows(responseJson.result),
-           })
-           console.log(responseJson.result);
-         })
-         .catch((error) => {
-           console.error(error);
-         });
+  componentDidMount(){
+    //console.log(this.state.id);
+    this.getData(this.state.id);
+  }
+
+  componentWillUnmount() {
+    flag = false;
+  }
+  _getUser(){
+    AsyncStorage.getItem("user").then((value)=>{
+      if(value != null){
+        this.setState({
+          user:JSON.parse(value),
+        //  name: this.state.user.username
+        })
+        // console.log(this.state.user.username);
+        //console.log(this.state.user.id_user);
+
+      }
+    }).done();
+  }
+
+  async getData(id){
+    let formdata = new FormData();
+    formdata.append('id_user',id);
+    try {
+      let response = await fetch('http://suta.esy.es/api/getstatus_id.php',{
+        method: 'post',
+        headers: {
+        'Content-Type': 'multipart/form-data',
+        },
+        body: formdata
+
+      });
+        let res = await response.text();
+        if(flag == true){
+      var jsonResponse = JSON.parse(res);
+      this.setState({
+        dataSource: this.state.dataSource.cloneWithRows(jsonResponse['result'])
+      });
     }
+    else {
+      return;
+    }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
 
   _renderRow(data){
     return (
         <View style={{flex:1,borderLeftColor:'#00BFFF',borderLeftWidth:1,borderStyle:'solid', paddingBottom:20}}>
+
+          <Image style={{width: 12, height: 12, marginLeft: -6}}
+          source={require('../../images/icon_cham_to.png')}/>
           <View style={{paddingLeft:15}}>
             <Text style={{fontWeight:'bold'}}>
               {data.time}
             </Text>
-            <Text>
-              {data.content}
-            </Text>
+            <View style={{flexDirection:'row'}}>
+              <Image style={{width: 10, height: 10, marginLeft: -21, marginTop: 5}}
+              source={require('../../images/icon_cham_to.png')}/>
+              <Text style={{paddingLeft: 15}}>
+                {data.content}
+              </Text>
+            </View>
           </View>
 
           <View style={{flexDirection:'row', paddingLeft:15}}>
@@ -98,6 +146,8 @@ export default class timeLineView extends Component{
   render(){
     return(
       <View style={{flex:1, paddingLeft:15, paddingRight:15, paddingTop:10}}>
+      <Text>{this.state.user.username}
+      </Text>
         <ListView
         style={{flex:1}}
         dataSource={this.state.dataSource}
