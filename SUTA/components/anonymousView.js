@@ -9,10 +9,14 @@ import {
   RefreshControl,
   Modal,
   KeyboardAvoidingView,
-  TextInput
+  TextInput,
+  Dimensions,
+  ScrollView
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import dateFormat from 'dateformat';
+var deviceWidth = Dimensions.get('window').width;
+var deviceHeight = Dimensions.get('window').height;
 var listnull = [];
 export default class Anonymous extends Component{
   constructor(props){
@@ -23,6 +27,7 @@ export default class Anonymous extends Component{
       refreshing: false,
       modalVisible: false,
       sendColor: '#90949c',
+      checkclose: false
     });
     flag = true;
   }
@@ -72,15 +77,23 @@ export default class Anonymous extends Component{
       console.error(error);
     }
   }
+  _onClose(){
+    this.setState({
+      checkclose:true
+    });
+    this.setModalVisible(!this.state.modalVisible)
+  }
   onClickComment(data)
   {
-    this.setModalVisible();
+
     this.setState({
+      checkclose:false,
       data: data,
       dataSource_cmt: this.state.dataSource_cmt.cloneWithRows(listnull),
     });
    this.getInfoUser(data);
-   this.getComment(data)
+   this.getComment(data);
+   this.setModalVisible();
   }
   async getInfoUser(data){
     let formdata = new FormData();
@@ -181,7 +194,6 @@ export default class Anonymous extends Component{
     }
   }
   _renderRow_cmt(data){
-    var time = dateFormat(data.time, "H:M dd/mm/yyyy ");
     return (
       <View style={{borderTopWidth:0.5,borderTopColor:'rgba(143, 143, 143, 0.2)'}}>
       <View style={{flex:1, flexDirection:'row'}}>
@@ -197,7 +209,7 @@ export default class Anonymous extends Component{
                {data.content}
               </Text>
               <Text style={styles.textgray}>
-                {time}
+                {data.time}
               </Text>
             </View>
           </View>
@@ -206,7 +218,6 @@ export default class Anonymous extends Component{
     )
   }
   _renderRow(data){
-    var time = dateFormat(data.time, "H:M dd/mm/yyyy ");
     return(
       <View style={{flex:1,
         marginLeft:5,
@@ -228,48 +239,49 @@ export default class Anonymous extends Component{
             Anonymous
           </Text>
           <Text style={styles.textgray}>
-            {time}
+            {data.time}
           </Text>
         </View>
       </View>
         <Text style={{paddingTop:10,paddingBottom:10,fontSize:13,color:'#1d2129'}}>
          {data.content}
         </Text>
-        <View style={{flexDirection:'row'}}>
-          <TouchableOpacity style={{flexDirection:'row'}}>
-            <Icon name='md-heart-outline' color="rgba(0, 0, 0, 0.2)" size={20} />
-            <Text style={[styles.textgray,{marginLeft:5}]}>
-               {
-                 data.likes!=null?
-                 data.likes + "Thích"
-                 :
-                 "Thích"
-               }
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={()=>this.onClickComment(data)} style={{flexDirection:'row',marginLeft:20}}>
-            <Icon name='md-text' color="rgba(0, 0, 0, 0.2)" size={20} />
-            <Text style={[styles.textgray,{marginLeft:5}]}>
-            {
-              data.comment!=null?
-              data.comment + "Bình Luận"
-              :
-              "Bình Luận"
-            }
-            </Text>
-          </TouchableOpacity>
+        <View style={{flexDirection:'row',justifyContent: 'space-between',alignItems:'center'}}>
+          <View style={{flex:3,flexDirection:'row'}}>
+            <TouchableOpacity style={{flexDirection:'row'}}>
+              <Icon name='md-heart-outline' color="rgba(0, 0, 0, 0.2)" size={20} />
+              <Text style={[styles.textgray,{marginLeft:5}]}>
+                 {
+                   data.likes!=null?
+                   data.likes + "Thích"
+                   :
+                   "Thích"
+                 }
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={()=>this.onClickComment(data)} style={{flexDirection:'row',marginLeft:20}}>
+              <Icon name='md-text' color="rgba(0, 0, 0, 0.2)" size={20} />
+              <Text style={[styles.textgray,{marginLeft:5}]}>
+              {
+                data.comment!=null?
+                data.comment + "Bình Luận"
+                :
+                "Bình Luận"
+              }
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={{flex:1}}>
+            <TouchableOpacity>
+              <Icon name="ios-more-outline" size={30} color="#BDBDBD" style={{marginLeft:deviceWidth/6}}/>
+            </TouchableOpacity>
+          </View>
         </View>
         </View>
       </View>
     )
   }
   render(){
-    var time = ''
-    if(this.state.data!=null)
-    {
-      time = dateFormat(this.state.data.time, "H:M dd/mm/yyyy ");
-    }
-
 
     return(
       <View style={{flex:1,backgroundColor:'#F5F5F5'}}>
@@ -299,7 +311,7 @@ export default class Anonymous extends Component{
         <View style={{flex:1,backgroundColor:'white'}} >
 
         <View style={styles.toolbar}>
-          <TouchableOpacity activeOpacity={1} onPress={()=>this.setModalVisible(!this.state.modalVisible)} style={{flex:1,alignItems:'center'}}>
+          <TouchableOpacity activeOpacity={1} onPress={()=>this._onClose()} style={{flex:1,alignItems:'center'}}>
             <Icon name="md-close" size={24} color="#F5F5F5" style={styles.ico}/>
           </TouchableOpacity>
           <View style={{flex:8,marginLeft:-20,alignItems:'center'}}>
@@ -322,7 +334,7 @@ export default class Anonymous extends Component{
                     Anonymous
                   </Text>
                   <Text style={styles.textgray}>
-                    {time}
+                    {this.state.data.time}
                   </Text>
                 </View>
               </View>
@@ -367,6 +379,7 @@ export default class Anonymous extends Component{
           </View>
 
           <View style={styles.bottomInput}>
+
             <TextInput
             style={styles.input}
             placeholder="Viết bình luận"
@@ -379,7 +392,7 @@ export default class Anonymous extends Component{
             <TouchableOpacity onPress={()=>this._addComment(this.state.data)}>
               <Icon name="md-send" size={28} color={this.state.sendColor} style={{paddingLeft:10,paddingRight:10}}/>
             </TouchableOpacity>
-          </View>
+            </View>
 
         </View>
 

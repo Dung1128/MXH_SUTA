@@ -11,7 +11,8 @@ import{
   Dimensions,
   ScrollView,
   AsyncStorage,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  Keyboard
 }from 'react-native';
 import TextField from 'react-native-md-textinput';
 import Hr from 'react-native-hr';
@@ -48,6 +49,7 @@ class loginView extends Component{
   }
 
   async onLoginPressed(){
+    Keyboard.dismiss(); 
     let formdata = new FormData();
     formdata.append("username", this.state.username);
     formdata.append("password", this.state.password);
@@ -113,6 +115,8 @@ class loginView extends Component{
               labelColor={'#F5F5F5'}
               label={'Tên tài khoản'}
               textColor={'#F5F5F5'}
+              autoCapitalize="none"
+              autoCorrect={false}
               highlightColor={'#BDBDBD'}
               returnKeyType="next"
               onChangeText={(text) => {
@@ -132,6 +136,8 @@ class loginView extends Component{
             label={'Mật khẩu'}
             labelColor={'#F5F5F5'}
             textColor={'#F5F5F5'}
+            autoCapitalize="none"
+            autoCorrect={false}
             highlightColor={'#BDBDBD'}
             onChangeText={(text) => {
             this.state.password = text;
