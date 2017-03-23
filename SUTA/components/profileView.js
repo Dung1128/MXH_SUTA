@@ -17,7 +17,7 @@ import TimeLineView from './tab/timelineView.js';
 import ImageView from './tab/imageView.js';
 import { Tabs, Tab, Icon } from 'react-native-elements';
 var ScrollableTabView = require('react-native-scrollable-tab-view');
-import defaultTabBar from './tab/DefaultTabBar.js';
+import DefaultTabBar from './tab/DefaultTabBar.js';
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
 export default class profileView extends Component {
@@ -163,7 +163,10 @@ export default class profileView extends Component {
           </Image>
         </View>
         <View style={styles._content}>
-          <ScrollableTabView>
+          <ScrollableTabView
+            initialPage={0}
+            renderTabBar={() => <DefaultTabBar/>}
+          >
               <TimeLineView tabLabel='Nhật Ký' id = {this.props.data.id_user} />
               <ImageView tabLabel='Hình Ảnh' />
           </ScrollableTabView>
