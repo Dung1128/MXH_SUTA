@@ -35,7 +35,7 @@ export default class NewFeed extends Component{
   async onPostStatus(){
     this.setModalVisible(!this.state.modalVisible);
       let formdata = new FormData();
-      formdata.append("id_user", this.state.id_user);
+      formdata.append("id_user", this.props.data.id_user);
       formdata.append("content", this.state.content);
       formdata.append("flagStatus", this.state.flagStatus);
       formdata.append("flagConfession", this.state.flagConfession);

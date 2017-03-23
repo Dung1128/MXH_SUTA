@@ -61,7 +61,7 @@ export default class Chat extends Component {
           renderIcon={() => <Icon containerStyle={{justifyContent: 'center', alignItems: 'center', marginTop: 12}} color={'#5e6977'} name='whatshot' size={28} />}
           renderSelectedIcon={() => <Icon color={'#6296f9'} name='whatshot' size={30} />}
           onPress={() => this.changeTab('feed')}>
-          <NewFeed />
+          <NewFeed data = {this.state.data} />
         </Tab>
           <Tab
             titleStyle={{fontWeight: 'bold', fontSize: 10}}
