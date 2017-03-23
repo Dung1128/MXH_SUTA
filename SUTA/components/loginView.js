@@ -26,12 +26,15 @@ class loginView extends Component{
     this.state=({
       warning_user: '',
       warning_pass: '',
+      username:'',
+      password:''
     });
   }
   redirect(routeName,data){
     this.props.navigator.push({
       name: routeName,
       passProps: {
+        data: this.state.result
       }
     })
   }
@@ -63,12 +66,15 @@ class loginView extends Component{
         code: jsonResponse['code'],
         message: jsonResponse['message'],
         result: jsonResponse['result'],
-
+        id: jsonResponse['result'].id_user
       });
 
       if (response.status >= 200 && response.status < 300 && jsonResponse['code']==0) {
           //Handle success
           //On success we will store the access_token in the AsyncStorage
+          AsyncStorage.setItem("user",JSON.stringify(jsonResponse['result']));
+          alert("Đăng nhập thành công");
+          //console.log(this.state.id);
           this.redirect('home');
 
       }else {
@@ -79,6 +85,9 @@ class loginView extends Component{
       //  console.log(this.state.username + " & " + this.state.password);
 
     }
+  }
+  test(){
+    alert(this.state.username +"-"+ this.state.password);
   }
   render(){
     return(
@@ -94,53 +103,62 @@ class loginView extends Component{
             />
         </View>
         <View style={styles.contentLogin}>
-          <View>
-            <View style={{flexDirection:'row', justifyContent:'center',marginTop:-15}}>
-              <View style={{flex:1,alignItems:'center'}}>
-                <Icon name="md-contact" size={24} style={{marginTop:35}} color="#F5F5F5"/>
-              </View>
-              <View style={{flex:6,marginLeft:5}}>
-              <TextInput
-              underlineColorAndroid="#F5F5F5"
-              placeholderTextColor= 'rgba(255,255,255,0.7)'
-              onChangeText={(val) => this.setState({username: val})}
-              style={styles.input}
-              autoCapitalize="none"
-              autoCorrect={false}
+        <View>
+          <View style={{flexDirection:'row', justifyContent:'center'}}>
+            <View style={{flex:1,alignItems:'center'}}>
+              <Icon name="md-contact" size={24} style={{marginTop:35}} color="#F5F5F5"/>
+            </View>
+            <View style={{flex:6,marginLeft:5}}>
+              <TextField
+              labelColor={'#F5F5F5'}
+              label={'Tên tài khoản'}
+              textColor={'#F5F5F5'}
+              highlightColor={'#BDBDBD'}
               returnKeyType="next"
+              onChangeText={(text) => {
+                this.state.username = text;
+              }}
               onSubmitEditing={()=>this.passwordInput.focus()}
-              placeholder='Tên Tài Khoản'/>
-
-              </View>
+              dense={true}/>
             </View>
-
-            <View style={{flexDirection:'row', justifyContent:'center',marginTop:-15}}>
-              <View style={{flex:1,alignItems:'center'}}>
-                <Icon name="md-key" size={24} color="#F5F5F5" style={{marginTop:35}} />
-              </View>
-              <View style={{flex:6, marginLeft:5}}>
-                <TextInput
-                secureTextEntry
-                underlineColorAndroid="#F5F5F5"
-                placeholderTextColor= 'rgba(255,255,255,0.7)'
-                onChangeText={(val) => this.setState({password: val})}
-                style={styles.input}
-                autoCapitalize="none"
-                autoCorrect={false}
-                returnKeyType="done"
-                ref={(input)=>this.passwordInput = input}
-                placeholder='Mật Khẩu'/>
-              </View>
-            </View>
-
           </View>
+
+          <View style={{flexDirection:'row', justifyContent:'center'}}>
+            <View style={{flex:1,alignItems:'center'}}>
+              <Icon name="md-key" size={24} color="#F5F5F5" style={{marginTop:35}} />
+            </View>
+            <View style={{flex:6, marginLeft:5}}>
+            <TextField
+            label={'Mật khẩu'}
+            labelColor={'#F5F5F5'}
+            textColor={'#F5F5F5'}
+            highlightColor={'#BDBDBD'}
+            onChangeText={(text) => {
+            this.state.password = text;
+          }}
+          dense={true}
+            ref={(input)=>this.passwordInput = input}
+            secureTextEntry= {true}/>
+            </View>
+          </View>
+
+        </View>
           <View style={{alignItems:'center'}}>
             <TouchableOpacity onPress={()=>this.onLoginPressed()} style={styles.button}>
               <Text style={{color:'#F5F5F5'}}>ĐĂNG NHẬP</Text>
             </TouchableOpacity>
           </View>
 
-          <View style={{padding:20}}>
+
+          <TouchableOpacity>
+            <View style={{justifyContent:'center', alignItems:'center', paddingTop: 20}}>
+                <Text style={{color:'#F5F5F5', paddingLeft:5}} >
+                  Quên mật khẩu
+                </Text>
+            </View>
+          </TouchableOpacity>
+
+          <View style={{padding:15}}>
             <Hr lineColor='#BDBDBD' text='OR' textColor='#F5F5F5'/>
           </View>
 
@@ -153,11 +171,17 @@ class loginView extends Component{
             </View>
           </TouchableOpacity>
 
+
         </View>
 
+
+        </KeyboardAvoidingView>
         <View style={{alignItems:'center'}}>
         <TouchableOpacity onPress={this.navigate.bind(this,'register')}>
-          <View style={{flexDirection:'row', justifyContent:'center'}}>
+          <View style={{flexDirection:'row',
+            justifyContent:'center',
+            width: deviceWidth,
+        }}>
             <Text style={{color:'#F5F5F5'}}>
                   Bạn chưa có tài khoản?
             </Text>
@@ -168,7 +192,6 @@ class loginView extends Component{
 
           </TouchableOpacity>
         </View>
-        </KeyboardAvoidingView>
       </Image>
 
       </SplashScreen>

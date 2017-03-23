@@ -6,7 +6,8 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
-  DrawerLayoutAndroid
+  DrawerLayoutAndroid,
+  AsyncStorage
 
 } from 'react-native';
 // import Style from 'Style.js';
@@ -22,12 +23,18 @@ var deviceHeight = Dimensions.get('window').height;
 export default class profileView extends Component {
   constructor(props) {
     super(props);
+    this.state= ({
+      user: '',
+      name:'dung111'
+    });
+    console.disableYellowBox = true;
 
   }
   redirect(routeName,data){
     this.props.navigator.push({
       name: routeName,
       passProps: {
+        data: data
       }
     })
   }
@@ -39,6 +46,24 @@ export default class profileView extends Component {
       }
     })
   }
+  componentWillMount(){
+    this._getUser();
+    //console.log(this.props.data.id_user);
+  }
+
+  _getUser(){
+    AsyncStorage.getItem("user").then((value)=>{
+      if(value != null){
+        this.setState({
+          user:JSON.parse(value),
+        //  name: this.state.user.username
+        })
+        // console.log(this.state.user.username);
+        // console.log(this.state.user.id_user);
+      }
+    }).done();
+  }
+
 
   openDrawer(){
     this.refs['DRAWER_REF'].openDrawer();
@@ -82,7 +107,7 @@ export default class profileView extends Component {
       <TouchableOpacity onPress={this.redirect.bind(this,'accountManager')}>
         <View style={{flexDirection:'row'}}>
           <Text style={{margin: 10, fontSize: 15, textAlign: 'left'}}> Quản lý tài khoản </Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={this.redirect.bind(this,'accountManager')}>
             <Iconn name="ios-arrow-forward" size={30} color="#BDBDBD" style={{marginTop:5, marginLeft: 100}}/>
           </TouchableOpacity>
         </View>
@@ -113,18 +138,19 @@ export default class profileView extends Component {
       renderNavigationView={() => navigationView}>
       <View style={{flex:1}}>
         <View style={styles._cover}>
+        <Image style={{flex:1, flexDirection:'row'}} source={{uri: 'http://suta.esy.es/images/dung.jpg'}}>
           <View style={styles.toolbar}>
-            <TouchableOpacity style={styles.back} >
+            <TouchableOpacity onPress={this.onBack.bind(this)} style={styles.back} >
               <Iconn name="md-arrow-back" size={34} color="#F5F5F5"/>
             </TouchableOpacity>
           </View>
 
           <View style={{left:20,bottom:20,position:'absolute',justifyContent:'center',alignItems:'center'}}>
             <View style={{justifyContent:'center',alignItems:'center',width:70,height:70,borderWidth:0.2,borderColor:'#d1d1d1',borderRadius:200, backgroundColor:'white', alignItems:'center'}} >
-              <Image style={{width:70, height:70,borderRadius:200}}/>
+              <Image style={{width:70, height:70,borderRadius:200}} source={{uri: this.state.user.avatar}}/>
             </View>
-            <Text style={{alignItems:'center',fontSize:14,fontWeight: 'bold',color:'black'}}>
-              Dũngnt
+            <Text style={{alignItems:'center',fontSize:14,fontWeight: 'bold',color:'white'}}>
+              {this.state.user.username}
             </Text>
           </View>
 
@@ -134,12 +160,12 @@ export default class profileView extends Component {
               <Iconn name="md-menu" size={34} color="#F5F5F5"/>
             </TouchableOpacity>
           </View>
+          </Image>
         </View>
         <View style={styles._content}>
-          <ScrollableTabView
-    >
-              <TimeLineView tabLabel='Nhật Ký'/>
-              <ImageView tabLabel='Hình Ảnh'/>
+          <ScrollableTabView>
+              <TimeLineView tabLabel='Nhật Ký' id = {this.props.data.id_user} />
+              <ImageView tabLabel='Hình Ảnh' />
           </ScrollableTabView>
         </View>
       </View>

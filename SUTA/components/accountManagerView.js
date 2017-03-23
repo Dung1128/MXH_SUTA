@@ -4,7 +4,8 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  Dimensions
+  Dimensions,
+  AsyncStorage
 } from 'react-native';
 import Iconn from 'react-native-vector-icons/Ionicons';
 var deviceWidth = Dimensions.get('window').width;
@@ -31,6 +32,16 @@ export default class accountManagerView extends Component{
     })
   }
 
+  async _removeStorage (){
+   AsyncStorage.removeItem('user');
+ }
+
+ clearId(){
+   this._removeStorage();
+   this.redirect('login');
+   alert("Đăng xuất thành công!");
+ }
+
   render(){
     return(
       <View style={{flex:1}}>
@@ -43,7 +54,7 @@ export default class accountManagerView extends Component{
         </View>
 
         <View style={styles._content}>
-          <View style={{padding:10}}>
+          <View style={{padding:10, }}>
             <TouchableOpacity onPress={this.redirect.bind(this,'changepass')}>
               <View style={{ flexDirection:'row', paddingBottom:10}}>
                 <Text style={{paddingLeft:5, paddingTop:2,fontSize: 15, textAlign: 'left'}}> Đổi mật khẩu </Text>
@@ -68,11 +79,11 @@ export default class accountManagerView extends Component{
             </TouchableOpacity>
             <Hr lineColor='#BDBDBD'/>
 
-            <TouchableOpacity>
+            <TouchableOpacity onPress={()=>this.clearId()}>
               <View style={{paddingBottom:5}}>
                   <View style={{ flexDirection:'row', paddingTop:10}}>
                     <Text style={{paddingLeft:5, paddingTop:2,fontSize: 15, textAlign: 'left'}}> Đăng xuất </Text>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={()=>this.clearId()}>
                       <Iconn name="ios-arrow-forward" size={25} color="#BDBDBD" style={{marginLeft: 234}}/>
                     </TouchableOpacity>
                   </View>
@@ -98,6 +109,7 @@ const styles = StyleSheet.create({
     flexDirection:'row'
   },
   _content:{
-    flex:13
+    flex:13,
+    backgroundColor:'rgb(255, 255, 255)'
   }
 })
