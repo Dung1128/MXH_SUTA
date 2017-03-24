@@ -34,7 +34,7 @@ export default class profileView extends Component {
     this.props.navigator.push({
       name: routeName,
       passProps: {
-        data: data
+        data: this.props.data
       }
     })
   }
