@@ -9,10 +9,13 @@ import {
   RefreshControl,
   Modal,
   KeyboardAvoidingView,
-  TextInput
+  TextInput,
+  Dimensions
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import dateFormat from 'dateformat';
+var deviceWidth = Dimensions.get('window').width;
+var deviceHeight = Dimensions.get('window').height;
 var listnull = [];
 export default class Public extends Component{
   constructor(props){
@@ -77,7 +80,7 @@ export default class Public extends Component{
     this.setModalVisible();
     this.setState({
       data: data,
-      dataSource_cmt: this.state.dataSource_cmt.cloneWithRows(listnull),
+
     });
    this.getInfoUser(data);
    this.getComment(data)
@@ -124,7 +127,7 @@ export default class Public extends Component{
     {
       this.clearText('contentComment')
       let formdata = new FormData();
-      formdata.append("id_user", '1489243825');
+      formdata.append("id_user", this.props.user.id_user);
       formdata.append("content", this.state.contentComment);
       formdata.append("id_status", value.id_status);
       try {
@@ -181,8 +184,7 @@ export default class Public extends Component{
     }
   }
   _renderRow_cmt(data){
-    var time = dateFormat(data.time, "H:M dd/mm/yyyy ");
-    return (
+    return(
       <View style={{borderTopWidth:0.5,borderTopColor:'rgba(143, 143, 143, 0.2)'}}>
       <View style={{flex:1, flexDirection:'row'}}>
           <View style={{flexDirection:'row',padding:10}}>
@@ -197,7 +199,7 @@ export default class Public extends Component{
                {data.content}
               </Text>
               <Text style={styles.textgray}>
-                {time}
+                {data.time}
               </Text>
             </View>
           </View>
@@ -206,22 +208,56 @@ export default class Public extends Component{
     )
   }
   _renderRow(data){
-    var time = dateFormat(data.time, "H:M dd/mm/yyyy ");
     return(
+    <View style={{flex:1,
+      marginLeft:5,
+      marginRight: 5,
+      marginTop: 5,
+      borderTopWidth:0.5,
+      borderTopColor:'rgba(143, 143, 143, 0.2)',
+      backgroundColor:'#fff',
+      borderRadius: 5
+    }}>
+    <View style={{padding: 10}}>
 
-      <View style={{flex:1,paddingBottom:10,backgroundColor:'#e9ebee'}}>
-        <View style={{flex:1,padding:10,backgroundColor:'#fff'}}>
-        <View style={{flex:1,flexDirection:'row'}}>
-          <View style={styles.backgroundAvatar} >
-            <Image style={styles.avatar} source={{uri: data.avatar}}/>
-          </View>
-          <View style={{justifyContent:'center',marginLeft:10}}>
-            <Text style={styles.textbold}>
-              {data.username}
-
+    <View style={{flex:1,flexDirection:'row'}}>
+      <View style={styles.backgroundAvatar} >
+        <Image style={styles.avatar} source={{uri: data.avatar}}/>
+      </View>
+      <View style={{justifyContent:'center',marginLeft:10}}>
+        <Text style={styles.textbold}>
+          {data.username}
+        </Text>
+        <Text style={styles.textgray}>
+          {data.time}
+        </Text>
+      </View>
+    </View>
+      <Text style={{paddingTop:10,paddingBottom:10,fontSize:13,color:'#1d2129'}}>
+       {data.content}
+      </Text>
+      <View style={{flexDirection:'row',justifyContent: 'space-between',alignItems:'center'}}>
+        <View style={{flex:3,flexDirection:'row'}}>
+          <TouchableOpacity style={{flexDirection:'row'}}>
+            <Icon name='md-heart-outline' color="rgba(0, 0, 0, 0.2)" size={20} />
+            <Text style={[styles.textgray,{marginLeft:5}]}>
+               {
+                 data.likes!=null?
+                 data.likes + "Thích"
+                 :
+                 "Thích"
+               }
             </Text>
-            <Text style={styles.textgray}>
-              {time}
+          </TouchableOpacity>
+          <TouchableOpacity onPress={()=>this.onClickComment(data)} style={{flexDirection:'row',marginLeft:20}}>
+            <Icon name='md-text' color="rgba(0, 0, 0, 0.2)" size={20} />
+            <Text style={[styles.textgray,{marginLeft:5}]}>
+            {
+              data.comment!=null?
+              data.comment + "Bình Luận"
+              :
+              "Bình Luận"
+            }
             </Text>
           </View>
         </View>
@@ -253,8 +289,14 @@ export default class Public extends Component{
             </TouchableOpacity>
           </View>
         </View>
+        <View style={{flex:1}}>
+          <TouchableOpacity>
+            <Icon name="ios-more-outline" size={30} color="#BDBDBD" style={{marginLeft:deviceWidth/6}}/>
+          </TouchableOpacity>
+        </View>
       </View>
       </View>
+    </View>
     )
   }
   render(){
@@ -316,7 +358,7 @@ export default class Public extends Component{
                     {this.state.data.username}
                   </Text>
                   <Text style={styles.textgray}>
-                    {time}
+                    {this.state.data.time}
                   </Text>
                 </View>
               </View>
@@ -362,6 +404,7 @@ export default class Public extends Component{
 
           <View style={styles.bottomInput}>
             <TextInput
+            underlineColorAndroid='transparent'
             style={styles.input}
             placeholder="Viết bình luận"
             onChangeText={(val) => this.setState({contentComment: val, sendColor:'#8e44ad'})}
@@ -401,6 +444,7 @@ const styles = StyleSheet.create({
       height:40,
       flex:1,
       backgroundColor:'rgba(255,255,255,0.8)',
+      paddingLeft: 15
     },
     textuser:{
       fontSize:13,

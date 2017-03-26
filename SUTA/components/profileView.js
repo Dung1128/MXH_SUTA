@@ -7,7 +7,8 @@ import {
   ScrollView,
   TouchableOpacity,
   DrawerLayoutAndroid,
-  AsyncStorage
+  AsyncStorage,
+  Modal
 
 } from 'react-native';
 // import Style from 'Style.js';
@@ -17,7 +18,7 @@ import TimeLineView from './tab/timelineView.js';
 import ImageView from './tab/imageView.js';
 import { Tabs, Tab, Icon } from 'react-native-elements';
 var ScrollableTabView = require('react-native-scrollable-tab-view');
-import defaultTabBar from './tab/DefaultTabBar.js';
+import DefaultTabBar from './tab/DefaultTabBar.js';
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
 export default class profileView extends Component {
@@ -25,16 +26,17 @@ export default class profileView extends Component {
     super(props);
     this.state= ({
       user: '',
-      name:'dung111'
+      name:'dung111',
+      modalVisible: false,
+      user:JSON.parse(this.props.data),
     });
     console.disableYellowBox = true;
-
   }
   redirect(routeName,data){
     this.props.navigator.push({
       name: routeName,
       passProps: {
-        data: data
+        data: this.props.data
       }
     })
   }
@@ -47,22 +49,20 @@ export default class profileView extends Component {
     })
   }
   componentWillMount(){
-    this._getUser();
-    //console.log(this.props.data.id_user);
+
   }
 
-  _getUser(){
-    AsyncStorage.getItem("user").then((value)=>{
-      if(value != null){
-        this.setState({
-          user:JSON.parse(value),
-        //  name: this.state.user.username
-        })
-        // console.log(this.state.user.username);
-        // console.log(this.state.user.id_user);
-      }
-    }).done();
-  }
+  onProfile(data){
+     this.setModalVisible();
+   }
+
+  setModalVisible() {
+       if(this.state.modalVisible){
+         this.setState({modalVisible: false});
+       }else{
+         this.setState({modalVisible: true});
+       }
+     }
 
 
   openDrawer(){
@@ -75,10 +75,10 @@ export default class profileView extends Component {
       <View>
         <Text style={{marginTop: 15, margin:10, fontSize: 15, textAlign: 'left',fontWeight:'bold'}}> Thông tin chung </Text>
       </View>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => {this.onProfile(this.props.data) }}>
         <View style={{ flexDirection:'row'}}>
           <Text style={{margin: 10, fontSize: 15, textAlign: 'left'}}> Thông tin cá nhân </Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => {this.onProfile(this.props.data) }}>
             <Iconn name="ios-arrow-forward" size={30} color="#BDBDBD" style={{marginTop:5, marginLeft: 100}}/>
           </TouchableOpacity>
         </View>
@@ -163,12 +163,141 @@ export default class profileView extends Component {
           </Image>
         </View>
         <View style={styles._content}>
-          <ScrollableTabView>
-              <TimeLineView tabLabel='Nhật Ký' id = {this.props.data.id_user} />
+          <ScrollableTabView
+            initialPage={0}
+            renderTabBar={() => <DefaultTabBar/>}
+          >
+              <TimeLineView tabLabel='Nhật Ký' id = {this.state.user.id_user} />
               <ImageView tabLabel='Hình Ảnh' />
           </ScrollableTabView>
         </View>
       </View>
+
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={this.state.modalVisible}
+        onRequestClose={()=>{alert("Modal has been closed.")}}
+      >
+        <TouchableOpacity activeOpacity={1}
+              onPress={() => {
+                    this.setModalVisible()
+                  }}
+              style={{backgroundColor: 'rgba(0,0,0,.8)',flex:1,justifyContent:'center',alignItems:'center'}} >
+          <TouchableOpacity activeOpacity={1} style={{
+            width:300,
+
+            backgroundColor:'white',
+          }}>
+
+            <View>
+
+            <Image style={{width:deviceWidth, height:deviceHeight/4}}
+            source={{uri: 'http://suta.esy.es/images/dung.jpg'}}>
+
+            <View style={{left:15,
+              bottom:15,position:'absolute',justifyContent:'center',
+              alignItems:'center',
+              flexDirection:'row'}}>
+              <View style={{justifyContent:'center',
+              alignItems:'center',width:60,height:60,
+              borderWidth:0.2,
+              borderColor:'#d1d1d1',
+              borderRadius:200,
+              backgroundColor:'white',
+              alignItems:'center',
+              }} >
+                <Image style={{width:60, height:60,borderRadius:180}} source={{uri: this.state.user.avatar}}/>
+              </View>
+              <Text style={{alignItems:'center',fontSize:14,
+              fontWeight: 'bold',color:'white', paddingLeft: 10}}>
+                {this.state.user.username}
+              </Text>
+            </View>
+
+            </Image>
+            <View>
+              <View style={{ marginLeft: 15, marginRight:15, borderBottomWidth: 0.3, borderBottomColor:'#F5F5F5'}}>
+                <View style={{paddingTop: 15, paddingBottom: 15, flexDirection: 'row' }}>
+                  <View sytle={{flex: 1}}>
+                    <Text> Ngày sinh
+                    </Text>
+                  </View>
+                  <View sytle={{flex: 2}}>
+                    <Text style={{paddingLeft: 30}}> {this.state.user.dob}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+
+              <View style={{ marginLeft: 15, marginRight:15, borderBottomWidth: 0.3, borderBottomColor:'#F5F5F5'}}>
+                <View style={{paddingTop: 15, paddingBottom: 15, flexDirection: 'row'}}>
+                  <View sytle={{flex: 1}}>
+                    <Text> Quê quán
+                    </Text>
+                  </View>
+                  <View sytle={{flex: 2}}>
+                    <Text style={{paddingLeft: 30}}>{this.state.user.address}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+
+              <View style={{ marginLeft: 15, marginRight:15, borderBottomWidth: 0.3, borderBottomColor:'#F5F5F5'}}>
+                <View style={{paddingTop: 15, paddingBottom: 15, flexDirection: 'row'}}>
+                  <View sytle={{flex: 1}}>
+                    <Text> Điện thoại
+                    </Text>
+                  </View>
+                  <View sytle={{flex: 2}}>
+                    <Text style={{paddingLeft: 30}}> {this.state.user.phone}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+
+              <View style={{ marginLeft: 15, marginRight:15, borderBottomWidth: 0.3, borderBottomColor:'#F5F5F5'}}>
+                <View style={{paddingTop: 15, paddingBottom: 15, flexDirection: 'row'}}>
+                  <View sytle={{flex: 1}}>
+                    <Text> Email
+                    </Text>
+                  </View>
+                  <View sytle={{flex: 2}}>
+                    <Text style={{paddingLeft: 30}}> {this.state.user.email}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+
+              <View style={{flexDirection: 'row', paddingTop: 15}}>
+                <TouchableOpacity activeOpacity={1}
+                  onPress={() => {
+                        this.setModalVisible()
+                      }}>
+                  <Text style={{marginLeft: 15, marginBottom: 15, fontWeight: 'bold'}}> Đóng
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity>
+                  <Text style={{marginLeft: 15, marginBottom: 15, fontWeight: 'bold', color:'#8e44ad'}}> Đổi thông tin
+                  </Text>
+                </TouchableOpacity>
+
+              </View>
+
+            </View>
+
+
+
+
+            </View>
+
+          </TouchableOpacity>
+
+
+        </TouchableOpacity>
+      </Modal>
+
       </DrawerLayoutAndroid>
     )
   }

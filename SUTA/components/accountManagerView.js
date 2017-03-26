@@ -14,12 +14,16 @@ import Hr from 'react-native-hr';
 export default class accountManagerView extends Component{
   constructor(props){
     super(props);
+    this.state={
+      data: this.props.data
+    }
   }
 
   redirect(routeName,data){
     this.props.navigator.push({
       name: routeName,
       passProps: {
+        data: data
       }
     })
   }
@@ -43,6 +47,7 @@ export default class accountManagerView extends Component{
  }
 
   render(){
+    //console.log(this.state.data);
     return(
       <View style={{flex:1}}>
         <View style={styles._toolbar}>
@@ -55,10 +60,10 @@ export default class accountManagerView extends Component{
 
         <View style={styles._content}>
           <View style={{padding:10, }}>
-            <TouchableOpacity onPress={this.redirect.bind(this,'changepass')}>
+            <TouchableOpacity onPress={this.redirect.bind(this,'changepass',this.state.data)}>
               <View style={{ flexDirection:'row', paddingBottom:10}}>
                 <Text style={{paddingLeft:5, paddingTop:2,fontSize: 15, textAlign: 'left'}}> Đổi mật khẩu </Text>
-                <TouchableOpacity onPress={this.redirect.bind(this,'changepass')}>
+                <TouchableOpacity onPress={this.redirect.bind(this,'changepass', this.state.data)}>
                   <Iconn name="ios-arrow-forward" size={25} color="#BDBDBD" style={{marginLeft: 217}}/>
                 </TouchableOpacity>
               </View>
@@ -103,7 +108,7 @@ export default class accountManagerView extends Component{
 const styles = StyleSheet.create({
   _toolbar:{
     flex:1,
-    backgroundColor:'rgb(117, 54, 96)',
+    backgroundColor:'#8e44ad',
     paddingLeft:10,
     paddingTop: (deviceHeight/14)/4,
     flexDirection:'row'

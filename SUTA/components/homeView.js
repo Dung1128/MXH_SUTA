@@ -70,7 +70,7 @@ export default class Chat extends Component {
             renderIcon={() => <Icon containerStyle={{justifyContent: 'center', alignItems: 'center', marginTop: 12}} color={'#5e6977'} name='people' size={30} />}
             renderSelectedIcon={() => <Icon color={'#6296f9'} name='people' size={30} />}
             onPress={() => this.changeTab('banbe')}>
-            <Friends />
+            <Friends data = {this.state.data} />
           </Tab>
           <Tab
             titleStyle={{fontWeight: 'bold', fontSize: 10}}
@@ -79,7 +79,7 @@ export default class Chat extends Component {
             renderIcon={() => <Icon containerStyle={{justifyContent: 'center', alignItems: 'center', marginTop: 12}} color={'#5e6977'} name='chat' size={25} />}
             renderSelectedIcon={() => <Icon color={'#6296f9'} name='chat' size={30} />}
             onPress={() => this.changeTab('tinnhan')}>
-            <Message />
+            <Message data = {this.state.data} />
           </Tab>
           <Tab
             titleStyle={{fontWeight: 'bold', fontSize: 10}}
@@ -87,7 +87,7 @@ export default class Chat extends Component {
             selected={selectedTab === 'menu'}
             renderIcon={() => <Icon containerStyle={{justifyContent: 'center', alignItems: 'center', marginTop: 12}} color={'#5e6977'} name='menu' size={30} />}
             renderSelectedIcon={() => <Icon color={'#6296f9'} name='menu' size={30} />}
-            onPress={this.navigate.bind(this,'profile', this.state.data)}>
+            onPress={()=>this.navigate('profile', this.state.data)}>
 
           </Tab>
         </Tabs>
