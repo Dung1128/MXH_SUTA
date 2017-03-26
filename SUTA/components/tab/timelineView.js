@@ -29,35 +29,21 @@ export default class timeLineView extends Component{
       id: this.props.id,
       modalVisible: false
     }
-    // this._getUser();
     flag = true;
     console.disableYellowBox = true;
   }
 
   componentWillMount(){
-
+    console.log(this.props.id);
+    this.getData(this.props.id);
   }
 
   componentDidMount(){
-    //console.log(this.state.id);
-    this.getData(this.state.id);
+
   }
 
   componentWillUnmount() {
     flag = false;
-  }
-  _getUser(){
-    AsyncStorage.getItem("user").then((value)=>{
-      if(value != null){
-        this.setState({
-          user:JSON.parse(value),
-        //  name: this.state.user.username
-        })
-        // console.log(this.state.user.username);
-        //console.log(this.state.user.id_user);
-
-      }
-    }).done();
   }
 
   async getData(id){

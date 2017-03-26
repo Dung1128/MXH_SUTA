@@ -28,9 +28,9 @@ export default class profileView extends Component {
       user: '',
       name:'dung111',
       modalVisible: false,
+      user:JSON.parse(this.props.data),
     });
     console.disableYellowBox = true;
-
   }
   redirect(routeName,data){
     this.props.navigator.push({
@@ -49,26 +49,11 @@ export default class profileView extends Component {
     })
   }
   componentWillMount(){
-    this._getUser();
-    //console.log(this.props.data.id_user);
-  }
 
-  _getUser(){
-    AsyncStorage.getItem("user").then((value)=>{
-      if(value != null){
-        this.setState({
-          user:JSON.parse(value),
-        //  name: this.state.user.username
-        })
-        // console.log(this.state.user.username);
-        // console.log(this.state.user.id_user);
-      }
-    }).done();
   }
 
   onProfile(data){
      this.setModalVisible();
-     console.log(this.state.user.avatar);
    }
 
   setModalVisible() {
@@ -182,7 +167,7 @@ export default class profileView extends Component {
             initialPage={0}
             renderTabBar={() => <DefaultTabBar/>}
           >
-              <TimeLineView tabLabel='Nhật Ký' id = {this.props.data.id_user} />
+              <TimeLineView tabLabel='Nhật Ký' id = {this.state.user.id_user} />
               <ImageView tabLabel='Hình Ảnh' />
           </ScrollableTabView>
         </View>

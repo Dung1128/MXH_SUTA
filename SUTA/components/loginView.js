@@ -35,7 +35,7 @@ class loginView extends Component{
     this.props.navigator.push({
       name: routeName,
       passProps: {
-        data: this.state.result
+        data: data
       }
     })
   }
@@ -47,9 +47,18 @@ class loginView extends Component{
       }
     })
   }
+  componentWillMount(){
+    AsyncStorage.getItem("user").then((value)=>{
+      if(value !=null)
+      {
+        this.setState({user:value});
+        this.redirect('home',value);
+      }
 
+    }).done();
+  }
   async onLoginPressed(){
-    Keyboard.dismiss(); 
+    Keyboard.dismiss();
     let formdata = new FormData();
     formdata.append("username", this.state.username);
     formdata.append("password", this.state.password);
@@ -75,9 +84,8 @@ class loginView extends Component{
           //Handle success
           //On success we will store the access_token in the AsyncStorage
           AsyncStorage.setItem("user",JSON.stringify(jsonResponse['result']));
-          alert("Đăng nhập thành công");
           //console.log(this.state.id);
-          this.redirect('home');
+          this.redirect('home',jsonResponse['result']);
 
       }else {
           Alert.alert('Thông báo',this.state.message);
