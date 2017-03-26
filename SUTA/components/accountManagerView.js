@@ -108,7 +108,7 @@ export default class accountManagerView extends Component{
 const styles = StyleSheet.create({
   _toolbar:{
     flex:1,
-    backgroundColor:'rgb(117, 54, 96)',
+    backgroundColor:'#8e44ad',
     paddingLeft:10,
     paddingTop: (deviceHeight/14)/4,
     flexDirection:'row'

@@ -158,7 +158,7 @@ export default class accountManagerView extends Component{
 
           <View style={{justifyContent:'center', paddingTop:20, alignItems:'center'}}>
             <TouchableOpacity style={styles._button} onPress={()=>this.changePass()}>
-              <Text> CẬP NHẬT
+              <Text style={{color:'white'}}> CẬP NHẬT
               </Text>
             </TouchableOpacity>
           </View>
@@ -173,7 +173,7 @@ export default class accountManagerView extends Component{
 const styles = StyleSheet.create({
   _toolbar:{
     flex:1,
-    backgroundColor:'rgb(117, 54, 96)',
+    backgroundColor:'#8e44ad',
     paddingLeft:10,
     paddingTop: (deviceHeight/14)/4,
     flexDirection:'row'
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
     backgroundColor:'#ffffff'
   },
   _button:{
-    backgroundColor:'#80bcde',
+    backgroundColor:'#8e44ad',
     width:deviceWidth/2,
     height:40,
     alignItems:'center',
