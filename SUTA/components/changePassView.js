@@ -5,7 +5,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
-  TextInput
+  TextInput,
+  KeyboardAvoidingView
 } from 'react-native';
 import Iconn from 'react-native-vector-icons/Ionicons';
 var deviceWidth = Dimensions.get('window').width;
@@ -113,6 +114,7 @@ export default class accountManagerView extends Component{
     //console.log(this.state.data);
     return(
       <View style={{flex:1}}>
+
         <View style={styles._toolbar}>
           <TouchableOpacity onPress={this.onBack.bind(this)}>
             <Iconn name="md-arrow-back" size={34} color="#F5F5F5"/>
@@ -122,6 +124,7 @@ export default class accountManagerView extends Component{
         </View>
 
         <View style={styles._content}>
+        <KeyboardAvoidingView behavior="padding" style={{flex:1}}>
           <View style={styles._inputChange}>
             <TextInput
             secureTextEntry
@@ -159,7 +162,7 @@ export default class accountManagerView extends Component{
               </Text>
             </TouchableOpacity>
           </View>
-
+          </KeyboardAvoidingView>
         </View>
 
       </View>
@@ -177,7 +180,7 @@ const styles = StyleSheet.create({
   },
   _content:{
     flex:13,
-    backgroundColor:'#dde9dc'
+    backgroundColor:'#F5F5F5'
   },
   _inputChange:{
     backgroundColor:'#ffffff'

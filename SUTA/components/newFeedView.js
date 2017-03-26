@@ -27,7 +27,8 @@ export default class NewFeed extends Component{
       radio3: 'md-radio-button-off',
       check: 'md-radio-button-on',
       flagConfession:0,
-      checkadd: false
+      checkadd: false,
+      data: this.props.data
     });
 
   }
@@ -59,7 +60,7 @@ export default class NewFeed extends Component{
            result: jsonResponse['result']
 
         });
-      
+
 
       }
       catch(error)
@@ -172,8 +173,8 @@ export default class NewFeed extends Component{
       initialPage={0}
       renderTabBar={() => <DefaultTabBar />}
       >
-        <Anonymous tabLabel="ẨN DANH" data={this.state.checkadd} />
-        <Public tabLabel="CÔNG KHAI" data={this.state.checkadd}/>
+        <Anonymous tabLabel="ẨN DANH" data={this.state.checkadd} user ={this.state.data}/>
+        <Public tabLabel="CÔNG KHAI" data={this.state.checkadd} user ={this.state.data}/>
 
       </ScrollableTabView>
       </View>

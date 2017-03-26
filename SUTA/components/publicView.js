@@ -80,7 +80,7 @@ export default class Public extends Component{
     this.setModalVisible();
     this.setState({
       data: data,
-      
+
     });
    this.getInfoUser(data);
    this.getComment(data)
@@ -127,7 +127,7 @@ export default class Public extends Component{
     {
       this.clearText('contentComment')
       let formdata = new FormData();
-      formdata.append("id_user", '1489243825');
+      formdata.append("id_user", this.props.user.id_user);
       formdata.append("content", this.state.contentComment);
       formdata.append("id_status", value.id_status);
       try {
@@ -369,6 +369,7 @@ export default class Public extends Component{
 
           <View style={styles.bottomInput}>
             <TextInput
+            underlineColorAndroid='transparent'
             style={styles.input}
             placeholder="Viết bình luận"
             onChangeText={(val) => this.setState({contentComment: val, sendColor:'#8e44ad'})}
@@ -408,6 +409,7 @@ const styles = StyleSheet.create({
       height:40,
       flex:1,
       backgroundColor:'rgba(255,255,255,0.8)',
+      paddingLeft: 15
     },
     textuser:{
       fontSize:13,
