@@ -146,6 +146,7 @@ export default class Public extends Component{
            result: jsonResponse['result'],
            dataSource_cmt: this.state.dataSource_cmt.cloneWithRows(jsonResponse['result'])
         });
+        console.log(this.state.dataSource_cmt);
 
 
       }
@@ -259,53 +260,20 @@ export default class Public extends Component{
               "Bình Luận"
             }
             </Text>
-          </View>
-        </View>
-          <Text style={{paddingTop:10,paddingBottom:10,fontSize:13,color:'#1d2129'}}>
-           {data.content}
-          </Text>
-          <View style={{flexDirection:'row'}}>
-            <TouchableOpacity style={{flexDirection:'row'}}>
-              <Icon name='md-heart-outline' color="rgba(0, 0, 0, 0.2)" size={20} />
-              <Text style={[styles.textgray,{marginLeft:5}]}>
-                 {
-                   data.likes!=null?
-                   data.likes + "Thích"
-                   :
-                   "Thích"
-                 }
-              </Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={()=>this.onClickComment(data)} style={{flexDirection:'row',marginLeft:20}}>
-              <Icon name='md-text' color="rgba(0, 0, 0, 0.2)" size={20} />
-              <Text style={[styles.textgray,{marginLeft:5}]}>
-              {
-                data.comment!=null?
-                data.comment + "Bình Luận"
-                :
-                "Bình Luận"
-              }
-              </Text>
+          </View>
+          <View style={{flex:1}}>
+            <TouchableOpacity>
+              <Icon name="ios-more-outline" size={30} color="#BDBDBD" style={{marginLeft:deviceWidth/6}}/>
             </TouchableOpacity>
           </View>
         </View>
-        <View style={{flex:1}}>
-          <TouchableOpacity>
-            <Icon name="ios-more-outline" size={30} color="#BDBDBD" style={{marginLeft:deviceWidth/6}}/>
-          </TouchableOpacity>
+
         </View>
-      </View>
-      </View>
     </View>
     )
   }
   render(){
-    var time = ''
-    if(this.state.data!=null)
-    {
-      time = dateFormat(this.state.data.time, "H:M dd/mm/yyyy ");
-    }
-
 
     return(
       <View style={{flex:1,backgroundColor:'#F5F5F5'}}>
