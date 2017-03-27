@@ -16,7 +16,6 @@ import Public from './publicView.js';
 import DefaultTabBar from './tab/DefaultTabBar';
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
-var anonymousView = new Anonymous();
 export default class NewFeed extends Component{
   constructor(props){
     super(props);

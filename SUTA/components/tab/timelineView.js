@@ -34,7 +34,6 @@ export default class timeLineView extends Component{
   }
 
   componentWillMount(){
-    console.log(this.props.id);
     this.getData(this.props.id);
   }
 
