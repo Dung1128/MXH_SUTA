@@ -27,7 +27,7 @@ export default class Anonymous extends Component{
       refreshing: false,
       modalVisible: false,
       sendColor: '#90949c',
-      checkclose: false
+      user: JSON.parse(this.props.user),
     });
     flag = true;
   }
@@ -77,19 +77,12 @@ export default class Anonymous extends Component{
       console.error(error);
     }
   }
-  _onClose(){
-    this.setState({
-      checkclose:true
-    });
-    this.setModalVisible(!this.state.modalVisible)
-  }
   onClickComment(data)
   {
 
     this.setState({
-      checkclose:false,
       data: data,
-      dataSource_cmt: this.state.dataSource_cmt.cloneWithRows(listnull),
+      dataSource_cmt: this.state.dataSource_cmt.cloneWithRows(listnull)
     });
    this.getInfoUser(data);
    this.getComment(data);
@@ -137,7 +130,7 @@ export default class Anonymous extends Component{
     {
       this.clearText('contentComment')
       let formdata = new FormData();
-      formdata.append("id_user", this.props.user.id_user);
+      formdata.append("id_user", this.state.user.id_user);
       formdata.append("content", this.state.contentComment);
       formdata.append("id_status", value.id_status);
       try {
@@ -149,14 +142,16 @@ export default class Anonymous extends Component{
           body: formdata
         });
         let res = await response.text();
+        if(flag == true){
         var jsonResponse = JSON.parse(res);
         this.setState({
-          code: jsonResponse['code'],
-           message: jsonResponse['message'],
-           result: jsonResponse['result'],
-           dataSource_cmt: this.state.dataSource_cmt.cloneWithRows(jsonResponse['result'])
+          dataSource_cmt: jsonResponse['result']!=null?this.state.dataSource_cmt.cloneWithRows(jsonResponse['result']):this.state.dataSource_cmt.cloneWithRows(listnull)
         });
 
+        }
+        else {
+          return;
+        }
 
       }
       catch(error)
@@ -169,6 +164,7 @@ export default class Anonymous extends Component{
   async getComment(value){
     let formdata = new FormData();
     formdata.append('id_status',value.id_status);
+    console.log(value.id_status);
     try {
       let response = await fetch('http://suta.esy.es/api/getcmtstatus_id.php',{
         method: 'post',
@@ -182,7 +178,7 @@ export default class Anonymous extends Component{
       if(flag == true){
       var jsonResponse = JSON.parse(res);
       this.setState({
-        dataSource_cmt: this.state.dataSource_cmt.cloneWithRows(jsonResponse['result'])
+        dataSource_cmt: jsonResponse['result']!=null?this.state.dataSource_cmt.cloneWithRows(jsonResponse['result']):this.state.dataSource_cmt.cloneWithRows(listnull)
       });
 
       }
@@ -196,7 +192,6 @@ export default class Anonymous extends Component{
   _renderRow_cmt(data){
     return (
       <View style={{borderTopWidth:0.5,borderTopColor:'rgba(143, 143, 143, 0.2)'}}>
-      <View style={{flex:1, flexDirection:'row'}}>
           <View style={{flexDirection:'row',padding:10}}>
             <View style={styles.backgroundAvatar} >
               <Image style={styles.avatar} source={{uri: data.avatar}}/>
@@ -213,7 +208,6 @@ export default class Anonymous extends Component{
               </Text>
             </View>
           </View>
-      </View>
     </View>
     )
   }
@@ -311,7 +305,7 @@ export default class Anonymous extends Component{
         <View style={{flex:1,backgroundColor:'white'}} >
 
         <View style={styles.toolbar}>
-          <TouchableOpacity activeOpacity={1} onPress={()=>this._onClose()} style={{flex:1,alignItems:'center'}}>
+          <TouchableOpacity activeOpacity={1} onPress={()=>this.setModalVisible(!this.state.modalVisible)} style={{flex:1,alignItems:'center'}}>
             <Icon name="md-close" size={24} color="#F5F5F5" style={styles.ico}/>
           </TouchableOpacity>
           <View style={{flex:8,marginLeft:-20,alignItems:'center'}}>
@@ -379,10 +373,8 @@ export default class Anonymous extends Component{
           </View>
 
           <View style={styles.bottomInput}>
-
             <TextInput
             style={styles.input}
-            underlineColorAndroid='transparent'
             placeholder="Viết bình luận"
             onChangeText={(val) => this.setState({contentComment: val, sendColor:'#8e44ad'})}
             multiline={true}
@@ -393,7 +385,7 @@ export default class Anonymous extends Component{
             <TouchableOpacity onPress={()=>this._addComment(this.state.data)}>
               <Icon name="md-send" size={28} color={this.state.sendColor} style={{paddingLeft:10,paddingRight:10}}/>
             </TouchableOpacity>
-            </View>
+          </View>
 
         </View>
 
@@ -421,7 +413,6 @@ const styles = StyleSheet.create({
       height:40,
       flex:1,
       backgroundColor:'rgba(255,255,255,0.8)',
-      paddingLeft: 15
     },
     textuser:{
       fontSize:13,

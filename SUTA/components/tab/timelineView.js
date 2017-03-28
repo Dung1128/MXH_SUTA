@@ -34,7 +34,6 @@ export default class timeLineView extends Component{
   }
 
   componentWillMount(){
-    console.log(this.props.id);
     this.getData(this.props.id);
   }
 
@@ -197,7 +196,6 @@ export default class timeLineView extends Component{
   _renderRow_cmt(data){
     return (
       <View style={{borderTopWidth:0.5,borderTopColor:'rgba(143, 143, 143, 0.2)'}}>
-      <View style={{flex:1, flexDirection:'row'}}>
           <View style={{flexDirection:'row',padding:10}}>
             <View style={Style.backgroundAvatar} >
               <Image style={Style.avatar} source={{uri: data.avatar}}/>
@@ -214,7 +212,6 @@ export default class timeLineView extends Component{
               </Text>
             </View>
           </View>
-      </View>
     </View>
     )
   }

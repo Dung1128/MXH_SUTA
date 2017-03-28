@@ -26,6 +26,7 @@ export default class Public extends Component{
       refreshing: false,
       modalVisible: false,
       sendColor: '#90949c',
+      user: JSON.parse(this.props.user),
     });
     flag = true;
   }
@@ -80,7 +81,7 @@ export default class Public extends Component{
     this.setModalVisible();
     this.setState({
       data: data,
-
+      dataSource_cmt: this.state.dataSource_cmt.cloneWithRows(listnull)
     });
    this.getInfoUser(data);
    this.getComment(data)
@@ -127,7 +128,7 @@ export default class Public extends Component{
     {
       this.clearText('contentComment')
       let formdata = new FormData();
-      formdata.append("id_user", this.props.user.id_user);
+      formdata.append("id_user", this.state.user.id_user);
       formdata.append("content", this.state.contentComment);
       formdata.append("id_status", value.id_status);
       try {
@@ -139,14 +140,17 @@ export default class Public extends Component{
           body: formdata
         });
         let res = await response.text();
+        if(flag == true){
         var jsonResponse = JSON.parse(res);
         this.setState({
-          code: jsonResponse['code'],
-           message: jsonResponse['message'],
-           result: jsonResponse['result'],
-           dataSource_cmt: this.state.dataSource_cmt.cloneWithRows(jsonResponse['result'])
+          dataSource_cmt: jsonResponse['result']!=null?this.state.dataSource_cmt.cloneWithRows(jsonResponse['result']):this.state.dataSource_cmt.cloneWithRows(listnull)
         });
-        console.log(this.state.dataSource_cmt);
+
+        }
+        else {
+          return;
+        }
+
 
 
       }
@@ -187,24 +191,22 @@ export default class Public extends Component{
   _renderRow_cmt(data){
     return(
       <View style={{borderTopWidth:0.5,borderTopColor:'rgba(143, 143, 143, 0.2)'}}>
-      <View style={{flex:1, flexDirection:'row'}}>
-          <View style={{flexDirection:'row',padding:10}}>
-            <View style={styles.backgroundAvatar} >
-              <Image style={styles.avatar} source={{uri: data.avatar}}/>
-            </View>
-            <View style={{justifyContent:'center',marginLeft:10}}>
-              <Text style={styles.textbold}>
-                {data.username}
-              </Text>
-              <Text style={styles.textnormal}>
-               {data.content}
-              </Text>
-              <Text style={styles.textgray}>
-                {data.time}
-              </Text>
-            </View>
+        <View style={{flexDirection:'row',padding:10}}>
+          <View style={styles.backgroundAvatar} >
+            <Image style={styles.avatar} source={{uri: data.avatar}}/>
           </View>
-      </View>
+          <View style={{justifyContent:'center',marginLeft:10}}>
+            <Text style={styles.textbold}>
+              {data.username}
+            </Text>
+            <Text style={styles.textnormal}>
+             {data.content}
+            </Text>
+            <Text style={styles.textgray}>
+              {data.time}
+            </Text>
+          </View>
+        </View>
     </View>
     )
   }
