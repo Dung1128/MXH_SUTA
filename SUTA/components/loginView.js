@@ -20,7 +20,11 @@ import SplashScreen from './splashScreen.js';
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
 import Icon from 'react-native-vector-icons/Ionicons';
-
+import FBSDK, {LoginManager} from 'react-native-fbsdk'
+const {
+  LoginButton,
+  AccessToken
+} = FBSDK;
 class loginView extends Component{
   constructor(props){
     super(props);
@@ -57,7 +61,61 @@ class loginView extends Component{
 
     }).done();
   }
+  async _fbAuth(){
+    LoginManager.logInWithReadPermissions(['public_profile']).then(function(result) {
+      if(result.isCancelled){
+        console.log('Login was cancelled');
+      }else {
+        // console.log('Login was a success' + result.accessToken.toString());
+        AccessToken.getCurrentAccessToken().then(
+          (data) => {
+            // console.log(data.accessToken.toString());
+            fetch('https://graph.facebook.com/v2.8/me?fields=id,name,gender,birthday,email,link,locale,picture,cover&access_token=' + data.accessToken.toString())
+            .then((response) => response.json())
+            .then((json) => {
+              // Some user object has been set up somewhere, build that user here
+              // user.name = json.name
+              // user.id = json.id
+              // user.user_friends = json.friends
+              // user.email = json.email
+              // user.username = json.name
+              // user.loading = false
+              // user.loggedIn = true
+              console.log(json);
+              //user.avatar = setAvatar(json.id)
+            })
+            .catch(() => {
+              console.log('ERROR GETTING DATA FROM FACEBOOK');
+            })
+          }
+        )
+
+      }
+    },function(error) {
+      console.log('An error occured' + error);
+    })
+  }
+  async initUser(token) {
+  fetch('https://graph.facebook.com/v2.8/me?fields=id,name,gender,birthday,link,locale,picture,cover&access_token=' + token)
+  .then((response) => response.json())
+  .then((json) => {
+    // Some user object has been set up somewhere, build that user here
+    // user.name = json.name
+    // user.id = json.id
+    // user.user_friends = json.friends
+    // user.email = json.email
+    // user.username = json.name
+    // user.loading = false
+    // user.loggedIn = true
+    console.log(json);
+    //user.avatar = setAvatar(json.id)
+  })
+  .catch(() => {
+    console.log('ERROR GETTING DATA FROM FACEBOOK');
+  })
+}
   async onLoginPressed(){
+
     Keyboard.dismiss();
     let formdata = new FormData();
     formdata.append("username", this.state.username);
@@ -83,9 +141,10 @@ class loginView extends Component{
       if (response.status >= 200 && response.status < 300 && jsonResponse['code']==0) {
           //Handle success
           //On success we will store the access_token in the AsyncStorage
+          this.redirect('home',JSON.stringify(jsonResponse['result']));
           AsyncStorage.setItem("user",JSON.stringify(jsonResponse['result']));
-          //console.log(this.state.id);
-          this.redirect('home',jsonResponse['result']);
+          console.log(this.state.message);
+
 
       }else {
           Alert.alert('Thông báo',this.state.message);
@@ -167,7 +226,7 @@ class loginView extends Component{
             <Hr lineColor='#BDBDBD' text='OR' textColor='#F5F5F5'/>
           </View>
 
-          <TouchableOpacity>
+          <TouchableOpacity onPress={()=>this._fbAuth()}>
             <View style={{flexDirection:'row', justifyContent:'center'}}>
                 <Icon name="logo-facebook" size={22} color="#F5F5F5" style={{marginTop:-1}} />
                 <Text style={{color:'#F5F5F5', fontWeight:'bold', paddingLeft:5}} >
