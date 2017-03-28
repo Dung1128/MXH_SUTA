@@ -64,6 +64,11 @@ export default class profileView extends Component {
        }
      }
 
+   changeprofile(){
+     this.setModalVisible()
+     this.redirect('changeprofile');
+   }
+
 
   openDrawer(){
     this.refs['DRAWER_REF'].openDrawer();
@@ -278,7 +283,7 @@ export default class profileView extends Component {
                   </Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity>
+                <TouchableOpacity onPress={()=>this.changeprofile()}>
                   <Text style={{marginLeft: 15, marginBottom: 15, fontWeight: 'bold', color:'#8e44ad'}}> Đổi thông tin
                   </Text>
                 </TouchableOpacity>

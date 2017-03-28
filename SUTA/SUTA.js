@@ -14,6 +14,7 @@ import Register from './components/registerView.js';
 import Profile from './components/profileView.js';
 import AccountManagerView from './components/accountManagerView.js';
 import ChangePass from './components/changePassView.js';
+import ChangeProfile from './components/changeProfileView.js';
 
 class SUTA extends Component {
   renderScene(route, navigator){
@@ -34,6 +35,9 @@ class SUTA extends Component {
     }
     if(route.name == 'changepass'){
       return <ChangePass navigator = {navigator} {...route.passProps}/>
+    }
+    if(route.name == 'changeprofile'){
+      return <ChangeProfile navigator = {navigator} {...route.passProps}/>
     }
   }
 
