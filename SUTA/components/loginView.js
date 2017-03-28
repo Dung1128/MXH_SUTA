@@ -163,15 +163,6 @@ class loginView extends Component{
             </TouchableOpacity>
           </View>
 
-
-          <TouchableOpacity>
-            <View style={{justifyContent:'center', alignItems:'center', paddingTop: 20}}>
-                <Text style={{color:'#F5F5F5', paddingLeft:5}} >
-                  Quên mật khẩu
-                </Text>
-            </View>
-          </TouchableOpacity>
-
           <View style={{padding:15}}>
             <Hr lineColor='#BDBDBD' text='OR' textColor='#F5F5F5'/>
           </View>
@@ -191,6 +182,13 @@ class loginView extends Component{
 
         </KeyboardAvoidingView>
         <View style={{alignItems:'center'}}>
+        <TouchableOpacity>
+          <View style={{justifyContent:'center', alignItems:'center', paddingTop: 20}}>
+              <Text style={{color:'#F5F5F5', paddingLeft:5,paddingBottom:10}} >
+                Quên mật khẩu?
+              </Text>
+          </View>
+        </TouchableOpacity>
         <TouchableOpacity onPress={this.navigate.bind(this,'register')}>
           <View style={{flexDirection:'row',
             justifyContent:'center',
