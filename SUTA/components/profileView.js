@@ -145,7 +145,7 @@ export default class profileView extends Component {
       <View style={{flex:1}}>
         <View style={styles._cover}>
         <Image style={{flex:1, flexDirection:'row'}}
-        source={{uri: this.state.user.background != null?this.state.user.background:'http://suta.esy.es/images/dung.jpg'}}
+        source={{uri:'http://suta.esy.es/images/dung.jpg'}}
         >
           <View style={styles.toolbar}>
             <TouchableOpacity onPress={this.onBack.bind(this)} style={styles.back} >
@@ -154,7 +154,14 @@ export default class profileView extends Component {
           </View>
 
           <View style={{left:20,bottom:20,position:'absolute',justifyContent:'center',alignItems:'center'}}>
-            <View style={{justifyContent:'center',alignItems:'center',width:70,height:70,borderWidth:0.2,borderColor:'#d1d1d1',borderRadius:200, backgroundColor:'white', alignItems:'center'}} >
+            <View style={{justifyContent:'center',
+            alignItems:'center',
+            width:70,height:70,
+            borderWidth:0.2,
+            borderColor:'#d1d1d1',
+            borderRadius:200,
+            backgroundColor:'white',
+            alignItems:'center'}} >
               <Image style={{width:70, height:70,borderRadius:200}} source={{uri: this.state.user.avatar}}/>
             </View>
             <Text style={{alignItems:'center',fontSize:14,fontWeight: 'bold',color:'white'}}>
@@ -199,10 +206,10 @@ export default class profileView extends Component {
           }}>
 
             <View>
-
+            <View style={{width:deviceWidth, height:deviceHeight/4, backgroundColor:'rgb(117, 54, 96)'}}>
             <Image style={{width:deviceWidth, height:deviceHeight/4}}
 
-              source={{uri: this.state.user.background != null?this.state.user.background:'http://suta.esy.es/images/dung.jpg'}}
+              source={{uri:'http://suta.esy.es/images/dung.jpg'}}
 
             >
 
@@ -218,7 +225,8 @@ export default class profileView extends Component {
               backgroundColor:'white',
               alignItems:'center',
               }} >
-                <Image style={{width:60, height:60,borderRadius:180}} source={{uri: this.state.user.avatar}}/>
+                <Image style={{width:60, height:60,borderRadius:180}}
+                source={{uri: this.state.user.avatar}}/>
               </View>
               <Text style={{alignItems:'center',fontSize:14,
               fontWeight: 'bold',color:'white', paddingLeft: 10}}>
@@ -227,6 +235,7 @@ export default class profileView extends Component {
             </View>
 
             </Image>
+            </View>
             <View>
               <View style={{ marginLeft: 15, marginRight:15, borderBottomWidth: 0.3, borderBottomColor:'#F5F5F5'}}>
                 <View style={{paddingTop: 15, paddingBottom: 15, flexDirection: 'row' }}>

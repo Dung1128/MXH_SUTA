@@ -17,7 +17,7 @@ export default class changeProfileView extends Component{
   constructor(props){
     super(props);
     this.state={
-      user: JSON.parse(this.props.data),
+      user: this.props.data,
       phone: this.props.data.phone,
       email: this.props.data.email,
       address: this.props.data.address,
