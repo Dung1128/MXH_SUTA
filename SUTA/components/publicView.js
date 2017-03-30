@@ -12,6 +12,13 @@ import {
   TextInput,
   Dimensions
 } from 'react-native';
+import {
+  Menu,
+  MenuOptions,
+  MenuOption,
+  MenuTrigger,
+  MenuContext
+} from 'react-native-popup-menu';
 import Icon from 'react-native-vector-icons/Ionicons';
 import dateFormat from 'dateformat';
 var deviceWidth = Dimensions.get('window').width;
@@ -29,6 +36,8 @@ export default class Public extends Component{
       user: this.props.user,
     });
     flag = true;
+
+    check = 0;
   }
   componentWillUnmount() {
     flag = false;
@@ -117,6 +126,43 @@ export default class Public extends Component{
      console.log(error);
     }
   }
+
+   async onLike(data){
+    if(data.check == 1 ){
+      check = 0;
+    }
+    else{
+      check = 1;
+    }
+
+    let formdata = new FormData();
+    formdata.append('id_user',data.id_user);
+    formdata.append('id_status',data.id_status);
+    formdata.append('check', check)
+
+    try {
+      let response = await fetch('http://suta.esy.es/api/likestatus.php',{
+        method: 'post',
+        header: {
+          'Content-Type': 'multipart/formdata'
+        },
+        body: formdata
+      });
+
+      let res = await response.text();
+      if (flag == true){
+      var jsonResponse = JSON.parse(res);
+
+      }
+      else {
+        return;
+      }
+    } catch (error) {
+     console.log(error);
+    }
+
+}
+
   clearText(fieldName) {
     this.refs[fieldName].setNativeProps({text: ''});
     this.setState({
@@ -241,16 +287,22 @@ export default class Public extends Component{
       </Text>
       <View style={{flexDirection:'row',justifyContent: 'space-between',alignItems:'center'}}>
         <View style={{flex:3,flexDirection:'row'}}>
-          <TouchableOpacity style={{flexDirection:'row'}}>
+          <TouchableOpacity style={{flexDirection:'row'}} onPress={()=>this.onLike(data)}>
+          {
+            data.userlike == this.state.user.id_user ?
+            <Icon name='md-heart-outline' color="rgb(254, 6, 6)" size={20} />
+            :
             <Icon name='md-heart-outline' color="rgba(0, 0, 0, 0.2)" size={20} />
-            <Text style={[styles.textgray,{marginLeft:5}]}>
-               {
-                 data.likes!=null?
-                 data.likes + "Thích"
-                 :
-                 "Thích"
-               }
-            </Text>
+          }
+          <Text style={[styles.textgray,{marginLeft:5}]}>
+             {
+               data.likes!=null?
+               data.likes + "Thích"
+               :
+               "Thích"
+             }
+          </Text>
+
           </TouchableOpacity>
           <TouchableOpacity onPress={()=>this.onClickComment(data)} style={{flexDirection:'row',marginLeft:20}}>
             <Icon name='md-text' color="rgba(0, 0, 0, 0.2)" size={20} />
@@ -265,9 +317,7 @@ export default class Public extends Component{
             </TouchableOpacity>
           </View>
           <View style={{flex:1}}>
-            <TouchableOpacity>
-              <Icon name="ios-more-outline" size={30} color="#BDBDBD" style={{marginLeft:deviceWidth/6}}/>
-            </TouchableOpacity>
+            <YourComponent/>
           </View>
         </View>
 
@@ -397,6 +447,36 @@ export default class Public extends Component{
 
 
 }
+
+
+
+class YourComponent extends React.Component{
+  render(){
+    return(
+      <MenuContext>
+      <Menu>
+      <MenuTrigger>
+        <TouchableOpacity>
+          <Icon name="ios-more-outline" size={30} color="#BDBDBD" style={{marginLeft:deviceWidth/6}}/>
+        </TouchableOpacity>
+      </MenuTrigger>
+
+      <MenuOptions>
+        <MenuOption >
+        <Text>logout</Text>
+        </MenuOption>
+
+        <MenuOption>
+        <Text>logout</Text>
+        </MenuOption>
+
+      </MenuOptions>
+  </Menu>
+  </MenuContext>
+    )
+  }
+}
+
 const styles = StyleSheet.create({
     avatar:{
       width:40,
