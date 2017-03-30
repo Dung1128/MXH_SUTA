@@ -11,6 +11,7 @@ import Iconn from 'react-native-vector-icons/Ionicons';
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
 import Hr from 'react-native-hr';
+import FBSDK, {LoginManager} from 'react-native-fbsdk'
 export default class accountManagerView extends Component{
   constructor(props){
     super(props);
@@ -41,6 +42,7 @@ export default class accountManagerView extends Component{
  }
 
  clearId(){
+   LoginManager.logOut();
    this._removeStorage();
    this.redirect('login');
    alert("Đăng xuất thành công!");
