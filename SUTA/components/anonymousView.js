@@ -62,9 +62,9 @@ export default class Anonymous extends Component{
 
   async fetchData() {
     try {
+      if(flag == true){
       let response = await fetch('http://suta.esy.es/api/getstatus_anonymous.php');
       let responseJson = await response.json();
-      if(flag == true){
       this.setState({
         data: responseJson.result,
         dataSource: this.state.dataSource.cloneWithRows(responseJson.result)
