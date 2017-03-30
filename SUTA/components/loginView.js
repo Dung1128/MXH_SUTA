@@ -25,6 +25,7 @@ const {
   LoginButton,
   AccessToken
 } = FBSDK;
+var datafb = '';
 class loginView extends Component{
   constructor(props){
     super(props);
@@ -62,28 +63,17 @@ class loginView extends Component{
     }).done();
   }
   async _fbAuth(){
+     let that = this;
     LoginManager.logInWithReadPermissions(['public_profile']).then(function(result) {
       if(result.isCancelled){
         console.log('Login was cancelled');
       }else {
-        // console.log('Login was a success' + result.accessToken.toString());
         AccessToken.getCurrentAccessToken().then(
           (data) => {
             // console.log(data.accessToken.toString());
             fetch('https://graph.facebook.com/v2.8/me?fields=id,name,gender,birthday,email,link,locale,picture,cover&access_token=' + data.accessToken.toString())
             .then((response) => response.json())
-            .then((json) => {
-              // Some user object has been set up somewhere, build that user here
-              // user.name = json.name
-              // user.id = json.id
-              // user.user_friends = json.friends
-              // user.email = json.email
-              // user.username = json.name
-              // user.loading = false
-              // user.loggedIn = true
-              console.log(json);
-              //user.avatar = setAvatar(json.id)
-            })
+            .then((json) => that.loginFB(json))
             .catch(() => {
               console.log('ERROR GETTING DATA FROM FACEBOOK');
             })
@@ -95,25 +85,35 @@ class loginView extends Component{
       console.log('An error occured' + error);
     })
   }
-  async initUser(token) {
-  fetch('https://graph.facebook.com/v2.8/me?fields=id,name,gender,birthday,link,locale,picture,cover&access_token=' + token)
-  .then((response) => response.json())
-  .then((json) => {
-    // Some user object has been set up somewhere, build that user here
-    // user.name = json.name
-    // user.id = json.id
-    // user.user_friends = json.friends
-    // user.email = json.email
-    // user.username = json.name
-    // user.loading = false
-    // user.loggedIn = true
-    console.log(json);
-    //user.avatar = setAvatar(json.id)
-  })
-  .catch(() => {
-    console.log('ERROR GETTING DATA FROM FACEBOOK');
-  })
-}
+
+  async loginFB(json){
+    let formdata = new FormData();
+    formdata.append("id", json.id);
+    formdata.append("name", json.name);
+    formdata.append("email", json.email);
+    formdata.append("gender", json.gender);
+    formdata.append("dob", json.birthday);
+    formdata.append("avatar", json.picture.data.url);
+    formdata.append("background", json.cover.source);
+
+    try {
+      let response = await fetch('http://suta.esy.es/api/login_fb.php',{
+        method: 'post',
+        headers: {
+        'Content-Type': 'multipart/form-data',
+        },
+        body: formdata
+      });
+      let res = await response.text();
+      var jsonResponse = JSON.parse(res);
+      this.redirect('home',JSON.stringify(jsonResponse['result']));
+      AsyncStorage.setItem("user",JSON.stringify(jsonResponse['result']));
+    }
+    catch(error)
+    {
+    //  console.log(error);
+    }
+  }
   async onLoginPressed(){
 
     Keyboard.dismiss();
@@ -143,7 +143,6 @@ class loginView extends Component{
           //On success we will store the access_token in the AsyncStorage
           this.redirect('home',JSON.stringify(jsonResponse['result']));
           AsyncStorage.setItem("user",JSON.stringify(jsonResponse['result']));
-          console.log(this.state.message);
 
 
       }else {

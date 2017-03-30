@@ -20,7 +20,7 @@ export default class Chat extends Component {
     super(props);
     this.state = {
       selectedTab: 'feed',
-      data: this.props.data
+      data: JSON.parse(this.props.data),
     }
   }
 

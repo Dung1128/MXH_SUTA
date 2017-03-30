@@ -26,7 +26,7 @@ export default class Public extends Component{
       refreshing: false,
       modalVisible: false,
       sendColor: '#90949c',
-      user: JSON.parse(this.props.user),
+      user: this.props.user,
     });
     flag = true;
   }
