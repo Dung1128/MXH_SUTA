@@ -28,9 +28,10 @@ export default class profileView extends Component {
       user: '',
       name:'dung111',
       modalVisible: false,
-      user:JSON.parse(this.props.data),
+      user:this.props.data,
     });
     console.disableYellowBox = true;
+    console.log(this.props.data);
   }
   redirect(routeName,data){
     this.props.navigator.push({
@@ -143,7 +144,9 @@ export default class profileView extends Component {
       renderNavigationView={() => navigationView}>
       <View style={{flex:1}}>
         <View style={styles._cover}>
-        <Image style={{flex:1, flexDirection:'row'}} source={{uri: 'http://suta.esy.es/images/dung.jpg'}}>
+        <Image style={{flex:1, flexDirection:'row'}}
+        source={{uri: this.state.user.background != null?this.state.user.background:'http://suta.esy.es/images/dung.jpg'}}
+        >
           <View style={styles.toolbar}>
             <TouchableOpacity onPress={this.onBack.bind(this)} style={styles.back} >
               <Iconn name="md-arrow-back" size={34} color="#F5F5F5"/>
@@ -198,7 +201,10 @@ export default class profileView extends Component {
             <View>
 
             <Image style={{width:deviceWidth, height:deviceHeight/4}}
-            source={{uri: 'http://suta.esy.es/images/dung.jpg'}}>
+
+              source={{uri: this.state.user.background != null?this.state.user.background:'http://suta.esy.es/images/dung.jpg'}}
+
+            >
 
             <View style={{left:15,
               bottom:15,position:'absolute',justifyContent:'center',
