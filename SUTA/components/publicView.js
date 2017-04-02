@@ -69,21 +69,34 @@ export default class Public extends Component{
   }
 
   async fetchData() {
+    let formdata = new FormData();
+    formdata.append('id_user',this.state.user.id_user);
+
     try {
-      let response = await fetch('http://suta.esy.es/api/getstatus_public.php');
-      let responseJson = await response.json();
-      if(flag == true){
+      let response = await fetch('http://suta.esy.es/api/getstatus_public.php',{
+        method: 'post',
+        header: {
+          'Content-Type': 'multipart/formdata'
+        },
+        body: formdata
+      });
+
+      let res = await response.text();
+      if (flag == true){
+      var responseJson = JSON.parse(res);
       this.setState({
         data: responseJson.result,
         dataSource: this.state.dataSource.cloneWithRows(responseJson.result)
       });
+
       }
       else {
         return;
       }
-    } catch(error) {
-      console.error(error);
+    } catch (error) {
+     console.log(error);
     }
+
   }
   onClickComment(data)
   {
@@ -127,21 +140,14 @@ export default class Public extends Component{
     }
   }
 
-   async onLike(data){
-    if(data.check == 1 ){
-      check = 0;
-    }
-    else{
-      check = 1;
-    }
+  async onLike(data){
 
     let formdata = new FormData();
-    formdata.append('id_user',data.id_user);
+    formdata.append('id_user',this.state.user.id_user);
     formdata.append('id_status',data.id_status);
-    formdata.append('check', check)
 
     try {
-      let response = await fetch('http://suta.esy.es/api/likestatus.php',{
+      let response = await fetch('http://suta.esy.es/api/checklike.php',{
         method: 'post',
         header: {
           'Content-Type': 'multipart/formdata'
@@ -152,7 +158,7 @@ export default class Public extends Component{
       let res = await response.text();
       if (flag == true){
       var jsonResponse = JSON.parse(res);
-
+        this.fetchData();
       }
       else {
         return;
@@ -161,7 +167,7 @@ export default class Public extends Component{
      console.log(error);
     }
 
-}
+  }
 
   clearText(fieldName) {
     this.refs[fieldName].setNativeProps({text: ''});
@@ -289,15 +295,15 @@ export default class Public extends Component{
         <View style={{flex:3,flexDirection:'row'}}>
           <TouchableOpacity style={{flexDirection:'row'}} onPress={()=>this.onLike(data)}>
           {
-            data.userlike == this.state.user.id_user ?
-            <Icon name='md-heart-outline' color="rgb(254, 6, 6)" size={20} />
+            data.checklike!='0'?
+            <Icon name='md-heart' color="rgb(254, 6, 6)" size={20} />
             :
             <Icon name='md-heart-outline' color="rgba(0, 0, 0, 0.2)" size={20} />
           }
           <Text style={[styles.textgray,{marginLeft:5}]}>
              {
-               data.likes!=null?
-               data.likes + "Thích"
+               data.like!='0'?
+               data.like + " Thích"
                :
                "Thích"
              }
@@ -386,17 +392,23 @@ export default class Public extends Component{
                  {this.state.data.content}
                 </Text>
                 <View style={{flexDirection:'row',padding:10}}>
-                  <TouchableOpacity style={{flexDirection:'row'}}>
-                    <Icon name='md-heart-outline' color="rgba(0, 0, 0, 0.2)" size={20} />
-                    <Text style={[styles.textgray,{marginLeft:5}]}>
-                       {
-                         this.state.data.likes!=null?
-                         this.state.data.likes + "Thích"
-                         :
-                         "Thích"
-                       }
-                    </Text>
-                  </TouchableOpacity>
+                <TouchableOpacity style={{flexDirection:'row'}} onPress={()=>this.onLike(this.state.data)}>
+                {
+                  this.state.data.checklike!='0'?
+                  <Icon name='md-heart' color="rgb(254, 6, 6)" size={20} />
+                  :
+                  <Icon name='md-heart-outline' color="rgba(0, 0, 0, 0.2)" size={20} />
+                }
+                <Text style={[styles.textgray,{marginLeft:5}]}>
+                   {
+                     this.state.data.like!='0'?
+                     this.state.data.like + " Thích"
+                     :
+                     "Thích"
+                   }
+                </Text>
+
+                </TouchableOpacity>
                   <TouchableOpacity style={{flexDirection:'row',marginLeft:20}}>
                     <Icon name='md-text' color="rgba(0, 0, 0, 0.2)" size={20} />
                     <Text style={[styles.textgray,{marginLeft:5}]}>

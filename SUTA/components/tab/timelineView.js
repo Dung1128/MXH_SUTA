@@ -34,7 +34,7 @@ export default class timeLineView extends Component{
   }
 
   componentWillMount(){
-    this.getData(this.props.id);
+    this.fetchData();
   }
 
   componentDidMount(){
@@ -45,9 +45,9 @@ export default class timeLineView extends Component{
     flag = false;
   }
 
-  async getData(id){
+  async fetchData(){
     let formdata = new FormData();
-    formdata.append('id_user',id);
+    formdata.append('id_user',this.state.id);
     try {
       let response = await fetch('http://suta.esy.es/api/getstatus_id.php',{
         method: 'post',
@@ -70,6 +70,34 @@ export default class timeLineView extends Component{
     } catch (error) {
       console.log(error);
     }
+  }
+  async onLike(data){
+
+    let formdata = new FormData();
+    formdata.append('id_user',this.state.user.id_user);
+    formdata.append('id_status',data.id_status);
+
+    try {
+      let response = await fetch('http://suta.esy.es/api/checklike.php',{
+        method: 'post',
+        header: {
+          'Content-Type': 'multipart/formdata'
+        },
+        body: formdata
+      });
+
+      let res = await response.text();
+      if (flag == true){
+      var jsonResponse = JSON.parse(res);
+        this.fetchData();
+      }
+      else {
+        return;
+      }
+    } catch (error) {
+     console.log(error);
+    }
+
   }
   setModalVisible() {
     if(this.state.modalVisible){
@@ -138,7 +166,7 @@ export default class timeLineView extends Component{
     {
       this.clearText('contentComment')
       let formdata = new FormData();
-      formdata.append("id_user", '1489243825');
+      formdata.append("id_user", this.state.id);
       formdata.append("content", this.state.contentComment);
       formdata.append("id_status", value.id_status);
       try {
@@ -246,17 +274,23 @@ export default class timeLineView extends Component{
         </Text>
         <View style={{flexDirection:'row',justifyContent: 'space-between',alignItems:'center'}}>
           <View style={{flex:3,flexDirection:'row'}}>
-            <TouchableOpacity style={{flexDirection:'row'}}>
-              <Icon name='md-heart-outline' color="rgba(0, 0, 0, 0.2)" size={20} />
-              <Text style={[Style.textgray,{marginLeft:5}]}>
-                 {
-                   data.likes!=null?
-                   data.likes + "Thích"
-                   :
-                   "Thích"
-                 }
-              </Text>
-            </TouchableOpacity>
+          <TouchableOpacity style={{flexDirection:'row'}} onPress={()=>this.onLike(data)}>
+          {
+            data.checklike!='0'?
+            <Icon name='md-heart' color="rgb(254, 6, 6)" size={20} />
+            :
+            <Icon name='md-heart-outline' color="rgba(0, 0, 0, 0.2)" size={20} />
+          }
+          <Text style={[Style.textgray,{marginLeft:5}]}>
+             {
+               data.like!='0'?
+               data.like + " Thích"
+               :
+               "Thích"
+             }
+          </Text>
+
+          </TouchableOpacity>
             <TouchableOpacity onPress={()=>this.onClickComment(data)} style={{flexDirection:'row',marginLeft:20}}>
               <Icon name='md-text' color="rgba(0, 0, 0, 0.2)" size={20} />
               <Text style={[Style.textgray,{marginLeft:5}]}>
@@ -331,17 +365,23 @@ export default class timeLineView extends Component{
                  {this.state.data.content}
                 </Text>
                 <View style={{flexDirection:'row',padding:10}}>
-                  <TouchableOpacity style={{flexDirection:'row'}}>
-                    <Icon name='md-heart-outline' color="rgba(0, 0, 0, 0.2)" size={20} />
-                    <Text style={[Style.textgray,{marginLeft:5}]}>
-                       {
-                         this.state.data.likes!=null?
-                         this.state.data.likes + "Thích"
-                         :
-                         "Thích"
-                       }
-                    </Text>
-                  </TouchableOpacity>
+                <TouchableOpacity style={{flexDirection:'row'}} onPress={()=>this.onLike(this.state.data)}>
+                {
+                  this.state.data.checklike!='0'?
+                  <Icon name='md-heart' color="rgb(254, 6, 6)" size={20} />
+                  :
+                  <Icon name='md-heart-outline' color="rgba(0, 0, 0, 0.2)" size={20} />
+                }
+                <Text style={[Style.textgray,{marginLeft:5}]}>
+                   {
+                     this.state.data.like!='0'?
+                     this.state.data.like + " Thích"
+                     :
+                     "Thích"
+                   }
+                </Text>
+
+                </TouchableOpacity>
                   <TouchableOpacity style={{flexDirection:'row',marginLeft:20}}>
                     <Icon name='md-text' color="rgba(0, 0, 0, 0.2)" size={20} />
                     <Text style={[Style.textgray,{marginLeft:5}]}>

@@ -31,7 +31,6 @@ export default class profileView extends Component {
       user:this.props.data,
     });
     console.disableYellowBox = true;
-    console.log(this.props.data);
   }
   redirect(routeName,data){
     this.props.navigator.push({
@@ -145,7 +144,7 @@ export default class profileView extends Component {
       <View style={{flex:1}}>
         <View style={styles._cover}>
         <Image style={{flex:1, flexDirection:'row'}}
-        source={{uri:'http://suta.esy.es/images/dung.jpg'}}
+        source={{uri: this.state.user.background != ''?this.state.user.background:'http://suta.esy.es/images/dung.jpg'}}
         >
           <View style={styles.toolbar}>
             <TouchableOpacity onPress={this.onBack.bind(this)} style={styles.back} >
@@ -208,9 +207,7 @@ export default class profileView extends Component {
             <View>
             <View style={{width:deviceWidth, height:deviceHeight/4, backgroundColor:'rgb(117, 54, 96)'}}>
             <Image style={{width:deviceWidth, height:deviceHeight/4}}
-
-              source={{uri:'http://suta.esy.es/images/dung.jpg'}}
-
+              source={{uri: this.state.user.background != ''?this.state.user.background:'http://suta.esy.es/images/dung.jpg'}}
             >
 
             <View style={{left:15,
