@@ -10,15 +10,21 @@ import {
   Modal,
   KeyboardAvoidingView,
   TextInput,
-  Dimensions,
-  ScrollView
+  Dimensions
 } from 'react-native';
+import {
+  Menu,
+  MenuOptions,
+  MenuOption,
+  MenuTrigger,
+  MenuContext
+} from 'react-native-popup-menu';
 import Icon from 'react-native-vector-icons/Ionicons';
 import dateFormat from 'dateformat';
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
 var listnull = [];
-export default class Anonymous extends Component{
+export default class Public extends Component{
   constructor(props){
     super(props);
     this.state = ({
@@ -30,6 +36,8 @@ export default class Anonymous extends Component{
       user: this.props.user,
     });
     flag = true;
+
+    check = 0;
   }
   componentWillUnmount() {
     flag = false;
@@ -61,32 +69,44 @@ export default class Anonymous extends Component{
   }
 
   async fetchData() {
+    let formdata = new FormData();
+    formdata.append('id_user',this.state.user.id_user);
+
     try {
-      if(flag == true){
-      let response = await fetch('http://suta.esy.es/api/getstatus_anonymous.php');
-      let responseJson = await response.json();
+      let response = await fetch('http://suta.esy.es/api/getstatus_anonymous.php',{
+        method: 'post',
+        header: {
+          'Content-Type': 'multipart/formdata'
+        },
+        body: formdata
+      });
+
+      let res = await response.text();
+      if (flag == true){
+      var responseJson = JSON.parse(res);
       this.setState({
         data: responseJson.result,
         dataSource: this.state.dataSource.cloneWithRows(responseJson.result)
       });
+
       }
       else {
         return;
       }
-    } catch(error) {
-      console.error(error);
+    } catch (error) {
+     console.log(error);
     }
+
   }
   onClickComment(data)
   {
-
+    this.setModalVisible();
     this.setState({
       data: data,
       dataSource_cmt: this.state.dataSource_cmt.cloneWithRows(listnull)
     });
-   this.getInfoUser(data);
-   this.getComment(data);
-   this.setModalVisible();
+  //  this.getInfoUser(data);
+   this.getComment(data)
   }
   async getInfoUser(data){
     let formdata = new FormData();
@@ -105,11 +125,7 @@ export default class Anonymous extends Component{
       let res = await response.text();
       if (flag == true){
       var jsonResponse = JSON.parse(res);
-      this.setState({
-        // fr_code: jsonResponse['code'],
-        // fr_message: jsonResponse['message'],
-        fr_result: jsonResponse['result'],
-      });
+      console.log(jsonResponse);
 
       }
       else {
@@ -118,6 +134,45 @@ export default class Anonymous extends Component{
     } catch (error) {
      console.log(error);
     }
+  }
+
+  async onLike(data){
+
+    let formdata = new FormData();
+    formdata.append('id_user',this.state.user.id_user);
+    formdata.append('id_status',data.id_status);
+
+    try {
+      let response = await fetch('http://suta.esy.es/api/checklike.php',{
+        method: 'post',
+        header: {
+          'Content-Type': 'multipart/formdata'
+        },
+        body: formdata
+      });
+
+      let res = await response.text();
+      if (flag == true){
+      var jsonResponse = JSON.parse(res);
+        if(this.state.modalVisible)
+        {
+          this.getInfoUser(data);
+        }else {
+          this.fetchData();
+        }
+
+      }
+      else {
+        return;
+      }
+    } catch (error) {
+     console.log(error);
+    }
+
+  }
+  onClose(){
+    this.fetchData();
+    this.setModalVisible(!this.state.modalVisible);
   }
   clearText(fieldName) {
     this.refs[fieldName].setNativeProps({text: ''});
@@ -153,6 +208,8 @@ export default class Anonymous extends Component{
           return;
         }
 
+
+
       }
       catch(error)
       {
@@ -164,7 +221,6 @@ export default class Anonymous extends Component{
   async getComment(value){
     let formdata = new FormData();
     formdata.append('id_status',value.id_status);
-    console.log(value.id_status);
     try {
       let response = await fetch('http://suta.esy.es/api/getcmtstatus_id.php',{
         method: 'post',
@@ -178,7 +234,7 @@ export default class Anonymous extends Component{
       if(flag == true){
       var jsonResponse = JSON.parse(res);
       this.setState({
-        dataSource_cmt: jsonResponse['result']!=null?this.state.dataSource_cmt.cloneWithRows(jsonResponse['result']):this.state.dataSource_cmt.cloneWithRows(listnull)
+        dataSource_cmt: this.state.dataSource_cmt.cloneWithRows(jsonResponse['result'])
       });
 
       }
@@ -190,89 +246,94 @@ export default class Anonymous extends Component{
     }
   }
   _renderRow_cmt(data){
-    return (
+    return(
       <View style={{borderTopWidth:0.5,borderTopColor:'rgba(143, 143, 143, 0.2)'}}>
-          <View style={{flexDirection:'row',padding:10}}>
-            <View style={styles.backgroundAvatar} >
-              <Image style={styles.avatar} source={{uri: data.avatar}}/>
-            </View>
-            <View style={{justifyContent:'center',marginLeft:10}}>
-              <Text style={styles.textbold}>
-                {data.username}
-              </Text>
-              <Text style={styles.textnormal}>
-               {data.content}
-              </Text>
-              <Text style={styles.textgray}>
-                {data.time}
-              </Text>
-            </View>
+        <View style={{flexDirection:'row',padding:10}}>
+          <View style={styles.backgroundAvatar} >
+            <Image style={styles.avatar} source={{uri: data.avatar}}/>
           </View>
+          <View style={{justifyContent:'center',marginLeft:10}}>
+            <Text style={styles.textbold}>
+              {data.username}
+            </Text>
+            <Text style={styles.textnormal}>
+             {data.content}
+            </Text>
+            <Text style={styles.textgray}>
+              {data.time}
+            </Text>
+          </View>
+        </View>
     </View>
     )
   }
   _renderRow(data){
     return(
-      <View style={{flex:1,
-        marginLeft:5,
-        marginRight: 5,
-        marginTop: 5,
-        borderTopWidth:0.5,
-        borderTopColor:'rgba(143, 143, 143, 0.2)',
-        backgroundColor:'#fff',
-        borderRadius: 5
-      }}>
-      <View style={{padding: 10}}>
+    <View style={{flex:1,
+      marginLeft:5,
+      marginRight: 5,
+      marginTop: 5,
+      borderTopWidth:0.5,
+      borderTopColor:'rgba(143, 143, 143, 0.2)',
+      backgroundColor:'#fff',
+      borderRadius: 5
+    }}>
+    <View style={{padding: 10}}>
 
-      <View style={{flex:1,flexDirection:'row'}}>
-        <View style={styles.backgroundAvatar} >
-          <Image style={styles.avatar} source={require('../images/avatar_anonymous.png')}/>
-        </View>
-        <View style={{justifyContent:'center',marginLeft:10}}>
-          <Text style={styles.textbold}>
-            Anonymous
-          </Text>
-          <Text style={styles.textgray}>
-            {data.time}
-          </Text>
-        </View>
+    <View style={{flex:1,flexDirection:'row'}}>
+      <View style={styles.backgroundAvatar} >
+        <Image style={styles.avatar} source={require('../images/logo2.png')}/>
       </View>
-        <Text style={{paddingTop:10,paddingBottom:10,fontSize:13,color:'#1d2129'}}>
-         {data.content}
+      <View style={{justifyContent:'center',marginLeft:10}}>
+        <Text style={styles.textbold}>
+          Anonymous
         </Text>
-        <View style={{flexDirection:'row',justifyContent: 'space-between',alignItems:'center'}}>
-          <View style={{flex:3,flexDirection:'row'}}>
-            <TouchableOpacity style={{flexDirection:'row'}}>
-              <Icon name='md-heart-outline' color="rgba(0, 0, 0, 0.2)" size={20} />
-              <Text style={[styles.textgray,{marginLeft:5}]}>
-                 {
-                   data.likes!=null?
-                   data.likes + "Thích"
-                   :
-                   "Thích"
-                 }
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={()=>this.onClickComment(data)} style={{flexDirection:'row',marginLeft:20}}>
-              <Icon name='md-text' color="rgba(0, 0, 0, 0.2)" size={20} />
-              <Text style={[styles.textgray,{marginLeft:5}]}>
-              {
-                data.comment!=null?
-                data.comment + "Bình Luận"
-                :
-                "Bình Luận"
-              }
-              </Text>
+        <Text style={styles.textgray}>
+          {data.time}
+        </Text>
+      </View>
+    </View>
+      <Text style={{paddingTop:10,paddingBottom:10,fontSize:13,color:'#1d2129'}}>
+       {data.content}
+      </Text>
+      <View style={{flexDirection:'row',justifyContent: 'space-between',alignItems:'center'}}>
+        <View style={{flex:3,flexDirection:'row'}}>
+          <TouchableOpacity style={{flexDirection:'row'}} onPress={()=>this.onLike(data)}>
+          {
+            data.checklike!='0'?
+            <Icon name='md-heart' color="rgb(254, 6, 6)" size={20} />
+            :
+            <Icon name='md-heart-outline' color="rgba(0, 0, 0, 0.2)" size={20} />
+          }
+          <Text style={[styles.textgray,{marginLeft:5}]}>
+             {
+               data.like!='0'?
+               data.like + " Thích"
+               :
+               "Thích"
+             }
+          </Text>
+
+          </TouchableOpacity>
+          <TouchableOpacity onPress={()=>this.onClickComment(data)} style={{flexDirection:'row',marginLeft:20}}>
+            <Icon name='md-text' color="rgba(0, 0, 0, 0.2)" size={20} />
+            <Text style={[styles.textgray,{marginLeft:5}]}>
+            {
+              data.comment!=null?
+              data.comment + "Bình Luận"
+              :
+              "Bình Luận"
+            }
+            </Text>
             </TouchableOpacity>
           </View>
           <View style={{flex:1}}>
-            <TouchableOpacity>
-              <Icon name="ios-more-outline" size={30} color="#BDBDBD" style={{marginLeft:deviceWidth/6}}/>
-            </TouchableOpacity>
+            <YourComponent/>
           </View>
         </View>
+
         </View>
-      </View>
+    </View>
     )
   }
   render(){
@@ -305,7 +366,7 @@ export default class Anonymous extends Component{
         <View style={{flex:1,backgroundColor:'white'}} >
 
         <View style={styles.toolbar}>
-          <TouchableOpacity activeOpacity={1} onPress={()=>this.setModalVisible(!this.state.modalVisible)} style={{flex:1,alignItems:'center'}}>
+          <TouchableOpacity activeOpacity={1} onPress={()=>this.onClose()} style={{flex:1,alignItems:'center'}}>
             <Icon name="md-close" size={24} color="#F5F5F5" style={styles.ico}/>
           </TouchableOpacity>
           <View style={{flex:8,marginLeft:-20,alignItems:'center'}}>
@@ -321,7 +382,7 @@ export default class Anonymous extends Component{
               <View style={{ flex:1}}>
               <View style={{flexDirection:'row',padding:10}}>
                 <View style={styles.backgroundAvatar} >
-                  <Image style={styles.avatar} source={require('../images/avatar_anonymous.png')}/>
+                  <Image style={styles.avatar} source={require('../images/logo2.png')}/>
                 </View>
                 <View style={{justifyContent:'center',marginLeft:10}}>
                   <Text style={styles.textbold}>
@@ -336,17 +397,23 @@ export default class Anonymous extends Component{
                  {this.state.data.content}
                 </Text>
                 <View style={{flexDirection:'row',padding:10}}>
-                  <TouchableOpacity style={{flexDirection:'row'}}>
-                    <Icon name='md-heart-outline' color="rgba(0, 0, 0, 0.2)" size={20} />
-                    <Text style={[styles.textgray,{marginLeft:5}]}>
-                       {
-                         this.state.data.likes!=null?
-                         this.state.data.likes + "Thích"
-                         :
-                         "Thích"
-                       }
-                    </Text>
-                  </TouchableOpacity>
+                <TouchableOpacity style={{flexDirection:'row'}} onPress={()=>this.onLike(this.state.data)}>
+                {
+                  this.state.data.checklike!='0'?
+                  <Icon name='md-heart' color="rgb(254, 6, 6)" size={20} />
+                  :
+                  <Icon name='md-heart-outline' color="rgba(0, 0, 0, 0.2)" size={20} />
+                }
+                <Text style={[styles.textgray,{marginLeft:5}]}>
+                   {
+                     this.state.data.like!='0'?
+                     this.state.data.like + " Thích"
+                     :
+                     "Thích"
+                   }
+                </Text>
+
+                </TouchableOpacity>
                   <TouchableOpacity style={{flexDirection:'row',marginLeft:20}}>
                     <Icon name='md-text' color="rgba(0, 0, 0, 0.2)" size={20} />
                     <Text style={[styles.textgray,{marginLeft:5}]}>
@@ -374,6 +441,7 @@ export default class Anonymous extends Component{
 
           <View style={styles.bottomInput}>
             <TextInput
+            underlineColorAndroid='transparent'
             style={styles.input}
             placeholder="Viết bình luận"
             onChangeText={(val) => this.setState({contentComment: val, sendColor:'#8e44ad'})}
@@ -396,6 +464,36 @@ export default class Anonymous extends Component{
 
 
 }
+
+
+
+class YourComponent extends React.Component{
+  render(){
+    return(
+      <MenuContext>
+      <Menu>
+      <MenuTrigger>
+        <TouchableOpacity>
+          <Icon name="ios-more-outline" size={30} color="#BDBDBD" style={{marginLeft:deviceWidth/6}}/>
+        </TouchableOpacity>
+      </MenuTrigger>
+
+      <MenuOptions>
+        <MenuOption >
+        <Text>logout</Text>
+        </MenuOption>
+
+        <MenuOption>
+        <Text>logout</Text>
+        </MenuOption>
+
+      </MenuOptions>
+  </Menu>
+  </MenuContext>
+    )
+  }
+}
+
 const styles = StyleSheet.create({
     avatar:{
       width:40,
@@ -413,6 +511,7 @@ const styles = StyleSheet.create({
       height:40,
       flex:1,
       backgroundColor:'rgba(255,255,255,0.8)',
+      paddingLeft: 15
     },
     textuser:{
       fontSize:13,
