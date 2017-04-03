@@ -191,7 +191,7 @@ export default class profileView extends Component {
         animationType="fade"
         transparent={true}
         visible={this.state.modalVisible}
-        onRequestClose={()=>{alert("Modal has been closed.")}}
+        onRequestClose={()=>this.setModalVisible()}
       >
         <TouchableOpacity activeOpacity={1}
               onPress={() => {

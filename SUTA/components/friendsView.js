@@ -14,6 +14,7 @@ import{
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
+import Spinner from 'react-native-loading-spinner-overlay';
 import Anonymous from './anonymousView.js';
 import Public from './publicView.js';
 var deviceWidth = Dimensions.get('window').width;
@@ -29,6 +30,7 @@ export default class Friends extends Component{
       user:this.props.data,
       modalVisible: false,
       checksearch: false,
+      spinnerVisible: false,
     })
     console.disableYellowBox = true;
     flag = true;
@@ -68,6 +70,9 @@ export default class Friends extends Component{
     })
   }
   componentWillMount(){
+    this.setState({
+        spinnerVisible: true,
+      });
     this.getFriends();
     data = [];
   }
@@ -118,6 +123,9 @@ export default class Friends extends Component{
 
 
   onAddFriends(){
+    this.setState({
+        spinnerVisible: true,
+      });
     this.getListUser();
     this.setModalVisible();
 
@@ -141,7 +149,8 @@ export default class Friends extends Component{
 
             this.setState({
               listuser: jsonResponse['result'],
-              dataSourceUser: this.state.dataSourceUser.cloneWithRows(jsonResponse['result'])
+              dataSourceUser: this.state.dataSourceUser.cloneWithRows(jsonResponse['result']),
+              spinnerVisible: false,
             });
 
 
@@ -198,12 +207,19 @@ export default class Friends extends Component{
 
   }
   getfriends_id(){
+    var j = 0;
     for (var i = 0; i <= this.state.list_array.length; i++) {
       if(typeof this.state.list_array[i]!='undefined')
       {
         this.friends(this.state.list_array[i]);
+        if(i == this.state.list_array.length-1){
+          this.setState({
+              spinnerVisible: false,
+            });
+        }
       }
     }
+
   }
   async friends(id_user){
 
@@ -289,6 +305,7 @@ export default class Friends extends Component{
   render(){
     return(
       <View style={{flex:1,backgroundColor:'#F5F5F5'}}>
+      <Spinner visible={this.state.spinnerVisible} textContent={"Vui lòng chờ..."} textStyle={{color: '#FFF'}} />
       {
         this.state.checksearch?
         <View style={Style.toolbar}>
@@ -341,7 +358,7 @@ export default class Friends extends Component{
         animationType="slide"
         transparent={true}
         visible={this.state.modalVisible}
-        onRequestClose={()=>{alert("Modal has been closed.")}}
+        onRequestClose={()=>this.setModalVisible()}
       >
       <View style={{flex:1,backgroundColor:'#F5F5F5'}}>
         <View style={Style.toolbar}>

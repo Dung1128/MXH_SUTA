@@ -14,6 +14,7 @@ import {
 import dateFormat from 'dateformat';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
+import Spinner from 'react-native-loading-spinner-overlay';
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
 var flag = true;
@@ -27,13 +28,17 @@ export default class timeLineView extends Component{
       dataSource_cmt: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
       user: '',
       id: this.props.id,
-      modalVisible: false
+      modalVisible: false,
+      spinnerVisible: false,
     }
     flag = true;
     console.disableYellowBox = true;
   }
 
   componentWillMount(){
+    this.setState({
+        spinnerVisible: true,
+      });
     this.fetchData();
   }
 
@@ -61,7 +66,8 @@ export default class timeLineView extends Component{
         if(flag == true){
       var jsonResponse = JSON.parse(res);
       this.setState({
-        dataSource: this.state.dataSource.cloneWithRows(jsonResponse['result'])
+        dataSource: this.state.dataSource.cloneWithRows(jsonResponse['result']),
+        spinnerVisible: false,
       });
     }
     else {
@@ -71,34 +77,7 @@ export default class timeLineView extends Component{
       console.log(error);
     }
   }
-  async onLike(data){
 
-    let formdata = new FormData();
-    formdata.append('id_user',this.state.user.id_user);
-    formdata.append('id_status',data.id_status);
-
-    try {
-      let response = await fetch('http://suta.esy.es/api/checklike.php',{
-        method: 'post',
-        header: {
-          'Content-Type': 'multipart/formdata'
-        },
-        body: formdata
-      });
-
-      let res = await response.text();
-      if (flag == true){
-      var jsonResponse = JSON.parse(res);
-        this.fetchData();
-      }
-      else {
-        return;
-      }
-    } catch (error) {
-     console.log(error);
-    }
-
-  }
   setModalVisible() {
     if(this.state.modalVisible){
       this.setState({modalVisible: false});
@@ -106,26 +85,24 @@ export default class timeLineView extends Component{
       this.setState({modalVisible: true});
     }
   }
-  _onClose(){
-    this.setState({
-      checkclose:true
-    });
-    this.setModalVisible(!this.state.modalVisible)
+
+  onClose(){
+    this.fetchData();
+    this.setModalVisible();
   }
   onClickComment(data)
   {
 
     this.setState({
-      checkclose:false,
       data: data,
       dataSource_cmt: this.state.dataSource_cmt.cloneWithRows(listnull),
     });
-   this.getInfoUser(data);
    this.getComment(data);
    this.setModalVisible();
   }
   async getInfoUser(data){
     let formdata = new FormData();
+    formdata.append('id_user_login',this.state.id);
     formdata.append('id_user',data.id_user);
     formdata.append('id_status',data.id_status);
 
@@ -141,11 +118,9 @@ export default class timeLineView extends Component{
       let res = await response.text();
       if (flag == true){
       var jsonResponse = JSON.parse(res);
-      this.setState({
-        // fr_code: jsonResponse['code'],
-        // fr_message: jsonResponse['message'],
-        fr_result: jsonResponse['result'],
-      });
+        this.setState({
+          data: jsonResponse.result['0'],
+        });
 
       }
       else {
@@ -154,6 +129,41 @@ export default class timeLineView extends Component{
     } catch (error) {
      console.log(error);
     }
+  }
+
+  async onLike(data){
+
+    let formdata = new FormData();
+    formdata.append('id_user',this.state.id);
+    formdata.append('id_status',data.id_status);
+
+    try {
+      let response = await fetch('http://suta.esy.es/api/checklike.php',{
+        method: 'post',
+        header: {
+          'Content-Type': 'multipart/formdata'
+        },
+        body: formdata
+      });
+
+      let res = await response.text();
+      if (flag == true){
+      var jsonResponse = JSON.parse(res);
+        if(this.state.modalVisible)
+        {
+          this.getInfoUser(data);
+        }else {
+          this.fetchData();
+        }
+
+      }
+      else {
+        return;
+      }
+    } catch (error) {
+     console.log(error);
+    }
+
   }
   clearText(fieldName) {
     this.refs[fieldName].setNativeProps({text: ''});
@@ -317,6 +327,7 @@ export default class timeLineView extends Component{
   render(){
     return(
       <View style={{flex:1, backgroundColor:'#F5F5F5'}}>
+      <Spinner visible={this.state.spinnerVisible} textContent={"Vui lòng chờ..."} textStyle={{color: '#FFF'}} />
       <Text>{this.state.user.username}
       </Text>
         <ListView
@@ -328,13 +339,13 @@ export default class timeLineView extends Component{
           animationType="slide"
           transparent={true}
           visible={this.state.modalVisible}
-          onRequestClose={()=>{alert("Modal has been closed.")}}
+          onRequestClose={()=>this.setModalVisible()}
         >
 
         <View style={{flex:1,backgroundColor:'white'}} >
 
         <View style={Style.toolbar}>
-          <TouchableOpacity activeOpacity={1} onPress={()=>this._onClose()} style={{flex:1,alignItems:'center'}}>
+          <TouchableOpacity activeOpacity={1} onPress={()=>this.onClose()} style={{flex:1,alignItems:'center'}}>
             <Icon name="md-close" size={24} color="#F5F5F5" style={Style.ico}/>
           </TouchableOpacity>
           <View style={{flex:8,marginLeft:-20,alignItems:'center'}}>

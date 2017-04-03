@@ -20,6 +20,7 @@ import {
   MenuContext
 } from 'react-native-popup-menu';
 import Icon from 'react-native-vector-icons/Ionicons';
+import Spinner from 'react-native-loading-spinner-overlay';
 import dateFormat from 'dateformat';
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
@@ -32,6 +33,8 @@ export default class Public extends Component{
       dataSource_cmt: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
       refreshing: false,
       modalVisible: false,
+      spinnerVisible: false,
+      spinnerVisible_modal: false,
       sendColor: '#90949c',
       user: this.props.user,
     });
@@ -43,6 +46,9 @@ export default class Public extends Component{
     flag = false;
   }
   componentWillMount(){
+    this.setState({
+        spinnerVisible: true,
+      });
     this.fetchData();
   }
   _onRefresh() {
@@ -86,7 +92,8 @@ export default class Public extends Component{
       var responseJson = JSON.parse(res);
       this.setState({
         data: responseJson.result,
-        dataSource: this.state.dataSource.cloneWithRows(responseJson.result)
+        dataSource: this.state.dataSource.cloneWithRows(responseJson.result),
+        spinnerVisible: false
       });
 
       }
@@ -102,14 +109,16 @@ export default class Public extends Component{
   {
     this.setModalVisible();
     this.setState({
+      spinnerVisible_modal: true,
       data: data,
       dataSource_cmt: this.state.dataSource_cmt.cloneWithRows(listnull)
     });
-  //  this.getInfoUser(data);
-   this.getComment(data)
+   this.getComment(data);
+
   }
   async getInfoUser(data){
     let formdata = new FormData();
+    formdata.append('id_user_login',this.state.user.id_user);
     formdata.append('id_user',data.id_user);
     formdata.append('id_status',data.id_status);
 
@@ -125,7 +134,9 @@ export default class Public extends Component{
       let res = await response.text();
       if (flag == true){
       var jsonResponse = JSON.parse(res);
-      console.log(jsonResponse);
+        this.setState({
+          data: jsonResponse.result['0'],
+        });
 
       }
       else {
@@ -170,9 +181,10 @@ export default class Public extends Component{
     }
 
   }
+
   onClose(){
     this.fetchData();
-    this.setModalVisible(!this.state.modalVisible);
+    this.setModalVisible();
   }
   clearText(fieldName) {
     this.refs[fieldName].setNativeProps({text: ''});
@@ -234,6 +246,7 @@ export default class Public extends Component{
       if(flag == true){
       var jsonResponse = JSON.parse(res);
       this.setState({
+        spinnerVisible_modal: false,
         dataSource_cmt: this.state.dataSource_cmt.cloneWithRows(jsonResponse['result'])
       });
 
@@ -340,6 +353,7 @@ export default class Public extends Component{
 
     return(
       <View style={{flex:1,backgroundColor:'#F5F5F5'}}>
+      <Spinner visible={this.state.spinnerVisible} textContent={"Vui lòng chờ..."} textStyle={{color: '#FFF'}} />
         <ListView
           refreshControl={
             <RefreshControl
@@ -360,11 +374,11 @@ export default class Public extends Component{
           animationType="slide"
           transparent={true}
           visible={this.state.modalVisible}
-          onRequestClose={()=>{alert("Modal has been closed.")}}
+          onRequestClose={()=>this.setModalVisible()}
         >
 
         <View style={{flex:1,backgroundColor:'white'}} >
-
+        <Spinner visible={this.state.spinnerVisible_modal} textContent={"Vui lòng chờ..."} textStyle={{color: '#FFF'}} />
         <View style={styles.toolbar}>
           <TouchableOpacity activeOpacity={1} onPress={()=>this.onClose()} style={{flex:1,alignItems:'center'}}>
             <Icon name="md-close" size={24} color="#F5F5F5" style={styles.ico}/>
