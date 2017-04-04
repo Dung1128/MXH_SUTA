@@ -394,9 +394,10 @@ class loginView extends Component{
                     source={this.state.checkBox}
                     />
                 </TouchableOpacity>
-
+                <TouchableOpacity onPress={()=>this.checkOk()} >
                   <Text style={{paddingLeft: 5}}>Tôi đồng ý
                   </Text>
+                  </TouchableOpacity>
               </View>
 
               <View style={{marginTop: 10, flexDirection: 'row'}}>
