@@ -12,7 +12,8 @@ import{
   ScrollView,
   AsyncStorage,
   KeyboardAvoidingView,
-  Keyboard
+  Keyboard,
+  Modal
 }from 'react-native';
 import TextField from 'react-native-md-textinput';
 import Hr from 'react-native-hr';
@@ -33,8 +34,11 @@ class loginView extends Component{
       warning_user: '',
       warning_pass: '',
       username:'',
-      password:''
+      password:'',
+      modalVisible: false,
+      checkBox:require('../images/box.png')
     });
+    console.disableYellowBox = true;
   }
   redirect(routeName,data){
     this.props.navigator.push({
@@ -157,6 +161,37 @@ class loginView extends Component{
   test(){
     alert(this.state.username +"-"+ this.state.password);
   }
+
+  setModalVisible() {
+       if(this.state.modalVisible){
+         this.setState({modalVisible: false});
+       }else{
+         this.setState({modalVisible: true});
+       }
+     }
+
+  _cancle(){
+    this.setModalVisible();
+  }
+
+  _next(){
+    if(this.state.checkBox == require('../images/ico_tick.png')){
+      this.setModalVisible();
+      this._fbAuth();
+    }
+  }
+
+  checkOk(){
+    if(this.state.checkBox == require('../images/box.png')){
+      this.setState({ checkBox: require('../images/ico_tick.png')})
+    }
+    else{
+      this.setState({ checkBox: require('../images/box.png')})
+    }
+  }
+
+
+
   render(){
     return(
       <SplashScreen duration={3000} backgroundColor={'blue'}>
@@ -225,7 +260,7 @@ class loginView extends Component{
             <Hr lineColor='#BDBDBD' text='OR' textColor='#F5F5F5'/>
           </View>
 
-          <TouchableOpacity onPress={()=>this._fbAuth()}>
+          <TouchableOpacity onPress={()=>this.setModalVisible()}>
             <View style={{flexDirection:'row', justifyContent:'center'}}>
                 <Icon name="logo-facebook" size={22} color="#F5F5F5" style={{marginTop:-1}} />
                 <Text style={{color:'#F5F5F5', fontWeight:'bold', paddingLeft:5}} >
@@ -262,6 +297,59 @@ class loginView extends Component{
 
           </TouchableOpacity>
         </View>
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={this.state.modalVisible}>
+          <TouchableOpacity activeOpacity={1}
+
+                style={{backgroundColor: 'rgba(0,0,0,.8)',flex:1,justifyContent:'center',alignItems:'center'}} >
+            <TouchableOpacity activeOpacity={1} style={{
+              width:300,
+
+              backgroundColor:'white',
+            }}>
+
+            <View style={{padding: 10}}>
+              <View style={{alignItems:'center'}}>
+                <Text style ={{ fontWeight: 'bold'}}> ĐIỀU KHOẢN MẠNG XÃ HỘI SUTA
+                </Text>
+              </View>
+              <View style={{marginTop: 10}}>
+                <Text>Mạng xã hội tâm sự SUTA là nơi để bày tỏ cảm xúc cá nhân....
+                </Text>
+              </View>
+              <View style={{marginTop: 10, flexDirection:'row'}}>
+                <TouchableOpacity onPress={()=>this.checkOk()} >
+                  <Image
+                    style={{width: 15, height: 15, marginTop: 2}}
+                    source={this.state.checkBox}
+                    />
+                </TouchableOpacity>
+
+                  <Text style={{paddingLeft: 5}}>Tôi đồng ý
+                  </Text>
+              </View>
+
+              <View style={{marginTop: 10, flexDirection: 'row'}}>
+                <TouchableOpacity onPress={()=> this._cancle()}>
+                  <Text style={{fontWeight: 'bold'}}> CANCLE
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={{paddingLeft: 20}} onPress={()=> this._next()}>
+                  <Text style={{color:'#8e44ad', fontWeight: 'bold'}}> NEXT
+                  </Text>
+                </TouchableOpacity>
+              </View>
+
+            </View>
+
+            </TouchableOpacity>
+
+
+          </TouchableOpacity>
+        </Modal>
       </Image>
 
       </SplashScreen>

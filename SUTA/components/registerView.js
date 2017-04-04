@@ -11,7 +11,8 @@ import{
   Dimensions,
   ScrollView,
   AsyncStorage,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  Modal
 }from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -27,7 +28,10 @@ class loginView extends Component{
       warning_phone:'',
       warning_pass: '',
       warning_repass: '',
+      modalVisible: false,
+      checkBox:require('../images/box.png')
     });
+    console.disableYellowBox = true;
   }
   onBack(routeName,data){
     this.props.navigator.pop({
@@ -36,6 +40,13 @@ class loginView extends Component{
       }
     })
   }
+  setModalVisible() {
+       if(this.state.modalVisible){
+         this.setState({modalVisible: false});
+       }else{
+         this.setState({modalVisible: true});
+       }
+     }
 
   redirect(routeName,data){
     this.props.navigator.replace({
@@ -189,9 +200,31 @@ class loginView extends Component{
     }else {
       Alert.alert('Thông báo',"Bạn cần điền đúng thông tin.!");
     }
-
-
   }
+  componentWillMount(){
+    this.setModalVisible();
+  }
+
+  _cancle(){
+    this.setModalVisible();
+    this.onBack('login');
+  }
+
+  _next(){
+    if(this.state.checkBox == require('../images/ico_tick.png')){
+      this.setModalVisible();
+    }
+  }
+
+  checkOk(){
+    if(this.state.checkBox == require('../images/box.png')){
+      this.setState({ checkBox: require('../images/ico_tick.png')})
+    }
+    else{
+      this.setState({ checkBox: require('../images/box.png')})
+    }
+  }
+
   render(){
     return(
       <Image source={require('../images/bgr2.png')} style={styles.container}>
@@ -332,8 +365,64 @@ class loginView extends Component{
             <Text style={{color:'#F5F5F5'}}>ĐĂNG KÝ</Text>
           </TouchableOpacity>
         </View>
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={this.state.modalVisible}>
+          <TouchableOpacity activeOpacity={1}
+
+                style={{backgroundColor: 'rgba(0,0,0,.8)',flex:1,justifyContent:'center',alignItems:'center'}} >
+            <TouchableOpacity activeOpacity={1} style={{
+              width:300,
+
+              backgroundColor:'white',
+            }}>
+
+            <View style={{padding: 10}}>
+              <View style={{alignItems:'center'}}>
+                <Text style ={{ fontWeight: 'bold'}}> ĐIỀU KHOẢN MẠNG XÃ HỘI SUTA
+                </Text>
+              </View>
+              <View style={{marginTop: 10}}>
+                <Text>Mạng xã hội tâm sự SUTA là nơi để bày tỏ cảm xúc cá nhân....
+                </Text>
+              </View>
+              <View style={{marginTop: 10, flexDirection:'row'}}>
+                <TouchableOpacity onPress={()=>this.checkOk()} >
+                  <Image
+                    style={{width: 15, height: 15, marginTop: 2}}
+                    source={this.state.checkBox}
+                    />
+                </TouchableOpacity>
+
+                  <Text style={{paddingLeft: 5}}>Tôi đồng ý
+                  </Text>
+              </View>
+
+              <View style={{marginTop: 10, flexDirection: 'row'}}>
+                <TouchableOpacity onPress={()=> this._cancle()}>
+                  <Text style={{fontWeight: 'bold'}}> CANCLE
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={{paddingLeft: 20}} onPress={()=> this._next()}>
+                  <Text style={{color:'#8e44ad', fontWeight: 'bold'}}> NEXT
+                  </Text>
+                </TouchableOpacity>
+              </View>
+
+            </View>
+
+            </TouchableOpacity>
+
+
+          </TouchableOpacity>
+        </Modal>
 
       </Image>
+
+
+
     );
   }
 
