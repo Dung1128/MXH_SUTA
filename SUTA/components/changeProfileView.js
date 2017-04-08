@@ -9,6 +9,7 @@ import {
   Image,
   TextInput
 } from 'react-native';
+import DatePicker from 'react-native-datepicker';
 import Iconn from 'react-native-vector-icons/Ionicons';
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
@@ -43,6 +44,131 @@ export default class changeProfileView extends Component{
     })
   }
 
+  componentWillMount(){
+    if(this.state.gender == 0){
+      this.setState({
+        checkBoxNam: require('../images/ico_tick.png'),
+        checkBoxNu: require('../images/box.png')
+      })
+    }
+    else {
+      this.setState({
+        checkBoxNu: require('../images/ico_tick.png'),
+        checkBoxNam: require('../images/box.png')
+      })
+    }
+  }
+  _changegender(val){
+    if(val == 0){
+      this.setState({
+        checkBoxNam: require('../images/ico_tick.png'),
+        checkBoxNu: require('../images/box.png')
+      })
+    }
+    else {
+      this.setState({
+        checkBoxNu: require('../images/ico_tick.png'),
+        checkBoxNam: require('../images/box.png')
+      })
+    }
+  }
+
+
+  async _changeprofile(){
+    // let formdata = new FormData();
+    // formdata.append("id_user", this.state.id_user);
+    // formdata.append("phone", this.state.phone);
+    // formdata.append("email", this.state.email);
+    // formdata.append("address", this.state.address);
+    // formdata.append("dob", this.state.dob);
+    // if(this.state.checkBoxNam == require('../images/box.png')){
+    //   formdata.append("gender", 1);
+    // }
+    // else{
+    //   formdata.append("gender", 0);
+    // }
+
+    try {
+      let formdata = new FormData();
+      formdata.append("id_user", this.state.user.id_user);
+      formdata.append("phone", this.state.phone);
+      formdata.append("email", this.state.email);
+      formdata.append("address", this.state.address);
+      formdata.append("dob", this.state.dob);
+      if(this.state.checkBoxNam == require('../images/box.png')){
+        formdata.append("gender", 1);
+      }
+      else{
+        formdata.append("gender", 0);
+      }
+      const res = await fetch('http://suta.esy.es/api/updateprofile.php', {
+        method: 'post',
+        headers: {
+        'Content-Type': 'multipart/form-data',
+        },
+        body: formdata
+      });
+      console.log('res', res);
+      const jsonData = await res.json();
+      console.log('jsonData', jsonData);
+      // var responseJson = JSON.parse(jsonData);
+      // if (response.status >= 200 && response.status < 300 && responseJson.code==0) {
+        Alert.alert('Thông báo','Đổi thông tin thành công, thông tin của bạn sẽ được cập nhật từ lần đăng nhập sau.');
+
+      // }else {
+      //     alert('Đổi không thành công.');
+      // }
+    } catch (error) {
+      console.log('error', error);
+    }
+
+    // try {
+    //   let response = await fetch('https://suta.esy.es/api/updateprofile.php', {
+    //     method: 'post',
+    //     headers: {
+    //     'Content-Type': 'multipart/form-data',
+    //     },
+    //     body: formdata
+    //   });
+    //   let responseJson = await response.json();
+    //   console.log(response);
+    //   // var responseJson = JSON.parse(res);
+    //   console.log(responseJson.result);
+    //   if (response.status >= 200 && response.status < 300 && responseJson['code']==0) {
+    //       alert('Đổi thông tin thành công, thông tin của bạn sẽ được cập nhật từ lần đăng nhập sau.');
+    //   }else {
+    //       Alert.alert('Thông báo',this.state.message);
+    //   }
+    // } catch(error) {
+    //     console.log("error " + error);
+    // }
+
+  }
+
+  // async componentDidMount() {
+  //   try {
+  //     let formdata = new FormData();
+  //     formdata.append("id_user", '1488737496');
+  //     formdata.append("phone", '12345');
+  //     formdata.append("email", 'trandung1128@hotmail.com');
+  //     formdata.append("address", 'hnoi');
+  //     formdata.append("dob", '1995-11-28');
+  //     formdata.append("gender", '0');
+  //     const res = await fetch('http://suta.esy.es/api/updateprofile.php', {
+  //       method: 'post',
+  //       headers: {
+  //       'Content-Type': 'multipart/form-data',
+  //       },
+  //       body: formdata
+  //     });
+  //     console.log('res', res);
+  //     const jsonData = await res.json();
+  //     console.log('jsonData', jsonData);
+  //   } catch (error) {
+  //     console.log('error', error);
+  //   }
+  // }
+
 
   render(){
     return(
@@ -65,12 +191,96 @@ export default class changeProfileView extends Component{
               <Image style={{width:80, height:80,borderRadius:200}} source={{uri: this.state.user.avatar}}/>
             </View>
 
-            <View style={{flex: 2.5}}>
-              <TextInput style={styles._input} value = {this.state.phone}/>
+            <View style={{flex:2.5, paddingLeft: 10}}>
+              <View style={styles._inputProfile}>
+                <TextInput style={styles._input} value = {this.state.email.toString()}
+                onChangeText={(val) => this.setState({email: val})}
+                underlineColorAndroid='transparent'
+                />
+              </View>
+
+              <View style={styles._inputProfile}>
+                <TextInput style={styles._input} value = {this.state.phone.toString()}
+                onChangeText={(val) => this.setState({phone: val})}
+                keyboardType="phone-pad"
+                underlineColorAndroid='transparent'
+                />
+              </View>
+
+              <View style={styles._inputProfile}>
+                <TextInput style={styles._input} value = {this.state.address.toString()}
+                onChangeText={(val) => this.setState({address: val})}
+                underlineColorAndroid='transparent'
+                />
+              </View>
+
+              <View style={styles._inputProfile}>
+              <DatePicker
+                style={{width: 200,marginLeft: -60 }}
+                date={this.state.dob}
+                mode="date"
+                placeholder="select date"
+                format="YYYY-MM-DD"
+                confirmBtnText="Confirm"
+                cancelBtnText="Cancel"
+                showIcon= {false}
+                customStyles={{
+                  dateInput: { borderWidth:0}
+            }}
+            onDateChange={(date) => {this.setState({dob: date})}}
+          />
+              </View>
+
+              <View style={styles._inputProfile}>
+                <View style={{flexDirection:'row', height: 40, alignItems:'center', padding: 10}}>
+
+                  <View style={{flex:1, flexDirection:'row'}}>
+                    <TouchableOpacity onPress={()=>this._changegender(0)}>
+                      <Image
+                        style={{width: 15, height: 15, marginTop: 2, marginRight: 10}}
+                        source={this.state.checkBoxNam}
+                        />
+
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={()=>this._changegender(0)}>
+                      <Text>Nam
+                      </Text>
+                    </TouchableOpacity>
+
+                  </View>
+
+                  <View style={{flex:1, flexDirection:'row'}}>
+                    <TouchableOpacity onPress={()=>this._changegender(1)}>
+                      <Image
+                        style={{width: 15, height: 15, marginTop: 2, marginRight: 10}}
+                        source={this.state.checkBoxNu}
+                        />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={()=>this._changegender(1)}>
+                      <Text>Nữ
+                      </Text>
+                    </TouchableOpacity>
+
+                  </View>
+
+                </View>
+              </View>
+
             </View>
 
 
           </View>
+        </View>
+        <View style={styles._footer}>
+          <View style={{justifyContent:'center', paddingTop:20, alignItems:'center'}}>
+            <TouchableOpacity style={styles._button} onPress={()=>this._changeprofile()}>
+              <Text style={{color:'white'}}> CẬP NHẬT
+              </Text>
+            </TouchableOpacity>
+          </View>
+
         </View>
 
       </View>
@@ -87,11 +297,27 @@ const styles = StyleSheet.create({
     flexDirection:'row'
   },
   _content:{
-    flex:13,
+    flex:6,
     backgroundColor:'rgb(255, 255, 255)'
   },
   _input:{
     height: 40,
     width: null
+  },
+  _inputProfile:{
+    borderBottomWidth: 1,
+    borderBottomColor:'#F5F5F5'
+  },
+  _footer:{
+    backgroundColor:'#F5F5F5',
+    flex: 10
+  },
+  _button:{
+    backgroundColor:'#8e44ad',
+    width:deviceWidth/2,
+    height:40,
+    alignItems:'center',
+    justifyContent:'center',
+    borderRadius: 20
   }
 })

@@ -296,61 +296,62 @@ class loginView extends Component{
           </View>
 
           </TouchableOpacity>
-        </View>
-        <Modal
-          animationType="fade"
-          transparent={true}
-          visible={this.state.modalVisible}>
-          <TouchableOpacity activeOpacity={1}
+          <Modal
+            animationType="fade"
+            transparent={true}
+            visible={this.state.modalVisible}>
+            <TouchableOpacity activeOpacity={1}
 
-                style={{backgroundColor: 'rgba(0,0,0,.8)',flex:1,justifyContent:'center',alignItems:'center'}} >
-            <TouchableOpacity activeOpacity={1} style={{
-              width:300,
+                  style={{backgroundColor: 'rgba(0,0,0,.8)',flex:1,justifyContent:'center',alignItems:'center'}} >
+              <TouchableOpacity activeOpacity={1} style={{
+                width:300,
 
-              backgroundColor:'white',
-            }}>
+                backgroundColor:'white',
+              }}>
 
-            <View style={{padding: 10}}>
-              <View style={{alignItems:'center'}}>
-                <Text style ={{ fontWeight: 'bold'}}> ĐIỀU KHOẢN MẠNG XÃ HỘI SUTA
-                </Text>
-              </View>
-              <View style={{marginTop: 10}}>
-                <Text>Mạng xã hội tâm sự SUTA là nơi để bày tỏ cảm xúc cá nhân....
-                </Text>
-              </View>
-              <View style={{marginTop: 10, flexDirection:'row'}}>
-                <TouchableOpacity onPress={()=>this.checkOk()} >
-                  <Image
-                    style={{width: 15, height: 15, marginTop: 2}}
-                    source={this.state.checkBox}
-                    />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={()=>this.checkOk()} >
-                  <Text style={{paddingLeft: 5}}>Tôi đồng ý
+              <View style={{padding: 10}}>
+                <View style={{alignItems:'center'}}>
+                  <Text style ={{ fontWeight: 'bold'}}> ĐIỀU KHOẢN MẠNG XÃ HỘI SUTA
                   </Text>
+                </View>
+                <View style={{marginTop: 10}}>
+                  <Text>Mạng xã hội tâm sự SUTA là nơi để bày tỏ cảm xúc cá nhân....
+                  </Text>
+                </View>
+                <View style={{marginTop: 10, flexDirection:'row'}}>
+                  <TouchableOpacity onPress={()=>this.checkOk()} >
+                    <Image
+                      style={{width: 15, height: 15, marginTop: 2}}
+                      source={this.state.checkBox}
+                      />
                   </TouchableOpacity>
+                  <TouchableOpacity onPress={()=>this.checkOk()} >
+                    <Text style={{paddingLeft: 5}}>Tôi đồng ý
+                    </Text>
+                    </TouchableOpacity>
+                </View>
+
+                <View style={{marginTop: 10, flexDirection: 'row'}}>
+                  <TouchableOpacity onPress={()=> this._cancle()}>
+                    <Text style={{fontWeight: 'bold'}}> CANCLE
+                    </Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity style={{paddingLeft: 20}} onPress={()=> this._next()}>
+                    <Text style={{color:'#8e44ad', fontWeight: 'bold'}}> NEXT
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+
               </View>
 
-              <View style={{marginTop: 10, flexDirection: 'row'}}>
-                <TouchableOpacity onPress={()=> this._cancle()}>
-                  <Text style={{fontWeight: 'bold'}}> CANCLE
-                  </Text>
-                </TouchableOpacity>
+              </TouchableOpacity>
 
-                <TouchableOpacity style={{paddingLeft: 20}} onPress={()=> this._next()}>
-                  <Text style={{color:'#8e44ad', fontWeight: 'bold'}}> NEXT
-                  </Text>
-                </TouchableOpacity>
-              </View>
-
-            </View>
 
             </TouchableOpacity>
+          </Modal>
+        </View>
 
-
-          </TouchableOpacity>
-        </Modal>
       </Image>
 
       </SplashScreen>
