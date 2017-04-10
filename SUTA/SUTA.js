@@ -4,7 +4,8 @@ import {
   StyleSheet,
   Text,
   View,
-  Navigator
+  Navigator,
+  AsyncStorage
 } from 'react-native';
 import Style from './src/Style.js';
 
@@ -15,8 +16,52 @@ import Profile from './components/profileView.js';
 import AccountManagerView from './components/accountManagerView.js';
 import ChangePass from './components/changePassView.js';
 import ChangeProfile from './components/changeProfileView.js';
-
+import Chat from './components/chatView.js';
+import firebase from './components/api.js';
 class SUTA extends Component {
+  constructor(props){
+    super(props);
+    this.state=({
+      data: '',
+    })
+  }
+  componentWillMount(){
+    AsyncStorage.getItem("user").then((value)=>{
+      if(value !=null)
+      {
+        this.setState({data:JSON.parse(value)});
+      }
+
+    }).done();
+  }
+  componentWillUnmount(){
+    var items_rooms = [];
+    database = firebase.database();
+    database.ref("rooms").once("value", (snap)=>{
+        snap.forEach((data)=>{
+          items_rooms.push({
+            key: data.key,
+            data: data.val(),
+          });
+
+        })
+        for (var i = 0; i < items_rooms.length; i++) {
+          if(items_rooms[i].data.user_1.id_user === this.state.data.id_user )
+          {
+            database.ref("rooms/" + items_rooms[i].key + "/user_1").update({
+               "online": 0
+            });
+          }
+          if(items_rooms[i].data.user_2.id_user === this.state.data.id_user)
+          {
+            database.ref("rooms/" + items_rooms[i].key + "/user_2").update({
+               "online": 0
+            });
+          }
+        }
+
+    });
+  }
   renderScene(route, navigator){
     if(route.name == 'home'){
       return <Home navigator = {navigator} {...route.passProps}/>
@@ -38,6 +83,9 @@ class SUTA extends Component {
     }
     if(route.name == 'changeprofile'){
       return <ChangeProfile navigator = {navigator} {...route.passProps}/>
+    }
+    if(route.name == 'chat'){
+      return <Chat navigator = {navigator} {...route.passProps}/>
     }
   }
 

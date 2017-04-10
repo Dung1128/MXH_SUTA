@@ -75,6 +75,9 @@ export default class timeLineView extends Component{
     }
     } catch (error) {
       console.log(error);
+      this.setState({
+        spinnerVisible: false,
+      });
     }
   }
 

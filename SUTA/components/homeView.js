@@ -14,7 +14,9 @@ import NewFeed from './newFeedView.js';
 import Friends from './friendsView.js';
 import Message from './messageView.js';
 import Menu from './menuView.js';
+import firebase from './api.js';
 import { Tabs, Tab, Icon } from 'react-native-elements';
+var items_rooms = [];
 export default class Chat extends Component {
   constructor(props) {
     super(props);
@@ -36,7 +38,33 @@ export default class Chat extends Component {
       }
     })
   }
+  componentWillMount(){
+    database = firebase.database();
+    database.ref("rooms").once("value", (snap)=>{
+        snap.forEach((data)=>{
+          items_rooms.push({
+            key: data.key,
+            data: data.val(),
+          });
 
+        })
+        for (var i = 0; i < items_rooms.length; i++) {
+          if(items_rooms[i].data.user_1.id_user === this.state.data.id_user )
+          {
+            database.ref("rooms/" + items_rooms[i].key + "/user_1").update({
+               "online": 1
+            });
+          }
+          if(items_rooms[i].data.user_2.id_user === this.state.data.id_user)
+          {
+            database.ref("rooms/" + items_rooms[i].key + "/user_2").update({
+               "online": 1
+            });
+          }
+        }
+
+    });
+  }
 
   navigate(routeName, data){
     this.props.navigator.push({
@@ -70,7 +98,7 @@ export default class Chat extends Component {
             renderIcon={() => <Icon containerStyle={{justifyContent: 'center', alignItems: 'center', marginTop: 12}} color={'#5e6977'} name='people' size={30} />}
             renderSelectedIcon={() => <Icon color={'#6296f9'} name='people' size={30} />}
             onPress={() => this.changeTab('banbe')}>
-            <Friends data = {this.state.data} />
+            <Friends navigator = {this.props.navigator} data = {this.state.data} />
           </Tab>
           <Tab
             titleStyle={{fontWeight: 'bold', fontSize: 10}}
@@ -79,7 +107,7 @@ export default class Chat extends Component {
             renderIcon={() => <Icon containerStyle={{justifyContent: 'center', alignItems: 'center', marginTop: 12}} color={'#5e6977'} name='chat' size={25} />}
             renderSelectedIcon={() => <Icon color={'#6296f9'} name='chat' size={30} />}
             onPress={() => this.changeTab('tinnhan')}>
-            <Message data = {this.state.data} />
+            <Message navigator = {this.props.navigator} data = {this.state.data} />
           </Tab>
           <Tab
             titleStyle={{fontWeight: 'bold', fontSize: 10}}

@@ -58,6 +58,7 @@ export default class Friends extends Component{
       name: routeName,
       passProps: {
         data: data,
+        user_login: this.state.user,
       }
     })
   }
@@ -260,10 +261,10 @@ export default class Friends extends Component{
 
   _renderRow(data){
     return (
-      <TouchableOpacity style={{padding:10,flex:1,borderBottomWidth:0.5,borderBottomColor:'rgba(143, 143, 143, 0.2)'}}>
+      <View style={{padding:10,flex:1,borderBottomWidth:0.5,borderBottomColor:'rgba(143, 143, 143, 0.2)'}}>
       <View style={{flex:1, flexDirection:'row',justifyContent:'space-between'}}>
           <View style={{flex:1,flexDirection:'row'}}>
-            <View style={Style.backgroundAvatar} >
+            <View >
               <Image style={Style.avatar} source={{uri: data.avatar}}/>
             </View>
             <View style={{marginLeft:10,justifyContent:'center'}}>
@@ -272,12 +273,13 @@ export default class Friends extends Component{
               </Text>
             </View>
           </View>
-          <TouchableOpacity style={{justifyContent:'center',marginRight:5}}>
+          <TouchableOpacity onPress={()=>this.navigate('chat',data)} style={{justifyContent:'center',marginRight:5}}>
             <Icon color='rgba(0, 0, 0, 0.2)' name='md-chatbubbles' size={24} />
           </TouchableOpacity>
 
       </View>
-    </TouchableOpacity>
+
+    </View>
     )
   }
   _renderRowAddFriends(data){
@@ -285,7 +287,7 @@ export default class Friends extends Component{
       <TouchableOpacity style={{padding:10,flex:1,borderBottomWidth:0.5,borderBottomColor:'rgba(143, 143, 143, 0.2)'}}>
       <View style={{flex:1, flexDirection:'row',justifyContent:'space-between'}}>
           <View style={{flex:1,flexDirection:'row'}}>
-            <View style={Style.backgroundAvatar} >
+            <View>
               <Image style={Style.avatar} source={{uri: data.avatar}}/>
             </View>
             <View style={{marginLeft:10,justifyContent:'center'}}>

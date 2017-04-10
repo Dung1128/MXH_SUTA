@@ -11,7 +11,9 @@ import Iconn from 'react-native-vector-icons/Ionicons';
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
 import Hr from 'react-native-hr';
-import FBSDK, {LoginManager} from 'react-native-fbsdk'
+import FBSDK, {LoginManager} from 'react-native-fbsdk';
+import firebase from './api.js';
+var items_rooms = [];
 export default class accountManagerView extends Component{
   constructor(props){
     super(props);
@@ -40,11 +42,38 @@ export default class accountManagerView extends Component{
   async _removeStorage (){
    AsyncStorage.removeItem('user');
  }
+ setOffline(){
+   database = firebase.database();
+   database.ref("rooms").once("value", (snap)=>{
+       snap.forEach((data)=>{
+         items_rooms.push({
+           key: data.key,
+           data: data.val(),
+         });
 
+       })
+       for (var i = 0; i < items_rooms.length; i++) {
+         if(items_rooms[i].data.user_1.id_user === this.state.data.id_user )
+         {
+           database.ref("rooms/" + items_rooms[i].key + "/user_1").update({
+              "online": 0
+           });
+         }
+         if(items_rooms[i].data.user_2.id_user === this.state.data.id_user)
+         {
+           database.ref("rooms/" + items_rooms[i].key + "/user_2").update({
+              "online": 0
+           });
+         }
+       }
+
+   });
+ }
  clearId(){
    LoginManager.logOut();
    this._removeStorage();
    this.redirect('login');
+   this.setOffline();
    alert("Đăng xuất thành công!");
  }
 
