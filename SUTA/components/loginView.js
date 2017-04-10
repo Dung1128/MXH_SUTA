@@ -319,33 +319,35 @@ class loginView extends Component{
                 <Text>Mạng xã hội tâm sự SUTA là nơi để bày tỏ cảm xúc cá nhân....
                 </Text>
               </View>
-              <TouchableOpacity style={{marginTop: 10, flexDirection:'row'}} onPress={()=>this.checkOk()} >
-                <Image
-                  style={{width: 15, height: 15, marginTop: 2}}
-                  source={this.state.checkBox}
-                  />
-                <Text style={{paddingLeft: 5}}>Tôi đồng ý
-                </Text>
-              </TouchableOpacity>
 
-            <View style={{marginTop: 10, flexDirection: 'row'}}>
-              <TouchableOpacity onPress={()=> this._cancle()}>
-                <Text style={{fontWeight: 'bold'}}> HỦY
-                </Text>
-              </TouchableOpacity>
+                <TouchableOpacity style={{marginTop: 10, flexDirection:'row'}} onPress={()=>this.checkOk()} >
+                  <Image
+                    style={{width: 15, height: 15, marginTop: 2}}
+                    source={this.state.checkBox}
+                    />
+                  <Text style={{paddingLeft: 5}}>Tôi đồng ý
+                  </Text>
+                </TouchableOpacity>
 
-              <TouchableOpacity style={{paddingLeft: 20}} onPress={()=> this._next()}>
-                <Text style={{color:'#8e44ad', fontWeight: 'bold'}}> TIẾP TỤC
-                </Text>
-              </TouchableOpacity>
+              <View style={{marginTop: 10, flexDirection: 'row'}}>
+                <TouchableOpacity onPress={()=> this._cancle()}>
+                  <Text style={{fontWeight: 'bold'}}> HỦY
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={{paddingLeft: 20}} onPress={()=> this._next()}>
+                  <Text style={{color:'#8e44ad', fontWeight: 'bold'}}> TIẾP TỤC
+                  </Text>
+                </TouchableOpacity>
               </View>
 
-              </TouchableOpacity>
-
+            </View>
 
             </TouchableOpacity>
-          </Modal>
-        </View>
+
+
+          </TouchableOpacity>
+        </Modal>
 
       </Image>
 
