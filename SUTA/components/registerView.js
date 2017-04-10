@@ -156,45 +156,53 @@ class loginView extends Component{
 
   }
   async onRegisterPressed(){
-    if(this.state.warning_user=='' && this.state.warning_phone==''
-      && this.state.warning_pass=='' && this.state.warning_repass=='')
-    {
-          let formdata = new FormData();
-          formdata.append("username", this.state.username);
-          formdata.append("password", this.state.password);
-          formdata.append("phone", this.state.phone);
-          try {
-            let response = await fetch('http://suta.esy.es/api/register.php',{
-              method: 'post',
-              headers: {
-              'Content-Type': 'multipart/form-data',
-              },
-              body: formdata
-            });
-            let res = await response.text();
-            var jsonResponse = JSON.parse(res);
-            this.setState({
-              code: jsonResponse['code'],
-               message: jsonResponse['message'],
-               result: jsonResponse['result']
 
-            });
-            // alert(this.state.message);
-            if (this.state.code==0) {
-                // show alert & moving screen
-               Alert.alert('Thông báo',this.state.message);
-                this.redirect('login','OK');
-            } else {
-                //Handle error
-                Alert.alert('Thông báo',this.state.message);
-                let error = res;
-                throw error;
-            }
+    if(this.state.warning_user=='' && this.state.warning_phone==''
+      && this.state.warning_pass=='' && this.state.warning_repass==''
+      && this.state.username != '' && this.state.password != ''
+      && this.state.phone != ''  )
+    {
+      this.setModalVisible();
+      if(this.state.checkBox == require('../images/ico_tick.png'))
+      {
+        let formdata = new FormData();
+        formdata.append("username", this.state.username);
+        formdata.append("password", this.state.password);
+        formdata.append("phone", this.state.phone);
+        try {
+          let response = await fetch('http://suta.esy.es/api/register.php',{
+            method: 'post',
+            headers: {
+            'Content-Type': 'multipart/form-data',
+            },
+            body: formdata
+          });
+          let res = await response.text();
+          var jsonResponse = JSON.parse(res);
+          this.setState({
+            code: jsonResponse['code'],
+             message: jsonResponse['message'],
+             result: jsonResponse['result']
+
+          });
+          // alert(this.state.message);
+          if (this.state.code==0) {
+              // show alert & moving screen
+
+              this.redirect('login','OK');
+          } else {
+              //Handle error
+              Alert.alert('Thông báo',this.state.message);
+              let error = res;
+              throw error;
           }
-          catch(error)
-          {
-          //  console.log(error);
-          }
+        }
+        catch(error)
+        {
+        //  console.log(error);
+        }
+      }
+
 
 
     }else {
@@ -202,7 +210,7 @@ class loginView extends Component{
     }
   }
   componentWillMount(){
-    this.setModalVisible();
+
   }
 
   _cancle(){
@@ -366,6 +374,7 @@ class loginView extends Component{
           </TouchableOpacity>
         </View>
         <Modal
+          onRequestClose={()=>this.setModalVisible()}
           animationType="fade"
           transparent={true}
           visible={this.state.modalVisible}>
@@ -387,27 +396,24 @@ class loginView extends Component{
                 <Text>Mạng xã hội tâm sự SUTA là nơi để bày tỏ cảm xúc cá nhân....
                 </Text>
               </View>
-              <View style={{marginTop: 10, flexDirection:'row'}}>
-                <TouchableOpacity onPress={()=>this.checkOk()} >
+
+                <TouchableOpacity style={{marginTop: 10, flexDirection:'row'}} onPress={()=>this.checkOk()} >
                   <Image
                     style={{width: 15, height: 15, marginTop: 2}}
                     source={this.state.checkBox}
                     />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={()=>this.checkOk()} >
                   <Text style={{paddingLeft: 5}}>Tôi đồng ý
                   </Text>
-                  </TouchableOpacity>
-              </View>
+                </TouchableOpacity>
 
               <View style={{marginTop: 10, flexDirection: 'row'}}>
                 <TouchableOpacity onPress={()=> this._cancle()}>
-                  <Text style={{fontWeight: 'bold'}}> CANCLE
+                  <Text style={{fontWeight: 'bold'}}> HỦY
                   </Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={{paddingLeft: 20}} onPress={()=> this._next()}>
-                  <Text style={{color:'#8e44ad', fontWeight: 'bold'}}> NEXT
+                  <Text style={{color:'#8e44ad', fontWeight: 'bold'}}> TIẾP TỤC
                   </Text>
                 </TouchableOpacity>
               </View>

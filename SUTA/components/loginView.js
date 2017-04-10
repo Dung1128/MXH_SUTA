@@ -148,13 +148,12 @@ class loginView extends Component{
           this.redirect('home',JSON.stringify(jsonResponse['result']));
           AsyncStorage.setItem("user",JSON.stringify(jsonResponse['result']));
 
-
       }else {
           Alert.alert('Thông báo',this.state.message);
       }
     } catch(error) {
         //console.log("error " + error);
-      //  console.log(this.state.username + " & " + this.state.password);
+      Alert.alert('Thông báo',);
 
     }
   }
@@ -298,6 +297,7 @@ class loginView extends Component{
           </TouchableOpacity>
         </View>
         <Modal
+          onRequestClose={()=>this.setModalVisible()}
           animationType="fade"
           transparent={true}
           visible={this.state.modalVisible}>
@@ -319,29 +319,25 @@ class loginView extends Component{
                 <Text>Mạng xã hội tâm sự SUTA là nơi để bày tỏ cảm xúc cá nhân....
                 </Text>
               </View>
-              <View style={{marginTop: 10, flexDirection:'row'}}>
-                <TouchableOpacity onPress={()=>this.checkOk()} >
-                  <Image
-                    style={{width: 15, height: 15, marginTop: 2}}
-                    source={this.state.checkBox}
-                    />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={()=>this.checkOk()} >
-                  <Text style={{paddingLeft: 5}}>Tôi đồng ý
-                  </Text>
-                  </TouchableOpacity>
-              </View>
+              <TouchableOpacity style={{marginTop: 10, flexDirection:'row'}} onPress={()=>this.checkOk()} >
+                <Image
+                  style={{width: 15, height: 15, marginTop: 2}}
+                  source={this.state.checkBox}
+                  />
+                <Text style={{paddingLeft: 5}}>Tôi đồng ý
+                </Text>
+              </TouchableOpacity>
 
-              <View style={{marginTop: 10, flexDirection: 'row'}}>
-                <TouchableOpacity onPress={()=> this._cancle()}>
-                  <Text style={{fontWeight: 'bold'}}> CANCLE
-                  </Text>
-                </TouchableOpacity>
+            <View style={{marginTop: 10, flexDirection: 'row'}}>
+              <TouchableOpacity onPress={()=> this._cancle()}>
+                <Text style={{fontWeight: 'bold'}}> HỦY
+                </Text>
+              </TouchableOpacity>
 
-                <TouchableOpacity style={{paddingLeft: 20}} onPress={()=> this._next()}>
-                  <Text style={{color:'#8e44ad', fontWeight: 'bold'}}> NEXT
-                  </Text>
-                </TouchableOpacity>
+              <TouchableOpacity style={{paddingLeft: 20}} onPress={()=> this._next()}>
+                <Text style={{color:'#8e44ad', fontWeight: 'bold'}}> TIẾP TỤC
+                </Text>
+              </TouchableOpacity>
               </View>
 
             </View>
