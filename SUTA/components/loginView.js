@@ -340,13 +340,13 @@ class loginView extends Component{
               </TouchableOpacity>
               </View>
 
-            </View>
+              </TouchableOpacity>
+
 
             </TouchableOpacity>
+          </Modal>
+        </View>
 
-
-          </TouchableOpacity>
-        </Modal>
       </Image>
 
       </SplashScreen>
@@ -354,9 +354,7 @@ class loginView extends Component{
   }
 
 }
-// loginView.propType = {
-//   data: React.PropTypes.arrayOf(React.PropTypes.object)
-// }
+
 const styles = StyleSheet.create({
   container:{
     flex: 1,
