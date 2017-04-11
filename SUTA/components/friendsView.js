@@ -76,6 +76,7 @@ export default class Friends extends Component{
       });
     this.getFriends();
     data = [];
+    this.getListUser();
   }
   setModalVisible() {
     if(this.state.modalVisible){
@@ -124,13 +125,42 @@ export default class Friends extends Component{
 
 
   onAddFriends(){
-    this.setState({
-        spinnerVisible: true,
-      });
-    this.getListUser();
+
     this.setModalVisible();
 
   }
+
+  async add_noti_addfr(data){
+
+      let formdata = new FormData();
+      formdata.append('id_user',this.state.user.id_user);
+      formdata.append('username',this.state.user.username);
+      formdata.append('id_userFriend',data.id_user);
+        try {
+          let response = await fetch('http://suta.esy.es/api/noti_add_friends.php',{
+            method: 'post',
+            headers: {
+            'Content-Type': 'multipart/form-data',
+            },
+            body: formdata
+          });
+          let res = await response.text();
+          if(flag == true){
+            var jsonResponse = JSON.parse(res);
+            this.getListUser();
+
+          }
+          else {
+            return;
+          }
+
+        } catch(error) {
+          console.error(error);
+        }
+
+
+  }
+
   async getListUser(){
 
       let formdata = new FormData();
@@ -213,11 +243,6 @@ export default class Friends extends Component{
       if(typeof this.state.list_array[i]!='undefined')
       {
         this.friends(this.state.list_array[i]);
-        if(i == this.state.list_array.length-1){
-          this.setState({
-              spinnerVisible: false,
-            });
-        }
       }
     }
 
@@ -296,7 +321,7 @@ export default class Friends extends Component{
               </Text>
             </View>
           </View>
-          <TouchableOpacity style={{justifyContent:'center',marginRight:5}}>
+          <TouchableOpacity onPress={()=>this.add_noti_addfr(data)} style={{justifyContent:'center',marginRight:5}}>
             <Icon color='rgba(0, 0, 0, 0.2)' name='md-add' size={24} />
           </TouchableOpacity>
 

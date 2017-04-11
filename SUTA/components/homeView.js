@@ -13,7 +13,6 @@ import Iconn from 'react-native-vector-icons/Ionicons';
 import NewFeed from './newFeedView.js';
 import Friends from './friendsView.js';
 import Message from './messageView.js';
-import Menu from './menuView.js';
 import firebase from './api.js';
 import { Tabs, Tab, Icon } from 'react-native-elements';
 var items_rooms = [];
