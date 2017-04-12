@@ -26,8 +26,8 @@ export default class timeLineView extends Component{
     this.state={
       dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
       dataSource_cmt: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
-      user: '',
-      id: this.props.id,
+      id: this.props.user.id_user,
+      user: this.props.user,
       modalVisible: false,
       spinnerVisible: false,
     }
@@ -174,10 +174,42 @@ export default class timeLineView extends Component{
       sendColor: '#90949c',
     })
   }
+  async _add_noti(value){
+    let formdata = new FormData();
+    formdata.append("id_user", this.state.user.id_user);
+    formdata.append("username", this.state.user.username);
+    formdata.append("id_userFriend", value.id_user);
+    formdata.append("id_status", value.id_status);
+    try {
+      let response = await fetch('http://suta.esy.es/api/noti_status.php',{
+        method: 'post',
+        headers: {
+        'Content-Type': 'multipart/form-data',
+        },
+        body: formdata
+      });
+      let res = await response.text();
+      if(flag == true){
+      var jsonResponse = JSON.parse(res);
+      this.setState({
+        dataSource_cmt: jsonResponse['result']!=null?this.state.dataSource_cmt.cloneWithRows(jsonResponse['result']):this.state.dataSource_cmt.cloneWithRows(listnull)
+      });
+
+      }
+      else {
+        return;
+      }
+    }
+    catch(error)
+    {
+     console.log(error);
+    }
+  }
   async _addComment(value){
     if(this.state.sendColor!= '#90949c')
     {
-      this.clearText('contentComment')
+      this._add_noti(value);
+      this.clearText('contentComment');
       let formdata = new FormData();
       formdata.append("id_user", this.state.id);
       formdata.append("content", this.state.contentComment);

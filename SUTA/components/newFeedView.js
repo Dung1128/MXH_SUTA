@@ -35,17 +35,20 @@ export default class NewFeed extends Component{
     });
 
   }
+  componentWillReceiveProps(){
+    this.get_noti();
+  }
   componentWillMount(){
     this.setState({
       radio1: 'md-radio-button-on'
     });
-
+    this.get_noti();
   }
   async onRead(data){
     let formdata = new FormData();
-    formdata.append("id_notificationAddFriends",data.id_notificationAddFriends);
+    formdata.append("id_notificationStatus",data.id_notificationStatus);
     try {
-      let response = await fetch('http://suta.esy.es/api/onread_noti.php',{
+      let response = await fetch('http://suta.esy.es/api/onread_noti_status.php',{
         method: 'post',
         headers: {
         'Content-Type': 'multipart/form-data',
@@ -73,7 +76,7 @@ export default class NewFeed extends Component{
     let formdata = new FormData();
     formdata.append("userid1",this.state.data.id_user);
     formdata.append("userid2",data.id_user);
-    formdata.append("id_notificationAddFriends",data.id_notificationAddFriends);
+    formdata.append("id_notificationStatus",data.id_notificationStatus);
     try {
       let response = await fetch('http://suta.esy.es/api/confirmFriend.php',{
         method: 'post',
@@ -102,9 +105,9 @@ export default class NewFeed extends Component{
 
   async onDelete(data){
     let formdata = new FormData();
-    formdata.append("id_notificationAddFriends",data.id_notificationAddFriends);
+    formdata.append("id_notificationStatus",data.id_notificationStatus);
     try {
-      let response = await fetch('http://suta.esy.es/api/ondelete_noti.php',{
+      let response = await fetch('http://suta.esy.es/api/ondelete_noti_status.php',{
         method: 'post',
         headers: {
         'Content-Type': 'multipart/form-data',
@@ -136,7 +139,7 @@ export default class NewFeed extends Component{
       let formdata = new FormData();
       formdata.append('id_userFriend',this.state.data.id_user);
         try {
-          let response = await fetch('http://suta.esy.es/api/get_notification_id.php',{
+          let response = await fetch('http://suta.esy.es/api/get_noti_status.php',{
             method: 'post',
             headers: {
             'Content-Type': 'multipart/form-data',
@@ -148,6 +151,7 @@ export default class NewFeed extends Component{
             var jsonResponse = JSON.parse(res);
 
             this.setState({
+              notification: jsonResponse['notification'],
               dataSource_noti: this.state.dataSource_noti.cloneWithRows(jsonResponse['result']!=null?jsonResponse['result']:listnull),
             });
           }
@@ -231,14 +235,9 @@ export default class NewFeed extends Component{
              {data.content}
             </Text>
           </View>
-            <View style={{flexDirection:'row'}}>
-              <TouchableOpacity onPress={()=>this.onOk(data)} style={{justifyContent:'center',marginRight:10}}>
-                <Icon name="md-checkmark" size={24} color="#2ecc71"/>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={()=>this.onDelete(data)} style={{justifyContent:'center'}}>
-                <Icon name="md-close" size={24} color="#e74c3c"/>
-              </TouchableOpacity>
-            </View>
+          <TouchableOpacity onPress={()=>this.onDelete(data)} style={{justifyContent:'center'}}>
+            <Icon name="md-close" size={24} color="#e74c3c"/>
+          </TouchableOpacity>
       </TouchableOpacity>
     )
   }
@@ -310,6 +309,18 @@ export default class NewFeed extends Component{
       <View style={Style.toolbar}>
         <TouchableOpacity onPress={()=> this.showNoti()} style={{flex:1,alignItems:'center'}}>
           <Icon name="md-notifications" size={24} color="#F5F5F5" style={Style.ico}/>
+          {
+            this.state.notification== 0?
+            <View></View>
+            :
+            <View style={{zIndex:1,borderRadius:100,
+              borderWidth:1,borderColor:'white',
+              width:15,height:15,position:'absolute',
+              backgroundColor:'#3498db',
+              top:0,right:10,justifyContent:'center',alignItems:'center'}}>
+              <Text style={{fontSize:8,color:'#f5f5f5'}}>{this.state.notification}</Text>
+            </View>
+          }
         </TouchableOpacity>
         <View style={{flex:5,alignItems:'center'}}>
           <Text style={Style.title}>
