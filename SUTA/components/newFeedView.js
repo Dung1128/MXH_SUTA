@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Modal,
   TextInput,
+  ListView,
   KeyboardAvoidingView
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -16,26 +17,152 @@ import Public from './publicView.js';
 import DefaultTabBar from './tab/DefaultTabBar';
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
+var listnull = [];
 export default class NewFeed extends Component{
   constructor(props){
     super(props);
     this.state = ({
       modalVisible: false,
+      modalVisible_noti: false,
       radio1: 'md-radio-button-off',
       radio2: 'md-radio-button-off',
       radio3: 'md-radio-button-off',
       check: 'md-radio-button-on',
       flagConfession:0,
+      dataSource_noti: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
       checkadd: false,
       data: this.props.data
     });
 
   }
+  componentWillReceiveProps(){
+    this.get_noti();
+  }
   componentWillMount(){
     this.setState({
       radio1: 'md-radio-button-on'
-    })
+    });
+    this.get_noti();
   }
+  async onRead(data){
+    let formdata = new FormData();
+    formdata.append("id_notificationStatus",data.id_notificationStatus);
+    try {
+      let response = await fetch('http://suta.esy.es/api/onread_noti_status.php',{
+        method: 'post',
+        headers: {
+        'Content-Type': 'multipart/form-data',
+        },
+        body: formdata
+      });
+      let res = await response.text();
+      if (flag == true){
+      var jsonResponse = JSON.parse(res);
+      if(jsonResponse['code']==0)
+      {
+        this.get_noti();
+      }
+  }
+  else {
+    return;
+  }
+    }
+    catch(error)
+    {
+      console.log(error);
+    }
+  }
+  async onOk(data){
+    let formdata = new FormData();
+    formdata.append("userid1",this.state.data.id_user);
+    formdata.append("userid2",data.id_user);
+    formdata.append("id_notificationStatus",data.id_notificationStatus);
+    try {
+      let response = await fetch('http://suta.esy.es/api/confirmFriend.php',{
+        method: 'post',
+        headers: {
+        'Content-Type': 'multipart/form-data',
+        },
+        body: formdata
+      });
+      let res = await response.text();
+      if(flag == true){
+      var jsonResponse = JSON.parse(res);
+      if(jsonResponse['code']==0)
+      {
+        this.get_noti();
+      }
+    }
+    else {
+      return;
+    }
+    }
+    catch(error)
+    {
+     console.log(error);
+    }
+  }
+
+  async onDelete(data){
+    let formdata = new FormData();
+    formdata.append("id_notificationStatus",data.id_notificationStatus);
+    try {
+      let response = await fetch('http://suta.esy.es/api/ondelete_noti_status.php',{
+        method: 'post',
+        headers: {
+        'Content-Type': 'multipart/form-data',
+        },
+        body: formdata
+      });
+      let res = await response.text();
+      if (flag == true){
+      var jsonResponse = JSON.parse(res);
+      if(jsonResponse['code']==0)
+      {
+        this.get_noti();
+      }
+      }
+      else {
+        return;
+      }
+    }
+    catch(error)
+    {
+      console.log(error);
+    }
+  }
+  showNoti(){
+    this.get_noti();
+    this.setModalVisible_noti(!this.state.modalVisible_noti);
+  }
+  async get_noti(){
+      let formdata = new FormData();
+      formdata.append('id_userFriend',this.state.data.id_user);
+        try {
+          let response = await fetch('http://suta.esy.es/api/get_noti_status.php',{
+            method: 'post',
+            headers: {
+            'Content-Type': 'multipart/form-data',
+            },
+            body: formdata
+          });
+          let res = await response.text();
+          if(flag == true){
+            var jsonResponse = JSON.parse(res);
+
+            this.setState({
+              notification: jsonResponse['notification'],
+              dataSource_noti: this.state.dataSource_noti.cloneWithRows(jsonResponse['result']!=null?jsonResponse['result']:listnull),
+            });
+          }
+          else {
+            return;
+          }
+        } catch(error) {
+          console.error(error);
+        }
+  }
+
   async onPostStatus(){
     this.setModalVisible(!this.state.modalVisible);
       let formdata = new FormData();
@@ -88,6 +215,31 @@ export default class NewFeed extends Component{
   }
   setModalVisible(visible) {
     this.setState({modalVisible: visible});
+  }
+  setModalVisible_noti(visible) {
+    this.setState({modalVisible_noti: visible});
+  }
+  _renderRow_noti(data){
+    return(
+      <TouchableOpacity onPress={()=>this.onRead(data)} style={{borderBottomWidth:0.5,borderBottomColor:'#e6dfdf',paddingBottom:10,flex:1,justifyContent:'space-between', flexDirection:'row',padding:10}}>
+          <View style={{alignItems:'center',justifyContent:'center'}}>
+              {
+                data.new==0?
+                <Icon name="md-mail-open" size={24} color="rgba(0, 0, 0, 0.2)"/>
+                :
+                <Icon name="md-mail" size={24} color="#3498db"/>
+              }
+          </View>
+          <View style={{flex:4,marginLeft:15}}>
+            <Text style={{color: 'black',fontSize:12}}>
+             {data.content}
+            </Text>
+          </View>
+          <TouchableOpacity onPress={()=>this.onDelete(data)} style={{justifyContent:'center'}}>
+            <Icon name="md-close" size={24} color="#e74c3c"/>
+          </TouchableOpacity>
+      </TouchableOpacity>
+    )
   }
   render(){
     return(
@@ -155,8 +307,20 @@ export default class NewFeed extends Component{
           </View>
       </Modal>
       <View style={Style.toolbar}>
-        <TouchableOpacity style={{flex:1,alignItems:'center'}}>
+        <TouchableOpacity onPress={()=> this.showNoti()} style={{flex:1,alignItems:'center'}}>
           <Icon name="md-notifications" size={24} color="#F5F5F5" style={Style.ico}/>
+          {
+            this.state.notification== 0?
+            <View></View>
+            :
+            <View style={{zIndex:1,borderRadius:100,
+              borderWidth:1,borderColor:'white',
+              width:15,height:15,position:'absolute',
+              backgroundColor:'#3498db',
+              top:0,right:10,justifyContent:'center',alignItems:'center'}}>
+              <Text style={{fontSize:8,color:'#f5f5f5'}}>{this.state.notification}</Text>
+            </View>
+          }
         </TouchableOpacity>
         <View style={{flex:5,alignItems:'center'}}>
           <Text style={Style.title}>
@@ -176,6 +340,36 @@ export default class NewFeed extends Component{
         <Public tabLabel="CÔNG KHAI" data={this.state.checkadd} user ={this.state.data}/>
 
       </ScrollableTabView>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={this.state.modalVisible_noti}
+        onRequestClose={()=>this.setModalVisible_noti(!this.state.modalVisible_noti)}
+      >
+      <View style={{flex:1,backgroundColor:'#F5F5F5'}}>
+        <View style={Style.toolbar}>
+          <TouchableOpacity onPress={()=>this.setModalVisible_noti(!this.state.modalVisible_noti)} style={{flex:1,alignItems:'center'}}>
+            <Icon name="md-close" size={24} color="#F5F5F5" style={Style.ico}/>
+          </TouchableOpacity>
+          <View style={{flex:8,marginLeft:-20,alignItems:'center'}}>
+            <Text style={Style.title}>
+              THÔNG BÁO
+            </Text>
+          </View>
+
+
+        </View>
+
+        <View style={{flex:1}}>
+          <ListView
+          style={{flex:1,zIndex:0,}}
+          dataSource={this.state.dataSource_noti}
+          renderRow={this._renderRow_noti.bind(this)}
+          enableEmptySections={true}
+          />
+        </View>
+     </View>
+      </Modal>
       </View>
     );
   }

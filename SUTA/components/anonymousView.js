@@ -34,7 +34,6 @@ export default class Public extends Component{
       refreshing: false,
       modalVisible: false,
       spinnerVisible: false,
-      spinnerVisible_modal: false,
       sendColor: '#90949c',
       user: this.props.user,
     });
@@ -109,7 +108,6 @@ export default class Public extends Component{
   {
     this.setModalVisible();
     this.setState({
-      spinnerVisible_modal: true,
       data: data,
       dataSource_cmt: this.state.dataSource_cmt.cloneWithRows(listnull)
     });
@@ -192,9 +190,42 @@ export default class Public extends Component{
       sendColor: '#90949c',
     })
   }
+  async _add_noti(value){
+    let formdata = new FormData();
+    formdata.append("id_user", this.state.user.id_user);
+    formdata.append("username", this.state.user.username);
+    formdata.append("id_userFriend", value.id_user);
+    formdata.append("id_status", value.id_status);
+    try {
+      let response = await fetch('http://suta.esy.es/api/noti_status.php',{
+        method: 'post',
+        headers: {
+        'Content-Type': 'multipart/form-data',
+        },
+        body: formdata
+      });
+      let res = await response.text();
+      if(flag == true){
+      var jsonResponse = JSON.parse(res);
+      this.setState({
+        dataSource_cmt: jsonResponse['result']!=null?this.state.dataSource_cmt.cloneWithRows(jsonResponse['result']):this.state.dataSource_cmt.cloneWithRows(listnull)
+      });
+
+      }
+      else {
+        return;
+      }
+    }
+    catch(error)
+    {
+     console.log(error);
+    }
+  }
   async _addComment(value){
+
     if(this.state.sendColor!= '#90949c')
     {
+      this._add_noti(value);
       this.clearText('contentComment')
       let formdata = new FormData();
       formdata.append("id_user", this.state.user.id_user);
@@ -219,9 +250,6 @@ export default class Public extends Component{
         else {
           return;
         }
-
-
-
       }
       catch(error)
       {
@@ -246,7 +274,7 @@ export default class Public extends Component{
       if(flag == true){
       var jsonResponse = JSON.parse(res);
       this.setState({
-        spinnerVisible_modal: false,
+        spinnerVisible: false,
         dataSource_cmt: this.state.dataSource_cmt.cloneWithRows(jsonResponse['result'])
       });
 
@@ -378,7 +406,7 @@ export default class Public extends Component{
         >
 
         <View style={{flex:1,backgroundColor:'white'}} >
-        <Spinner visible={this.state.spinnerVisible_modal} textContent={"Vui lòng chờ..."} textStyle={{color: '#FFF'}} />
+
         <View style={styles.toolbar}>
           <TouchableOpacity activeOpacity={1} onPress={()=>this.onClose()} style={{flex:1,alignItems:'center'}}>
             <Icon name="md-close" size={24} color="#F5F5F5" style={styles.ico}/>
