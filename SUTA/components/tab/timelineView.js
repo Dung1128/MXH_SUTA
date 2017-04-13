@@ -424,8 +424,6 @@ export default class timeLineView extends Component{
     return(
       <View style={{flex:1, backgroundColor:'#F5F5F5'}}>
       <Spinner visible={this.state.spinnerVisible} textContent={"Vui lòng chờ..."} textStyle={{color: '#FFF'}} />
-      <Text>{this.state.user.username}
-      </Text>
         <ListView
         refreshControl={
           <RefreshControl
