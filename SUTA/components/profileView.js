@@ -8,8 +8,8 @@ import {
   TouchableOpacity,
   DrawerLayoutAndroid,
   AsyncStorage,
-  Modal
-
+  Modal,
+  Platform
 } from 'react-native';
 // import Style from 'Style.js';
 import Hr from 'react-native-hr';
@@ -19,6 +19,7 @@ import ImageView from './tab/imageView.js';
 import { Tabs, Tab, Icon } from 'react-native-elements';
 var ScrollableTabView = require('react-native-scrollable-tab-view');
 import DefaultTabBar from './tab/DefaultTabBar.js';
+var ImagePicker = require('react-native-image-picker');
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
 export default class profileView extends Component {
@@ -49,7 +50,7 @@ export default class profileView extends Component {
     })
   }
   componentWillMount(){
-
+    this.get_set_info();
   }
 
   onProfile(data){
@@ -73,7 +74,115 @@ export default class profileView extends Component {
   openDrawer(){
     this.refs['DRAWER_REF'].openDrawer();
   }
+  async get_set_info(){
+    let formdata = new FormData();
+    formdata.append("id_user",this.state.user.id_user);
+    try {
+      let response = await fetch('http://suta.esy.es/api/getuser_id.php',{
+        method: 'post',
+        headers: {
+        'Content-Type': 'multipart/form-data',
+        },
+        body: formdata
+      });
+      let res = await response.text();
+      var jsonResponse = JSON.parse(res);
+      this.setState({
+        user: jsonResponse['result']
+      });
+      AsyncStorage.setItem("user",JSON.stringify(jsonResponse['result']));
+    }
+    catch(error)
+    {
+      console.log(error);
+    }
+  }
+  selectPhotoTapped(key) {
+    const options = {
+      quality: 1.0,
+      maxWidth: 500,
+      maxHeight: 500,
+      storageOptions: {
+        skipBackup: true
+      }
+    };
 
+    ImagePicker.showImagePicker(options, (response) => {
+
+      if (response.didCancel) {
+        console.log('User cancelled photo picker');
+      }
+      else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      }
+      else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+      }
+      else {
+        var source, temp;
+        temp = response.data;
+
+        this.setState({
+          avatarSource: source,
+          imgBase64: temp,
+        });
+        if (key==0) {
+          this.upload_avatar();
+        }else if (key==1) {
+          this.upload_background();
+        }
+
+      }
+    });
+  }
+  async upload_avatar(){
+    let formdata = new FormData();
+    formdata.append("img",this.state.imgBase64);
+    formdata.append("id_user",this.state.user.id_user);
+    try {
+      let response = await fetch('http://suta.esy.es/api/upload_avatar.php',{
+        method: 'post',
+        headers: {
+        'Content-Type': 'multipart/form-data',
+        },
+        body: formdata
+      });
+      let res = await response.text();
+      var jsonResponse = JSON.parse(res);
+      this.setState({
+        user: jsonResponse['result']
+      });
+      AsyncStorage.setItem("user",JSON.stringify(jsonResponse['result']));
+    }
+    catch(error)
+    {
+      console.log(error);
+    }
+  }
+  async upload_background(){
+    let formdata = new FormData();
+    formdata.append("img_background",this.state.imgBase64);
+    formdata.append("id_user",this.state.user.id_user);
+    try {
+      let response = await fetch('http://suta.esy.es/api/upload_background.php',{
+        method: 'post',
+        headers: {
+        'Content-Type': 'multipart/form-data',
+        },
+        body: formdata
+      });
+      let res = await response.text();
+      var jsonResponse = JSON.parse(res);
+      this.setState({
+        user: jsonResponse['result']
+      });
+      AsyncStorage.setItem("user",JSON.stringify(jsonResponse['result']));
+    }
+    catch(error)
+    {
+      console.log(error);
+    }
+  }
   render(){
     var navigationView = (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
@@ -90,14 +199,14 @@ export default class profileView extends Component {
       </TouchableOpacity>
 
       <Hr lineColor='#BDBDBD'/>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={()=>this.selectPhotoTapped(0)}>
         <View>
         <Text style={{margin: 10, fontSize: 15, textAlign: 'left'}}> Cập nhật ảnh đại điện </Text>
         </View>
       </TouchableOpacity>
 
       <Hr lineColor='#BDBDBD'/>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={()=>this.selectPhotoTapped(1)}>
         <View>
           <Text style={{margin: 10, fontSize: 15, textAlign: 'left'}}> Cập nhật hình nền </Text>
         </View>
@@ -144,7 +253,7 @@ export default class profileView extends Component {
       <View style={{flex:1}}>
         <View style={styles._cover}>
         <Image style={{flex:1, flexDirection:'row'}}
-        source={{uri: this.state.user.background != ''?this.state.user.background:'http://suta.esy.es/images/dung.jpg'}}
+        source={{uri: this.state.user.background}}
         >
           <View style={styles.toolbar}>
             <TouchableOpacity onPress={this.onBack.bind(this)} style={styles.back} >
@@ -207,7 +316,7 @@ export default class profileView extends Component {
             <View>
             <View style={{width:deviceWidth, height:deviceHeight/4, backgroundColor:'rgb(117, 54, 96)'}}>
             <Image style={{width:deviceWidth, height:deviceHeight/4}}
-              source={{uri: this.state.user.background != ''?this.state.user.background:'http://suta.esy.es/images/dung.jpg'}}
+              source={{uri: this.state.user.background}}
             >
 
             <View style={{left:15,
