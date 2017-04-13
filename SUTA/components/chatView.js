@@ -77,7 +77,8 @@ export default class Chat extends Component {
     })
   }
   componentDidMount(){
-    this.checkStatus(this.state.info_rooms.key);
+
+
   }
   checkStatus(key){
 
@@ -301,7 +302,6 @@ export default class Chat extends Component {
             height:40,
           }}
           placeholder="Nhập tin nhắn"
-          onFocus={()=>this.checkStatus(this.state.info_rooms.key)}
           onChangeText={(val)=>this.setState({message:val, sendColor:'#8e44ad'})}
           placeholderTextColor='rgb(171, 171, 171)'
           underlineColorAndroid = 'transparent'

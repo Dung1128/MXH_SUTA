@@ -181,7 +181,7 @@ export default class profileView extends Component {
             initialPage={0}
             renderTabBar={() => <DefaultTabBar/>}
           >
-              <TimeLineView tabLabel='Nhật Ký' id = {this.state.user.id_user} />
+              <TimeLineView tabLabel='Nhật Ký' user = {this.state.user} />
               <ImageView tabLabel='Hình Ảnh' />
           </ScrollableTabView>
         </View>
