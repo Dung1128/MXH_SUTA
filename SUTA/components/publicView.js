@@ -10,7 +10,8 @@ import {
   Modal,
   KeyboardAvoidingView,
   TextInput,
-  Dimensions
+  Dimensions,
+  Alert
 } from 'react-native';
 import {
   Menu,
@@ -23,6 +24,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import Spinner from 'react-native-loading-spinner-overlay';
 import dateFormat from 'dateformat';
+import firebase from './api.js';
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
 var listnull = [];
@@ -34,6 +36,8 @@ export default class Public extends Component{
       dataSource_cmt: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
       refreshing: false,
       modalVisible: false,
+      modalVisible_setting1: false,
+      modalVisible_setting2: false,
       sendColor: '#90949c',
       user: this.props.user,
       spinnerVisible: false,
@@ -41,6 +45,9 @@ export default class Public extends Component{
     flag = true;
 
     check = 0;
+
+    database = firebase.database();
+    _rp = database.ref('Report')
   }
   componentWillUnmount() {
     flag = false;
@@ -49,6 +56,9 @@ export default class Public extends Component{
     this.setState({
         spinnerVisible: true,
       });
+
+  }
+  componentDidMount(){
     this.fetchData();
   }
   _onRefresh() {
@@ -70,6 +80,23 @@ export default class Public extends Component{
       this.setState({modalVisible: true});
     }
   }
+
+  setModalVisible_Setting1() {
+    if(this.state.modalVisible_setting1){
+      this.setState({modalVisible_setting1: false});
+    }else{
+      this.setState({modalVisible_setting1: true});
+    }
+  }
+
+  setModalVisible_Setting2() {
+    if(this.state.modalVisible_setting2){
+      this.setState({modalVisible_setting2: false});
+    }else{
+      this.setState({modalVisible_setting2: true});
+    }
+  }
+
   componentWillReceiveProps(){
     this.fetchData();
   }
@@ -109,6 +136,45 @@ export default class Public extends Component{
   onClose(){
     this.fetchData();
     this.setModalVisible();
+  }
+
+  _setting1(data){
+    this.setModalVisible_Setting1();
+    this.setState({
+      ID: data.id_status
+    })
+  }
+
+  _setting2(data){
+    this.setModalVisible_Setting2();
+    this.setState({
+      ID: data.id_status
+    })
+  }
+
+  _report(){
+  //  alert(this.state.ID);
+    _rp.push(this.state.ID)
+    this.setModalVisible_Setting2();
+  }
+
+  async _deleteStatus(){
+    let formdata = new FormData();
+    formdata.append('id_status',this.state.ID);
+
+    try {
+      let response = await fetch('http://suta.esy.es/api/deletestatus.php',{
+        method: 'post',
+        header: {
+          'Content-Type': 'multipart/formdata'
+        },
+        body: formdata
+      });
+      this.fetchData();
+
+    } catch (error) {
+     console.log(error);
+    }
   }
 
   onClickComment(data)
@@ -151,6 +217,21 @@ export default class Public extends Component{
     } catch (error) {
      console.log(error);
     }
+  }
+
+  _okok(){
+    Alert.alert(
+   'Thông báo',
+   'Bạn có muốn xóa cảm nghĩ không?',
+   [
+     {text: 'No', onPress: () => console.log('no')},
+     {text: 'Yes', onPress: () => {this._deleteStatus();}}
+   ],
+   { cancelable: false }
+  );
+
+  this.setModalVisible_Setting1();
+
   }
 
   async onLike(data){
@@ -343,7 +424,16 @@ export default class Public extends Component{
             </TouchableOpacity>
           </View>
           <View style={{flex:1}}>
-            <YourComponent/>
+          {
+            this.state.user.username == data.username?
+            <TouchableOpacity onPress={()=>this._setting1(data)}>
+              <Icon name="ios-more-outline" size={30} color="#BDBDBD" style={{marginLeft:deviceWidth/6}}/>
+            </TouchableOpacity>
+            :
+            <TouchableOpacity onPress={()=>this._setting2(data)}>
+              <Icon name="ios-more-outline" size={30} color="#BDBDBD" style={{marginLeft:deviceWidth/6}}/>
+            </TouchableOpacity>
+          }
           </View>
         </View>
 
@@ -474,6 +564,64 @@ export default class Public extends Component{
         </View>
 
         </Modal>
+
+        <Modal
+        animationType="fade"
+        transparent={true}
+        visible={this.state.modalVisible_setting1}
+        onRequestClose={()=>this.setModalVisible_Setting1()}
+      >
+        <TouchableOpacity activeOpacity={1}
+              onPress={() => {
+                    this.setModalVisible_Setting1()
+                  }}
+              style={{backgroundColor: 'rgba(0,0,0,.8)',flex:1,justifyContent:'center',alignItems:'center'}} >
+          <TouchableOpacity activeOpacity={1} style={{
+            width:300,
+            backgroundColor:'white',
+          }}>
+
+              <TouchableOpacity onPress={()=>this._okok()}>
+                <View style={styles._buttonSetting}>
+                    <Text>Xóa bài
+                    </Text>
+                </View>
+              </TouchableOpacity>
+
+
+        </TouchableOpacity>
+        </TouchableOpacity>
+
+        </Modal>
+
+        <Modal
+        animationType="fade"
+        transparent={true}
+        visible={this.state.modalVisible_setting2}
+        onRequestClose={()=>this.setModalVisible_Setting2()}
+      >
+        <TouchableOpacity activeOpacity={1}
+              onPress={() => {
+                    this.setModalVisible_Setting2()
+                  }}
+              style={{backgroundColor: 'rgba(0,0,0,.8)',flex:1,justifyContent:'center',alignItems:'center'}} >
+          <TouchableOpacity activeOpacity={1} style={{
+            width:300,
+            backgroundColor:'white',
+          }}>
+
+              <TouchableOpacity onPress={()=>this._report()}>
+                <View style={styles._buttonSetting}>
+                    <Text>Report
+                    </Text>
+                </View>
+              </TouchableOpacity>
+
+
+        </TouchableOpacity>
+        </TouchableOpacity>
+
+        </Modal>
       </View>
     );
   }
@@ -564,4 +712,12 @@ const styles = StyleSheet.create({
       alignItems:'center',
       justifyContent: 'space-between',
     },
+    _buttonSetting:{
+      alignItems:'center',
+      justifyContent:'center',
+      borderBottomWidth: 1,
+      borderBottomColor:'#F5F5F5',
+      paddingTop: 10,
+      paddingBottom: 10
+    }
   });
