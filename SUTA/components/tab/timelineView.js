@@ -9,7 +9,9 @@ import {
   AsyncStorage,
   Image,
   Modal,
-  TextInput
+  TextInput,
+  Alert,
+  RefreshControl
 } from 'react-native';
 import dateFormat from 'dateformat';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -30,6 +32,8 @@ export default class timeLineView extends Component{
       user: this.props.user,
       modalVisible: false,
       spinnerVisible: false,
+      modalVisible_setting1: false,
+      refreshing: false,
     }
     flag = true;
     console.disableYellowBox = true;
@@ -39,10 +43,67 @@ export default class timeLineView extends Component{
     this.setState({
         spinnerVisible: true,
       });
-    this.fetchData();
+
   }
 
   componentDidMount(){
+    this.fetchData();
+  }
+
+  setModalVisible_Setting1() {
+    if(this.state.modalVisible_setting1){
+      this.setState({modalVisible_setting1: false});
+    }else{
+      this.setState({modalVisible_setting1: true});
+    }
+  }
+  _setting1(data){
+    this.setModalVisible_Setting1();
+    this.setState({
+      ID: data.id_status
+    })
+  }
+  _onRefresh() {
+    this.setState({refreshing: true});
+    setTimeout(() => {
+      // prepend 10 items
+      this.setState({
+        refreshing: false,
+
+      });
+      this.fetchData();
+    }, 1000);
+  }
+  async _deleteStatus(){
+    let formdata = new FormData();
+    formdata.append('id_status',this.state.ID);
+
+    try {
+      let response = await fetch('http://suta.esy.es/api/deletestatus.php',{
+        method: 'post',
+        header: {
+          'Content-Type': 'multipart/formdata'
+        },
+        body: formdata
+      });
+      this.fetchData();
+
+    } catch (error) {
+     console.log(error);
+    }
+  }
+  _okok(){
+    Alert.alert(
+   'Thông báo',
+   'Bạn có muốn xóa cảm nghĩ không?',
+   [
+     {text: 'No', onPress: () => console.log('no')},
+     {text: 'Yes', onPress: () => {this._deleteStatus();}}
+   ],
+   { cancelable: false }
+  );
+
+  this.setModalVisible_Setting1();
 
   }
 
@@ -349,7 +410,7 @@ export default class timeLineView extends Component{
             </TouchableOpacity>
           </View>
           <View style={{flex:1}}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={()=>this._setting1(data)}>
               <Icon name="ios-more-outline" size={30} color="#BDBDBD" style={{marginLeft:deviceWidth/6}}/>
             </TouchableOpacity>
           </View>
@@ -366,6 +427,17 @@ export default class timeLineView extends Component{
       <Text>{this.state.user.username}
       </Text>
         <ListView
+        refreshControl={
+          <RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={this._onRefresh.bind(this)}
+            tintColor="#ff0000"
+            title="Loading..."
+            titleColor="#00ff00"
+            colors={['#ff0000', '#00ff00', '#0000ff']}
+            progressBackgroundColor="#ffffff"
+          />
+        }
         dataSource={this.state.dataSource}
         renderRow={this._renderRow.bind(this)}
         enableEmptySections
@@ -472,6 +544,34 @@ export default class timeLineView extends Component{
         </View>
 
         </Modal>
+        <Modal
+        animationType="fade"
+        transparent={true}
+        visible={this.state.modalVisible_setting1}
+        onRequestClose={()=>this.setModalVisible_Setting1()}
+      >
+        <TouchableOpacity activeOpacity={1}
+              onPress={() => {
+                    this.setModalVisible_Setting1()
+                  }}
+              style={{backgroundColor: 'rgba(0,0,0,.8)',flex:1,justifyContent:'center',alignItems:'center'}} >
+          <TouchableOpacity activeOpacity={1} style={{
+            width:300,
+            backgroundColor:'white',
+          }}>
+
+              <TouchableOpacity onPress={()=>this._okok()}>
+                <View style={Style._buttonSetting}>
+                    <Text>Xóa bài
+                    </Text>
+                </View>
+              </TouchableOpacity>
+
+
+        </TouchableOpacity>
+        </TouchableOpacity>
+
+        </Modal>
       </View>
     );
   }
@@ -529,4 +629,12 @@ var Style = StyleSheet.create({
     alignItems:'center',
     justifyContent: 'space-between',
   },
+  _buttonSetting:{
+    alignItems:'center',
+    justifyContent:'center',
+    borderBottomWidth: 1,
+    borderBottomColor:'#F5F5F5',
+    paddingTop: 10,
+    paddingBottom: 10
+  }
 });
