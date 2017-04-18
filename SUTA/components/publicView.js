@@ -56,7 +56,7 @@ export default class Public extends Component{
   }
 
   componentDidMount(){
-    this.fetchData();
+     this.fetchData();
   }
   _onRefresh() {
     this.setState({refreshing: true});

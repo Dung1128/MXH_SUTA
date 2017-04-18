@@ -93,11 +93,19 @@ export default class Friends extends Component{
     this.setState({
         spinnerVisible: true,
       });
+    // this.getFriends();
+    // data = [];
+    // this.getListUser();
+    // this.get_noti();
+  }
+
+  componentDidMount(){
     this.getFriends();
     data = [];
     this.getListUser();
     this.get_noti();
   }
+  
   setModalVisible() {
     if(this.state.modalVisible){
       this.setState({modalVisible: false});
