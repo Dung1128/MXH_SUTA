@@ -34,6 +34,49 @@ export default class Chat extends Component {
 
   }
   componentWillMount(){
+    // var check = false;
+    // database.ref("rooms").on("value", (snap)=>{
+    //   items_rooms = [];
+    //     snap.forEach((data)=>{
+    //       items_rooms.push({
+    //         key: data.key,
+    //         data: data.val(),
+    //       });
+    //
+    //     })
+    //     for (var i = 0; i < items_rooms.length; i++) {
+    //       if(items_rooms[i].data.user_1.id_user === this.state.data.id_user && items_rooms[i].data.user_2.id_user === this.state.user_login.id_user
+    //       || items_rooms[i].data.user_2.id_user === this.state.data.id_user && items_rooms[i].data.user_1.id_user === this.state.user_login.id_user)
+    //       {
+    //         this.showMess(items_rooms[i].key);
+    //         this.setState({
+    //           check_rooms:true,
+    //           info_rooms: items_rooms[i],
+    //         });
+    //         this.checkStatus(items_rooms[i].key);
+    //       }
+    //
+    //     }
+    //
+    // });
+
+
+  }
+
+  showMess(key){
+    database.ref('message').child(key).on('value',(snap)=>{
+      items=[];
+      snap.forEach((data)=>{
+        items.push({
+          key: data.key,
+          data: data.val(),
+        });
+
+      });
+      this.setState({dataSource: this.state.dataSource.cloneWithRows(items)});
+    })
+  }
+  componentDidMount(){
     var check = false;
     database.ref("rooms").on("value", (snap)=>{
       items_rooms = [];
@@ -59,25 +102,6 @@ export default class Chat extends Component {
         }
 
     });
-
-
-  }
-
-  showMess(key){
-    database.ref('message').child(key).on('value',(snap)=>{
-      items=[];
-      snap.forEach((data)=>{
-        items.push({
-          key: data.key,
-          data: data.val(),
-        });
-
-      });
-      this.setState({dataSource: this.state.dataSource.cloneWithRows(items)});
-    })
-  }
-  componentDidMount(){
-
 
   }
   checkStatus(key){

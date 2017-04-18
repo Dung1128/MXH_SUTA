@@ -47,9 +47,12 @@ export default class profileView extends Component {
     })
   }
   componentWillMount(){
-    this.get_set_info();
+    // this.get_set_info();
   }
 
+componentDidMount(){
+  this.get_set_info();
+}
   onProfile(data){
      this.setModalVisible();
    }
