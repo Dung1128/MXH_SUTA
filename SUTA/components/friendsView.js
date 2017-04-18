@@ -450,7 +450,6 @@ export default class Friends extends Component{
   async get_noti(){
       let formdata = new FormData();
       formdata.append('id_userFriend',this.state.user.id_user);
-      console.log(this.state.user.id_user);
         try {
           let response = await fetch('http://suta.esy.es/api/get_noti_addfr.php',{
             method: 'post',

@@ -26,7 +26,7 @@ import dateFormat from 'dateformat';
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
 var listnull = [];
-export default class Public extends Component{
+export default class Anonymous extends Component{
   constructor(props){
     super(props);
     this.state = ({

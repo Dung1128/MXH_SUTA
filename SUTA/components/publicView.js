@@ -18,13 +18,11 @@ import {
   MenuOptions,
   MenuOption,
   MenuTrigger,
-  MenuContext
+  MenuContext,
 } from 'react-native-popup-menu';
 import Icon from 'react-native-vector-icons/Ionicons';
-import ScrollableTabView from 'react-native-scrollable-tab-view';
 import Spinner from 'react-native-loading-spinner-overlay';
 import dateFormat from 'dateformat';
-import firebase from './api.js';
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
 var listnull = [];
@@ -36,18 +34,17 @@ export default class Public extends Component{
       dataSource_cmt: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
       refreshing: false,
       modalVisible: false,
+      spinnerVisible: false,
       modalVisible_setting1: false,
       modalVisible_setting2: false,
+      spinnerVisible_modal: false,
+
       sendColor: '#90949c',
       user: this.props.user,
-      spinnerVisible: false,
     });
     flag = true;
 
     check = 0;
-
-    database = firebase.database();
-    _rp = database.ref('Report')
   }
   componentWillUnmount() {
     flag = false;
@@ -56,10 +53,10 @@ export default class Public extends Component{
     this.setState({
         spinnerVisible: true,
       });
-this.fetchData();
   }
+
   componentDidMount(){
-    // this.fetchData();
+     this.fetchData();
   }
   _onRefresh() {
     this.setState({refreshing: true});
@@ -97,6 +94,53 @@ this.fetchData();
     }
   }
 
+  _setting1(data){
+    this.setModalVisible_Setting1();
+    this.setState({
+      ID: data.id_status
+    })
+  }
+
+  _setting2(data){
+    this.setModalVisible_Setting2();
+    this.setState({
+      ID: data.id_status
+    })
+  }
+  async _deleteStatus(){
+    let formdata = new FormData();
+    formdata.append('id_status',this.state.ID);
+
+    try {
+      let response = await fetch('http://suta.esy.es/api/deletestatus.php',{
+        method: 'post',
+        header: {
+          'Content-Type': 'multipart/formdata'
+        },
+        body: formdata
+      });
+      this.fetchData();
+
+    } catch (error) {
+     console.log(error);
+    }
+  }
+
+  _okok(){
+    Alert.alert(
+   'Thông báo',
+   'Bạn có muốn xóa cảm nghĩ không?',
+   [
+     {text: 'No', onPress: () => console.log('no')},
+     {text: 'Yes', onPress: () => {this._deleteStatus();}}
+   ],
+   { cancelable: false }
+  );
+
+  this.setModalVisible_Setting1();
+
+  }
+
   componentWillReceiveProps(){
     this.fetchData();
   }
@@ -120,7 +164,7 @@ this.fetchData();
       this.setState({
         data: responseJson.result,
         dataSource: this.state.dataSource.cloneWithRows(responseJson.result),
-        spinnerVisible: false,
+        spinnerVisible: false
       });
 
       }
@@ -132,61 +176,15 @@ this.fetchData();
     }
 
   }
-
-  onClose(){
-    this.fetchData();
-    this.setModalVisible();
-  }
-
-  _setting1(data){
-    this.setModalVisible_Setting1();
-    this.setState({
-      ID: data.id_status
-    })
-  }
-
-  _setting2(data){
-    this.setModalVisible_Setting2();
-    this.setState({
-      ID: data.id_status
-    })
-  }
-
-  _report(){
-  //  alert(this.state.ID);
-    _rp.push(this.state.ID)
-    this.setModalVisible_Setting2();
-  }
-
-  async _deleteStatus(){
-    let formdata = new FormData();
-    formdata.append('id_status',this.state.ID);
-
-    try {
-      let response = await fetch('http://suta.esy.es/api/deletestatus.php',{
-        method: 'post',
-        header: {
-          'Content-Type': 'multipart/formdata'
-        },
-        body: formdata
-      });
-      this.fetchData();
-
-    } catch (error) {
-     console.log(error);
-    }
-  }
-
   onClickComment(data)
   {
-
+    this.setModalVisible();
     this.setState({
-      spinnerVisible: true,
       data: data,
       dataSource_cmt: this.state.dataSource_cmt.cloneWithRows(listnull)
     });
    this.getComment(data);
-   this.setModalVisible();
+
   }
   async getInfoUser(data){
     let formdata = new FormData();
@@ -217,21 +215,6 @@ this.fetchData();
     } catch (error) {
      console.log(error);
     }
-  }
-
-  _okok(){
-    Alert.alert(
-   'Thông báo',
-   'Bạn có muốn xóa cảm nghĩ không?',
-   [
-     {text: 'No', onPress: () => console.log('no')},
-     {text: 'Yes', onPress: () => {this._deleteStatus();}}
-   ],
-   { cancelable: false }
-  );
-
-  this.setModalVisible_Setting1();
-
   }
 
   async onLike(data){
@@ -269,6 +252,10 @@ this.fetchData();
 
   }
 
+  onClose(){
+    this.fetchData();
+    this.setModalVisible();
+  }
   clearText(fieldName) {
     this.refs[fieldName].setNativeProps({text: ''});
     this.setState({
@@ -307,9 +294,10 @@ this.fetchData();
     }
   }
   async _addComment(value){
+
     if(this.state.sendColor!= '#90949c')
     {
-      this.add_noti(value);
+      this._add_noti(value);
       this.clearText('contentComment')
       let formdata = new FormData();
       formdata.append("id_user", this.state.user.id_user);
@@ -334,9 +322,6 @@ this.fetchData();
         else {
           return;
         }
-
-
-
       }
       catch(error)
       {
@@ -362,7 +347,7 @@ this.fetchData();
       var jsonResponse = JSON.parse(res);
       this.setState({
         spinnerVisible: false,
-        dataSource_cmt: this.state.dataSource_cmt.cloneWithRows(jsonResponse['result'])
+        dataSource_cmt: this.state.dataSource_cmt.cloneWithRows(jsonResponse['result']!=null?jsonResponse['result']:listnull)
       });
 
       }
@@ -596,7 +581,6 @@ this.fetchData();
         </View>
 
         </Modal>
-
         <Modal
         animationType="fade"
         transparent={true}
@@ -642,7 +626,7 @@ this.fetchData();
             backgroundColor:'white',
           }}>
 
-              <TouchableOpacity onPress={()=>this._report()}>
+              <TouchableOpacity>
                 <View style={styles._buttonSetting}>
                     <Text>Report
                     </Text>
