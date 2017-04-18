@@ -53,10 +53,11 @@ export default class Public extends Component{
     this.setState({
         spinnerVisible: true,
       });
+      this.fetchData();
   }
 
   componentDidMount(){
-    this.fetchData();
+    // this.fetchData();
   }
   _onRefresh() {
     this.setState({refreshing: true});

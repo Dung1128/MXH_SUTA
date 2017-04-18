@@ -61,6 +61,27 @@ export default class Message extends Component{
    });
   }
   componentWillMount(){
+    // var check = false;
+    // database.ref("rooms").on("value", (snap)=>{
+    //   items_rooms = [];
+    //     snap.forEach((data)=>{
+    //       var value = data.val();
+    //       if(value.user_1.id_user!=this.state.user.id_user && value.user_2.id_user === this.state.user.id_user
+    //       || value.user_1.id_user===this.state.user.id_user && value.user_2.id_user != this.state.user.id_user)
+    //       {
+    //         items_rooms.push({
+    //           key: data.key,
+    //           data: data.val(),
+    //         });
+    //       }
+    //
+    //
+    //     })
+    //     this.setState({dataSource: this.state.dataSource.cloneWithRows(items_rooms)});
+    // });
+  }
+
+  componentDidMount(){
     var check = false;
     database.ref("rooms").on("value", (snap)=>{
       items_rooms = [];

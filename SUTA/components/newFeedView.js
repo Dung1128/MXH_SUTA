@@ -42,6 +42,9 @@ export default class NewFeed extends Component{
     this.setState({
       radio1: 'md-radio-button-on'
     });
+    // this.get_noti();
+  }
+  componentDidMount(){
     this.get_noti();
   }
   async onRead(data){
