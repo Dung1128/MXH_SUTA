@@ -15,10 +15,7 @@ import {
 import Hr from 'react-native-hr';
 import Iconn from 'react-native-vector-icons/Ionicons';
 import TimeLineView from './tab/timelineView.js';
-import ImageView from './tab/imageView.js';
 import { Tabs, Tab, Icon } from 'react-native-elements';
-var ScrollableTabView = require('react-native-scrollable-tab-view');
-import DefaultTabBar from './tab/DefaultTabBar.js';
 var ImagePicker = require('react-native-image-picker');
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
@@ -265,8 +262,8 @@ export default class profileView extends Component {
             <View style={{justifyContent:'center',
             alignItems:'center',
             width:70,height:70,
-            borderWidth:0.2,
-            borderColor:'#d1d1d1',
+            borderWidth:2,
+            borderColor:'#f5f5f5',
             borderRadius:200,
             backgroundColor:'white',
             alignItems:'center'}} >
@@ -286,13 +283,7 @@ export default class profileView extends Component {
           </Image>
         </View>
         <View style={styles._content}>
-          <ScrollableTabView
-            initialPage={0}
-            renderTabBar={() => <DefaultTabBar/>}
-          >
-              <TimeLineView tabLabel='Nhật Ký' user = {this.state.user} />
-              <ImageView tabLabel='Hình Ảnh' />
-          </ScrollableTabView>
+          <TimeLineView tabLabel='Nhật Ký' user = {this.state.user} />
         </View>
       </View>
 
