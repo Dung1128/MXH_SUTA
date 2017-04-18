@@ -567,7 +567,7 @@ export default class Anonymous extends Component{
             underlineColorAndroid='transparent'
             style={styles.input}
             placeholder="Viết bình luận"
-            onChangeText={(val) => this.setState({contentComment: val, sendColor:'#8e44ad'})}
+            onChangeText={(val) => this.setState({contentComment: val, sendColor:val!=''?'#8e44ad':'#90949c'})}
             multiline={true}
             placeholderTextColor= '#90949c'
             autoCapitalize="none"
