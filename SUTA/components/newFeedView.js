@@ -31,7 +31,8 @@ export default class NewFeed extends Component{
       flagConfession:0,
       dataSource_noti: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
       checkadd: false,
-      data: this.props.data
+      data: this.props.data,
+      sendColor: 'rgba(255, 255, 255, 0.5)',
     });
 
   }
@@ -162,8 +163,16 @@ export default class NewFeed extends Component{
           console.error(error);
         }
   }
-
+  clearText(fieldName) {
+    this.refs[fieldName].setNativeProps({text: ''});
+    this.setState({
+      sendColor: 'rgba(255, 255, 255, 0.5)',
+    })
+  }
   async onPostStatus(){
+    if(this.state.sendColor!= 'rgba(255, 255, 255, 0.5)')
+    {
+      this.clearText('contentStatus');
     this.setModalVisible(!this.state.modalVisible);
       let formdata = new FormData();
       formdata.append("id_user", this.props.data.id_user);
@@ -193,7 +202,7 @@ export default class NewFeed extends Component{
       {
       //  console.log(error);
       }
-
+    }
 
 
   }
@@ -262,7 +271,7 @@ export default class NewFeed extends Component{
             </View>
 
             <TouchableOpacity onPress={()=> this.onPostStatus()} style={{flex:1,alignItems:'center'}}>
-              <Icon name="md-send" size={24} color="#F5F5F5" style={Style.ico}/>
+              <Icon name="md-send" size={24} color={this.state.sendColor} style={Style.ico}/>
             </TouchableOpacity>
           </View>
 
@@ -271,7 +280,7 @@ export default class NewFeed extends Component{
                 <TextInput
                 underlineColorAndroid="#F5F5F5"
                 placeholderTextColor= 'gray'
-                onChangeText={(val) => this.setState({content: val})}
+                onChangeText={(val) => this.setState({content: val, sendColor:val!=''?'#f5f5f5':'rgba(255, 255, 255, 0.5)'})}
                 style={Style.textInputStyle}
                 multiline={true}
                 autoCapitalize="none"
@@ -280,6 +289,7 @@ export default class NewFeed extends Component{
                 autoFocus={true}
                 textAlignVertical="top"
                 numberOfLines = {4}
+                ref={'contentStatus'}
                 returnKeyType="done"
                 placeholder='Bạn đang có tâm sự gì?'/>
               </View>
