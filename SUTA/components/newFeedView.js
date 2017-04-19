@@ -166,16 +166,13 @@ export default class NewFeed extends Component{
           console.error(error);
         }
   }
-  clearText(fieldName) {
-    this.refs[fieldName].setNativeProps({text: ''});
-    this.setState({
-      sendColor: 'rgba(255, 255, 255, 0.5)',
-    })
-  }
+
   async onPostStatus(){
     if(this.state.sendColor!= 'rgba(255, 255, 255, 0.5)')
     {
-      this.clearText('contentStatus');
+      this.setState({
+        sendColor: 'rgba(255, 255, 255, 0.5)',
+      })
     this.setModalVisible(!this.state.modalVisible);
       let formdata = new FormData();
       formdata.append("id_user", this.props.data.id_user);
@@ -292,7 +289,6 @@ export default class NewFeed extends Component{
                 autoFocus={true}
                 textAlignVertical="top"
                 numberOfLines = {4}
-                ref={'contentStatus'}
                 returnKeyType="done"
                 placeholder='Bạn đang có tâm sự gì?'/>
               </View>
@@ -349,8 +345,8 @@ export default class NewFeed extends Component{
       initialPage={0}
       renderTabBar={() => <DefaultTabBar />}
       >
-        <Anonymous tabLabel="ẨN DANH" data={this.state.checkadd} user ={this.state.data}/>
-        <Public tabLabel="CÔNG KHAI" data={this.state.checkadd} user ={this.state.data}/>
+        <Anonymous tabLabel="ẨN DANH" navigator = {this.props.navigator} data={this.state.checkadd} user ={this.state.data}/>
+        <Public tabLabel="CÔNG KHAI" navigator = {this.props.navigator} data={this.state.checkadd} user ={this.state.data}/>
 
       </ScrollableTabView>
       <Modal

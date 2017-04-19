@@ -30,6 +30,7 @@ export default class timeLineView extends Component{
       dataSource_cmt: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
       id: this.props.user.id_user,
       user: this.props.user,
+      user_fr: this.props.user_fr,
       modalVisible: false,
       spinnerVisible: false,
       modalVisible_setting1: false,
@@ -557,14 +558,22 @@ export default class timeLineView extends Component{
             width:300,
             backgroundColor:'white',
           }}>
-
+          {
+            this.state.user_fr==null?
               <TouchableOpacity onPress={()=>this._okok()}>
                 <View style={Style._buttonSetting}>
                     <Text>Xóa bài
                     </Text>
                 </View>
               </TouchableOpacity>
-
+              :
+              <TouchableOpacity>
+                <View style={Style._buttonSetting}>
+                    <Text>Report
+                    </Text>
+                </View>
+              </TouchableOpacity>
+          }
 
         </TouchableOpacity>
         </TouchableOpacity>

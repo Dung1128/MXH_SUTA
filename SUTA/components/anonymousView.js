@@ -359,17 +359,32 @@ export default class Anonymous extends Component{
      console.log(error);
     }
   }
+  showTimeline(data){
+    this.props.navigator.push({
+      name: 'profile',
+      passProps: {
+        data: data
+      }
+    })
+    if(this.state.modalVisible){
+      this.setModalVisible();
+
+    }
+
+  }
   _renderRow_cmt(data){
     return(
       <View style={{borderTopWidth:0.5,borderTopColor:'rgba(143, 143, 143, 0.2)'}}>
         <View style={{flexDirection:'row',padding:10}}>
-          <View style={styles.backgroundAvatar} >
-            <Image style={styles.avatar} source={{uri: data.avatar}}/>
-          </View>
-          <View style={{justifyContent:'center',marginLeft:10}}>
+        <TouchableOpacity onPress={()=>this.showTimeline(data)} style={styles.backgroundAvatar} >
+          <Image style={styles.avatar} source={{uri: data.avatar}}/>
+        </TouchableOpacity>
+        <View style={{justifyContent:'center',marginLeft:10}}>
+          <TouchableOpacity onPress={()=>this.showTimeline(data)}>
             <Text style={styles.textbold}>
               {data.username}
             </Text>
+          </TouchableOpacity>
             <Text style={styles.textnormal}>
              {data.content}
             </Text>

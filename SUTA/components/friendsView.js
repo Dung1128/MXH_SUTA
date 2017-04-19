@@ -105,7 +105,7 @@ export default class Friends extends Component{
     this.getListUser();
     this.get_noti();
   }
-  
+
   setModalVisible() {
     if(this.state.modalVisible){
       this.setState({modalVisible: false});
@@ -310,12 +310,24 @@ export default class Friends extends Component{
        console.log(error);
       }
   }
+  showTimeline(data){
+    this.props.navigator.push({
+      name: 'profile',
+      passProps: {
+        data: data
+      }
+    })
+    if(this.state.modalVisible){
+      this.setModalVisible();
 
+    }
+
+  }
   _renderRow(data){
     return (
       <View style={{padding:10,flex:1,borderBottomWidth:0.5,borderBottomColor:'rgba(143, 143, 143, 0.2)'}}>
       <View style={{flex:1, flexDirection:'row',justifyContent:'space-between'}}>
-          <View style={{flex:1,flexDirection:'row'}}>
+          <TouchableOpacity onPress={()=>this.showTimeline(data)} style={{flex:1,flexDirection:'row'}}>
             <View >
               <Image style={Style.avatar} source={{uri: data.avatar}}/>
             </View>
@@ -324,7 +336,7 @@ export default class Friends extends Component{
                {data.username}
               </Text>
             </View>
-          </View>
+          </TouchableOpacity>
           <TouchableOpacity onPress={()=>this.navigate('chat',data)} style={{justifyContent:'center',marginRight:5}}>
             <Icon color='rgba(0, 0, 0, 0.2)' name='md-chatbubbles' size={24} />
           </TouchableOpacity>
@@ -338,7 +350,7 @@ export default class Friends extends Component{
     return (
       <View style={{padding:10,flex:1,borderBottomWidth:0.5,borderBottomColor:'rgba(143, 143, 143, 0.2)'}}>
       <View style={{flex:1, flexDirection:'row',justifyContent:'space-between'}}>
-          <View style={{flex:1,flexDirection:'row'}}>
+          <TouchableOpacity onPress={()=>this.showTimeline(data)} style={{flex:1,flexDirection:'row'}}>
             <View>
               <Image style={Style.avatar} source={{uri: data.avatar}}/>
             </View>
@@ -347,7 +359,7 @@ export default class Friends extends Component{
                {data.username}
               </Text>
             </View>
-          </View>
+          </TouchableOpacity>
           <TouchableOpacity onPress={()=>this.add_noti_addfr(data)} style={{justifyContent:'center',marginRight:5}}>
             <Icon color='rgba(0, 0, 0, 0.2)' name='md-add' size={24} />
           </TouchableOpacity>

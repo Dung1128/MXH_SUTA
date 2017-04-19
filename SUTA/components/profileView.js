@@ -27,6 +27,7 @@ export default class profileView extends Component {
       name:'dung111',
       modalVisible: false,
       user:this.props.data,
+      check_user:false,
     });
     console.disableYellowBox = true;
   }
@@ -46,13 +47,15 @@ export default class profileView extends Component {
       }
     })
   }
-  componentWillMount(){
-    // this.get_set_info();
+  componentDidMount(){
+    AsyncStorage.getItem("user").then((value)=>{
+      if(value !=null)
+      {
+        this.setState({user_login:JSON.parse(value)});
+      }
+    }).done();
+    this.get_set_info();
   }
-
-componentDidMount(){
-  this.get_set_info();
-}
   onProfile(data){
      this.setModalVisible();
    }
@@ -70,10 +73,19 @@ componentDidMount(){
      this.redirect('changeprofile');
    }
 
-
   openDrawer(){
     this.refs['DRAWER_REF'].openDrawer();
   }
+
+  save_user(data){
+    if (this.state.user.id_user==this.state.user_login.id_user) {
+      AsyncStorage.setItem("user",JSON.stringify(data));
+      this.setState({
+        check_user: true
+      });
+    }
+  }
+
   async get_set_info(){
     let formdata = new FormData();
     formdata.append("id_user",this.state.user.id_user);
@@ -90,7 +102,8 @@ componentDidMount(){
       this.setState({
         user: jsonResponse['result']
       });
-      AsyncStorage.setItem("user",JSON.stringify(jsonResponse['result']));
+      this.save_user(jsonResponse['result']);
+
     }
     catch(error)
     {
@@ -152,7 +165,7 @@ componentDidMount(){
       this.setState({
         user: jsonResponse['result']
       });
-      AsyncStorage.setItem("user",JSON.stringify(jsonResponse['result']));
+      this.save_user(jsonResponse['result']);
     }
     catch(error)
     {
@@ -176,7 +189,7 @@ componentDidMount(){
       this.setState({
         user: jsonResponse['result']
       });
-      AsyncStorage.setItem("user",JSON.stringify(jsonResponse['result']));
+      this.save_user(jsonResponse['result']);
     }
     catch(error)
     {
@@ -276,13 +289,25 @@ componentDidMount(){
               {this.state.user.username}
             </Text>
           </View>
-
-
-          <View style={{paddingLeft: deviceWidth - 68,paddingTop:10}}>
-            <TouchableOpacity onPress={()=>this.openDrawer()}>
-              <Iconn name="md-menu" size={34} color="#F5F5F5"/>
+          {
+            this.state.check_user?
+            <View style={{paddingLeft: deviceWidth - 68,paddingTop:10}}>
+              <TouchableOpacity onPress={()=>this.openDrawer()}>
+                <Iconn name="md-menu" size={34} color="#F5F5F5"/>
+              </TouchableOpacity>
+            </View>
+            :
+            <View style={{position:'absolute',right:10,paddingTop:10}}>
+            <TouchableOpacity style={{justifyContent:'center',
+            alignItems:'center',
+            width:40,height:40,
+            borderRadius:200,
+            backgroundColor:'rgba(255, 255, 255, 0.2)',
+            alignItems:'center'}}>
+              <Iconn name="md-person-add" size={24} color="#F5F5F5"/>
             </TouchableOpacity>
-          </View>
+            </View>
+          }
           </Image>
         </View>
         <View style={styles._content}>
