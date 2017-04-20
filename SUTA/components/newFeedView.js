@@ -139,32 +139,32 @@ export default class NewFeed extends Component{
     this.get_noti();
     this.setModalVisible_noti(!this.state.modalVisible_noti);
   }
-  async get_noti(){
+  get_noti(){
       let formdata = new FormData();
       formdata.append('id_userFriend',this.state.data.id_user);
-        try {
-          let response = await fetch('http://suta.esy.es/api/get_noti_status.php',{
+        fetch('http://suta.esy.es/api/get_noti_status.php',{
             method: 'post',
             headers: {
             'Content-Type': 'multipart/form-data',
             },
             body: formdata
+          })
+          .then((response)=>response.json())
+          .then((responseJson)=>{
+            if (flag == true){
+              this.setState({
+                notification: responseJson['notification'],
+                dataSource_noti: this.state.dataSource_noti.cloneWithRows(responseJson['result']!=null?responseJson['result']:listnull),
+              });
+            }
+            else {
+              return;
+            }
+          })
+          .catch(error=>{
+            console.log(error);
           });
-          let res = await response.text();
-          if(flag == true){
-            var jsonResponse = JSON.parse(res);
 
-            this.setState({
-              notification: jsonResponse['notification'],
-              dataSource_noti: this.state.dataSource_noti.cloneWithRows(jsonResponse['result']!=null?jsonResponse['result']:listnull),
-            });
-          }
-          else {
-            return;
-          }
-        } catch(error) {
-          console.error(error);
-        }
   }
 
   async onPostStatus(){

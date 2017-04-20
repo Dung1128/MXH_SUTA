@@ -145,36 +145,42 @@ export default class Anonymous extends Component{
   componentWillReceiveProps(){
     this.fetchData();
   }
-
-  async fetchData() {
+  stop_spinner(){
+    setTimeout(()=>{
+      this.setState({
+        spinnerVisible: false
+      });
+    },2000)
+  }
+  fetchData() {
     let formdata = new FormData();
     formdata.append('id_user',this.state.user.id_user);
 
-    try {
-      let response = await fetch('http://suta.esy.es/api/getstatus_anonymous.php',{
+      fetch('http://suta.esy.es/api/getstatus_anonymous.php',{
         method: 'post',
         header: {
           'Content-Type': 'multipart/formdata'
         },
         body: formdata
+      })
+      .then((response)=>response.json())
+      .then((responseJson)=>{
+        if (flag == true){
+          this.setState({
+            data: responseJson.result,
+            dataSource: this.state.dataSource.cloneWithRows(responseJson.result),
+
+          });
+          this.stop_spinner();
+        }
+        else {
+          return;
+        }
+      })
+      .catch(error=>{
+        console.log(error);
       });
 
-      let res = await response.text();
-      if (flag == true){
-      var responseJson = JSON.parse(res);
-      this.setState({
-        data: responseJson.result,
-        dataSource: this.state.dataSource.cloneWithRows(responseJson.result),
-        spinnerVisible: false
-      });
-
-      }
-      else {
-        return;
-      }
-    } catch (error) {
-     console.log(error);
-    }
 
   }
   onClickComment(data)
@@ -331,34 +337,33 @@ export default class Anonymous extends Component{
     }
   }
   // Get data to list Comment
-  async getComment(value){
+  getComment(value){
     let formdata = new FormData();
     formdata.append('id_status',value.id_status);
-    try {
-      let response = await fetch('http://suta.esy.es/api/getcmtstatus_id.php',{
+      fetch('http://suta.esy.es/api/getcmtstatus_id.php',{
         method: 'post',
         header: {
           'Content-Type': 'multipart/formdata'
         },
         body: formdata
+      })
+      .then((response)=>response.json())
+      .then((responseJson)=>{
+        if (flag == true){
+          this.setState({
+            spinnerVisible: false,
+            dataSource_cmt: this.state.dataSource_cmt.cloneWithRows(responseJson['result']!=null?responseJson['result']:listnull)
+          });
+        }
+        else {
+          return;
+        }
+      })
+      .catch(error=>{
+        console.log(error);
       });
 
-      let res = await response.text();
-      if(flag == true){
-      var jsonResponse = JSON.parse(res);
-      this.setState({
-        spinnerVisible: false,
-        dataSource_cmt: this.state.dataSource_cmt.cloneWithRows(jsonResponse['result'])
-      });
-
-      }
-      else {
-        return;
-      }
-    } catch (error) {
-     console.log(error);
     }
-  }
   showTimeline(data){
     this.props.navigator.push({
       name: 'profile',

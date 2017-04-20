@@ -93,10 +93,6 @@ export default class Friends extends Component{
     this.setState({
         spinnerVisible: true,
       });
-    // this.getFriends();
-    // data = [];
-    // this.getListUser();
-    // this.get_noti();
   }
 
   componentDidMount(){
@@ -158,71 +154,65 @@ export default class Friends extends Component{
 
   }
 
-  async add_noti_addfr(data){
+  add_noti_addfr(data){
 
       let formdata = new FormData();
       formdata.append('id_user',this.state.user.id_user);
       formdata.append('username',this.state.user.username);
       formdata.append('id_userFriend',data.id_user);
-        try {
-          let response = await fetch('http://suta.esy.es/api/noti_add_friends.php',{
+
+          fetch('http://suta.esy.es/api/noti_add_friends.php',{
             method: 'post',
             headers: {
             'Content-Type': 'multipart/form-data',
             },
             body: formdata
+          })
+          .then((response)=>response.json())
+          .then((responseJson)=>{
+            if (flag == true){
+              this.getListUser();
+            }
+            else {
+              return;
+            }
+          })
+          .catch(error=>{
+            console.log(error);
           });
-          let res = await response.text();
-          if(flag == true){
-            var jsonResponse = JSON.parse(res);
-            this.getListUser();
 
-          }
-          else {
-            return;
-          }
-
-        } catch(error) {
-          console.error(error);
-        }
 
 
   }
 
-  async getListUser(){
+   getListUser(){
 
       let formdata = new FormData();
       formdata.append('id_userFriend',this.state.user.id_user);
-        try {
-          let response = await fetch('http://suta.esy.es/api/listuser.php',{
+          fetch('http://suta.esy.es/api/listuser.php',{
             method: 'post',
             headers: {
             'Content-Type': 'multipart/form-data',
             },
             body: formdata
+          })
+          .then((response)=>response.json())
+          .then((responseJson)=>{
+            if (flag == true){
+              this.setState({
+                listuser: responseJson['result'],
+                dataSourceUser: this.state.dataSourceUser.cloneWithRows(responseJson['result']!=null?responseJson['result']:listnull),
+
+              });
+            }
+            else {
+              return;
+            }
+          })
+          .catch(error=>{
+            console.log(error);
           });
-          let res = await response.text();
-          if(flag == true){
-            var jsonResponse = JSON.parse(res);
 
-            this.setState({
-              listuser: jsonResponse['result'],
-              dataSourceUser: this.state.dataSourceUser.cloneWithRows(jsonResponse['result']!=null?jsonResponse['result']:listnull),
-
-            });
-
-
-          }
-          else {
-            return;
-          }
-          // else{
-          //   console.log(this.state.message);
-          // }
-
-        } catch(error) {
-          console.error(error);
-        }
 
 
   }
@@ -331,11 +321,11 @@ export default class Friends extends Component{
             <View >
               <Image style={Style.avatar} source={{uri: data.avatar}}/>
             </View>
-            <View style={{marginLeft:10,justifyContent:'center'}}>
+            <TouchableOpacity  onPress={()=>this.showTimeline(data)} style={{marginLeft:10,justifyContent:'center'}}>
               <Text style={Style.textbold}>
                {data.username}
               </Text>
-            </View>
+            </TouchableOpacity>
           </TouchableOpacity>
           <TouchableOpacity onPress={()=>this.navigate('chat',data)} style={{justifyContent:'center',marginRight:5}}>
             <Icon color='rgba(0, 0, 0, 0.2)' name='md-chatbubbles' size={24} />
@@ -459,6 +449,13 @@ export default class Friends extends Component{
 
     this.setModalVisible_noti(!this.state.modalVisible_noti);
   }
+  stop_spinner(){
+    setTimeout(()=>{
+      this.setState({
+        spinnerVisible: false
+      });
+    },2000)
+  }
   async get_noti(){
       let formdata = new FormData();
       formdata.append('id_userFriend',this.state.user.id_user);
@@ -475,10 +472,10 @@ export default class Friends extends Component{
             var jsonResponse = JSON.parse(res);
 
             this.setState({
-              spinnerVisible: false,
               notification: jsonResponse['notification'],
               dataSource_noti: this.state.dataSource_noti.cloneWithRows(jsonResponse['result']!=null?jsonResponse['result']:listnull),
             });
+            this.stop_spinner();
           }
           else {
             return;

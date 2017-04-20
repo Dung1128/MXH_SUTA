@@ -101,13 +101,22 @@ export default class Message extends Component{
         this.setState({dataSource: this.state.dataSource.cloneWithRows(items_rooms)});
     });
   }
+  showTimeline(data){
+    this.props.navigator.push({
+      name: 'profile',
+      passProps: {
+        data: data
+      }
+    })
+
+  }
   _renderRow(data){
     if(data.data.user_1.id_user != this.state.user.id_user && data.data.user_2.id_user === this.state.user.id_user)
     {
       return(
         <View style={{padding:10,flex:1,borderBottomWidth:0.5,borderBottomColor:'rgba(143, 143, 143, 0.2)'}}>
         <View style={{flex:1, flexDirection:'row',justifyContent:'space-between'}}>
-            <View style={{flex:1,flexDirection:'row'}}>
+            <TouchableOpacity  onPress={()=>this.showTimeline(data.data.user_1)} style={{flex:1,flexDirection:'row'}}>
               <View >
                 <Image style={Style.avatar} source={{uri: data.data.user_1.avatar}}/>
                 {
@@ -124,7 +133,7 @@ export default class Message extends Component{
                  {data.data.user_1.username}
                 </Text>
               </View>
-            </View>
+            </TouchableOpacity>
             <TouchableOpacity onPress={()=>this.navigate('chat',data.data.user_1)} style={{justifyContent:'center',marginRight:5}}>
               <Icon color='rgba(0, 0, 0, 0.2)' name='md-chatbubbles' size={24} />
             </TouchableOpacity>
@@ -135,7 +144,7 @@ export default class Message extends Component{
       return(
         <View style={{padding:10,flex:1,borderBottomWidth:0.5,borderBottomColor:'rgba(143, 143, 143, 0.2)'}}>
         <View style={{flex:1, flexDirection:'row',justifyContent:'space-between'}}>
-            <View style={{flex:1,flexDirection:'row'}}>
+            <TouchableOpacity  onPress={()=>this.showTimeline(data.data.user_2)} style={{flex:1,flexDirection:'row'}}>
               <View >
                 <Image style={Style.avatar} source={{uri: data.data.user_2.avatar}}/>
                 {
@@ -151,7 +160,7 @@ export default class Message extends Component{
                  {data.data.user_2.username}
                 </Text>
               </View>
-            </View>
+            </TouchableOpacity>
             <TouchableOpacity onPress={()=>this.navigate('chat',data.data.user_2)} style={{justifyContent:'center',marginRight:5}}>
               <Icon color='rgba(0, 0, 0, 0.2)' name='md-chatbubbles' size={24} />
             </TouchableOpacity>

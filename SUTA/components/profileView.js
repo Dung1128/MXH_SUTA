@@ -9,7 +9,8 @@ import {
   DrawerLayoutAndroid,
   AsyncStorage,
   Modal,
-  Platform
+  Platform,
+  Alert
 } from 'react-native';
 // import Style from 'Style.js';
 import Hr from 'react-native-hr';
@@ -28,6 +29,8 @@ export default class profileView extends Component {
       modalVisible: false,
       user:this.props.data,
       check_user:false,
+      check_fr: '',
+      check_noti: '',
     });
     console.disableYellowBox = true;
   }
@@ -36,6 +39,15 @@ export default class profileView extends Component {
       name: routeName,
       passProps: {
         data: this.props.data
+      }
+    })
+  }
+  navigate(routeName,data){
+    this.props.navigator.push({
+      name: routeName,
+      passProps: {
+        data: data,
+        user_login: this.state.user_login,
       }
     })
   }
@@ -52,8 +64,10 @@ export default class profileView extends Component {
       if(value !=null)
       {
         this.setState({user_login:JSON.parse(value)});
+
       }
     }).done();
+
     this.get_set_info();
   }
   onProfile(data){
@@ -86,30 +100,65 @@ export default class profileView extends Component {
     }
   }
 
-  async get_set_info(){
+   get_set_info(){
     let formdata = new FormData();
     formdata.append("id_user",this.state.user.id_user);
-    try {
-      let response = await fetch('http://suta.esy.es/api/getuser_id.php',{
+    fetch('http://suta.esy.es/api/getuser_id.php',{
         method: 'post',
         headers: {
         'Content-Type': 'multipart/form-data',
         },
         body: formdata
+      })
+      .then((response)=>response.json())
+      .then((responseJson)=>{
+        if (flag == true){
+          this.setState({
+            user: responseJson['result']
+          });
+          this.save_user(responseJson['result']);
+          if (this.state.user_login.id_user!=this.state.user.id_user) {
+            this.check_friends();
+          }
+        }
+        else {
+          return;
+        }
+      })
+      .catch(error=>{
+        console.log(error);
       });
-      let res = await response.text();
-      var jsonResponse = JSON.parse(res);
-      this.setState({
-        user: jsonResponse['result']
-      });
-      this.save_user(jsonResponse['result']);
 
-    }
-    catch(error)
-    {
-      console.log(error);
-    }
   }
+  check_friends(){
+   let formdata = new FormData();
+   formdata.append("id_user",this.state.user_login.id_user);
+   formdata.append("id_userFriend",this.state.user.id_user);
+   fetch('http://suta.esy.es/api/check_friends.php',{
+       method: 'post',
+       headers: {
+       'Content-Type': 'multipart/form-data',
+       },
+       body: formdata
+     })
+     .then((response)=>response.json())
+     .then((responseJson)=>{
+       if (flag == true){
+         this.setState({
+           check_fr: responseJson.result.check_fr,
+           check_noti: responseJson.result.check_noti,
+         });
+         console.log(responseJson.result);
+       }
+       else {
+         return;
+       }
+     })
+     .catch(error=>{
+       console.log(error);
+     });
+
+ }
   selectPhotoTapped(key) {
     const options = {
       quality: 1.0,
@@ -196,7 +245,137 @@ export default class profileView extends Component {
       console.log(error);
     }
   }
+  async ondelete_add_fr(){
+    let formdata = new FormData();
+    formdata.append("id_user",this.state.user_login.id_user);
+    formdata.append("id_userFriend",this.state.user.id_user);
+    try {
+      let response = await fetch('http://suta.esy.es/api/ondelete_add_fr.php',{
+        method: 'post',
+        headers: {
+        'Content-Type': 'multipart/form-data',
+        },
+        body: formdata
+      });
+      let res = await response.text();
+      if (flag == true){
+      var jsonResponse = JSON.parse(res);
+      if(jsonResponse['code']==0)
+      {
+        this.check_friends();
+      }
+      }
+      else {
+        return;
+      }
+    }
+    catch(error)
+    {
+      console.log(error);
+    }
+  }
+  async add_fr(){
+    let formdata = new FormData();
+    formdata.append("id_user",this.state.user_login.id_user);
+    formdata.append("username",this.state.user_login.username);
+    formdata.append("id_userFriend",this.state.user.id_user);
+    try {
+      let response = await fetch('http://suta.esy.es/api/noti_add_friends.php',{
+        method: 'post',
+        headers: {
+        'Content-Type': 'multipart/form-data',
+        },
+        body: formdata
+      });
+      let res = await response.text();
+      if (flag == true){
+      var jsonResponse = JSON.parse(res);
+      if(jsonResponse['code']==0)
+      {
+        this.check_friends();
+      }
+      }
+      else {
+        return;
+      }
+    }
+    catch(error)
+    {
+      console.log(error);
+    }
+  }
+  check_delete(){
+    Alert.alert(
+   'Thông báo',
+   'Bạn có muốn hủy bạn bè không?',
+   [
+     {text: 'Không', onPress: () => console.log('no')},
+     {text: 'Có', onPress: () => {this.delete_fr();}}
+   ],
+   { cancelable: false }
+  );
+
+  }
+  async delete_fr(){
+    let formdata = new FormData();
+    formdata.append("id_user1",this.state.user_login.id_user);
+    formdata.append("id_user2",this.state.user.id_user);
+    try {
+      let response = await fetch('http://suta.esy.es/api/ondelete_friends.php',{
+        method: 'post',
+        headers: {
+        'Content-Type': 'multipart/form-data',
+        },
+        body: formdata
+      });
+      let res = await response.text();
+      if (flag == true){
+      var jsonResponse = JSON.parse(res);
+      if(jsonResponse['code']==0)
+      {
+        this.check_friends();
+      }
+      }
+      else {
+        return;
+      }
+    }
+    catch(error)
+    {
+      console.log(error);
+    }
+  }
   render(){
+    var friends = null;
+    if (this.state.check_fr!=false) {
+      friends = (
+        <TouchableOpacity onPress={()=>this.check_delete()}>
+          <View>
+          <Text style={{margin: 10, fontSize: 15, textAlign: 'left'}}> Hủy bạn bè  </Text>
+          </View>
+        </TouchableOpacity>
+      )
+    }
+    if (this.state.check_noti) {
+      friends = (
+        <TouchableOpacity onPress={()=>this.ondelete_add_fr()}>
+          <View>
+          <Text style={{margin: 10, fontSize: 15, textAlign: 'left'}}> Hủy lời mời kết bạn  </Text>
+          </View>
+        </TouchableOpacity>
+      )
+    }if (this.state.check_noti==false && this.state.check_fr==false) {
+      friends = (
+        <TouchableOpacity onPress={()=>this.add_fr()}>
+          <View>
+          <Text style={{margin: 10, fontSize: 15, textAlign: 'left'}}> Kết bạn  </Text>
+          </View>
+        </TouchableOpacity>
+      )
+    }
+
+
+
     var navigationView = (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
       <View>
@@ -257,17 +436,45 @@ export default class profileView extends Component {
     </View>
   );
 
+    var navigationView_fr = (
+      <View style={{flex: 1, backgroundColor: '#fff'}}>
+        <View>
+          <Text style={{marginTop: 15, margin:10, fontSize: 15, textAlign: 'left',fontWeight:'bold'}}> Thông tin chung </Text>
+        </View>
+        <TouchableOpacity onPress={() => {this.onProfile(this.props.data) }}>
+          <View style={{ flexDirection:'row'}}>
+            <Text style={{margin: 10, fontSize: 15, textAlign: 'left'}}> Thông tin cá nhân </Text>
+            <TouchableOpacity onPress={() => {this.onProfile(this.props.data) }}>
+              <Iconn name="ios-arrow-forward" size={30} color="#BDBDBD" style={{marginTop:5, marginLeft: 100}}/>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+        <Hr lineColor='#BDBDBD'/>
+        {friends}
+
+        <Hr lineColor='#BDBDBD'/>
+        <TouchableOpacity onPress={()=>this.navigate('chat',this.state.user)}>
+          <View>
+            <Text style={{margin: 10, fontSize: 15, textAlign: 'left'}}> Nhắn tin </Text>
+          </View>
+        </TouchableOpacity>
+        <Hr lineColor='#BDBDBD'/>
+
+      </View>
+    )
     return(
       <DrawerLayoutAndroid
       drawerWidth={270}
       drawerPosition={DrawerLayoutAndroid.positions.Right}
       ref={'DRAWER_REF'}
-      renderNavigationView={() => navigationView}>
+      renderNavigationView={() => this.state.check_user?navigationView:navigationView_fr}>
       <View style={{flex:1}}>
         <View style={styles._cover}>
         <Image style={{flex:1, flexDirection:'row'}}
         source={{uri: this.state.user.background}}
         >
+        <View style={{backgroundColor:'rgba(0, 0, 0, 0.2)',flex:1, flexDirection:'row'}}>
+
           <View style={styles.toolbar}>
             <TouchableOpacity onPress={this.onBack.bind(this)} style={styles.back} >
               <Iconn name="md-arrow-back" size={34} color="#F5F5F5"/>
@@ -289,29 +496,16 @@ export default class profileView extends Component {
               {this.state.user.username}
             </Text>
           </View>
-          {
-            this.state.check_user?
-            <View style={{paddingLeft: deviceWidth - 68,paddingTop:10}}>
-              <TouchableOpacity onPress={()=>this.openDrawer()}>
-                <Iconn name="md-menu" size={34} color="#F5F5F5"/>
-              </TouchableOpacity>
-            </View>
-            :
-            <View style={{position:'absolute',right:10,paddingTop:10}}>
-            <TouchableOpacity style={{justifyContent:'center',
-            alignItems:'center',
-            width:40,height:40,
-            borderRadius:200,
-            backgroundColor:'rgba(255, 255, 255, 0.2)',
-            alignItems:'center'}}>
-              <Iconn name="md-person-add" size={24} color="#F5F5F5"/>
+          <View style={{paddingLeft: deviceWidth - 68,paddingTop:10}}>
+            <TouchableOpacity onPress={()=>this.openDrawer()}>
+              <Iconn name="md-menu" size={34} color="#F5F5F5"/>
             </TouchableOpacity>
-            </View>
-          }
+          </View>
+          </View>
           </Image>
         </View>
         <View style={styles._content}>
-          <TimeLineView tabLabel='Nhật Ký' user = {this.state.user} />
+          <TimeLineView tabLabel='Nhật Ký' user = {this.state.user}/>
         </View>
       </View>
 
@@ -422,11 +616,16 @@ export default class profileView extends Component {
                   <Text style={{marginLeft: 15, marginBottom: 15, fontWeight: 'bold'}}> Đóng
                   </Text>
                 </TouchableOpacity>
+                {
+                  this.state.check_user?
+                  <TouchableOpacity onPress={()=>this.changeprofile()}>
+                    <Text style={{marginLeft: 15, marginBottom: 15, fontWeight: 'bold', color:'#8e44ad'}}> Đổi thông tin
+                    </Text>
+                  </TouchableOpacity>
+                  :
+                  <View></View>
+                }
 
-                <TouchableOpacity onPress={()=>this.changeprofile()}>
-                  <Text style={{marginLeft: 15, marginBottom: 15, fontWeight: 'bold', color:'#8e44ad'}}> Đổi thông tin
-                  </Text>
-                </TouchableOpacity>
 
               </View>
 

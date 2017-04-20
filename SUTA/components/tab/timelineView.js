@@ -30,7 +30,7 @@ export default class timeLineView extends Component{
       dataSource_cmt: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
       id: this.props.user.id_user,
       user: this.props.user,
-      user_fr: this.props.user_fr,
+      check_user: false,
       modalVisible: false,
       spinnerVisible: false,
       modalVisible_setting1: false,
@@ -48,6 +48,18 @@ export default class timeLineView extends Component{
   }
 
   componentDidMount(){
+    AsyncStorage.getItem("user").then((value)=>{
+      if(value !=null)
+      {
+        this.setState({user_login:JSON.parse(value)});
+        if (this.state.user.id_user==this.state.user_login.id_user) {
+          this.setState({
+            check_user: true
+          });
+        }
+      }
+    }).done();
+
     this.fetchData();
   }
 
@@ -111,36 +123,44 @@ export default class timeLineView extends Component{
   componentWillUnmount() {
     flag = false;
   }
-
-  async fetchData(){
+  stop_spinner(){
+    setTimeout(()=>{
+      this.setState({
+        spinnerVisible: false
+      });
+    },2000)
+  }
+  fetchData(){
     let formdata = new FormData();
     formdata.append('id_user',this.state.id);
-    try {
-      let response = await fetch('http://suta.esy.es/api/getstatus_id.php',{
+    fetch('http://suta.esy.es/api/getstatus_id.php',{
         method: 'post',
         headers: {
         'Content-Type': 'multipart/form-data',
         },
         body: formdata
 
+      })
+      .then((response)=>response.json())
+      .then((responseJson)=>{
+        if (flag == true){
+          this.setState({
+            check: responseJson.result,
+            dataSource: this.state.dataSource.cloneWithRows(responseJson['result']),
+          });
+          this.stop_spinner();
+        }
+        else {
+          return;
+        }
+      })
+      .catch(error=>{
+        console.log(error);
+        this.setState({
+          spinnerVisible: false,
+        });
       });
-        let res = await response.text();
-        if(flag == true){
-      var jsonResponse = JSON.parse(res);
-      this.setState({
-        dataSource: this.state.dataSource.cloneWithRows(jsonResponse['result']),
-        spinnerVisible: false,
-      });
-    }
-    else {
-      return;
-    }
-    } catch (error) {
-      console.log(error);
-      this.setState({
-        spinnerVisible: false,
-      });
-    }
+
   }
 
   setModalVisible() {
@@ -425,160 +445,171 @@ export default class timeLineView extends Component{
     return(
       <View style={{flex:1, backgroundColor:'#F5F5F5'}}>
       <Spinner visible={this.state.spinnerVisible} textContent={"Vui lòng chờ..."} textStyle={{color: '#FFF'}} />
-        <ListView
-        refreshControl={
-          <RefreshControl
-            refreshing={this.state.refreshing}
-            onRefresh={this._onRefresh.bind(this)}
-            tintColor="#ff0000"
-            title="Loading..."
-            titleColor="#00ff00"
-            colors={['#ff0000', '#00ff00', '#0000ff']}
-            progressBackgroundColor="#ffffff"
+        {
+          this.state.check==null?
+          <View style={{justifyContent:'center',alignItems:'center',flex:1}}>
+          <Text style={Style.textgray}>
+          Người dùng chưa có bài đăng nào.!
+          </Text>
+          </View>
+          :
+          <View>
+          <ListView
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this._onRefresh.bind(this)}
+              tintColor="#ff0000"
+              title="Loading..."
+              titleColor="#00ff00"
+              colors={['#ff0000', '#00ff00', '#0000ff']}
+              progressBackgroundColor="#ffffff"
+            />
+          }
+          dataSource={this.state.dataSource}
+          renderRow={this._renderRow.bind(this)}
+          enableEmptySections
           />
-        }
-        dataSource={this.state.dataSource}
-        renderRow={this._renderRow.bind(this)}
-        enableEmptySections
-        />
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={this.state.modalVisible}
-          onRequestClose={()=>this.setModalVisible()}
-        >
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={this.state.modalVisible}
+            onRequestClose={()=>this.setModalVisible()}
+          >
 
-        <View style={{flex:1,backgroundColor:'white'}} >
+          <View style={{flex:1,backgroundColor:'white'}} >
 
-        <View style={Style.toolbar}>
-          <TouchableOpacity activeOpacity={1} onPress={()=>this.onClose()} style={{flex:1,alignItems:'center'}}>
-            <Icon name="md-close" size={24} color="#F5F5F5" style={Style.ico}/>
-          </TouchableOpacity>
-          <View style={{flex:8,marginLeft:-20,alignItems:'center'}}>
-            <Text style={Style.title}>
-              BÌNH LUẬN
-            </Text>
-          </View>
-
-        </View>
-            <View style={{ flex:1}}>
-            {
-              this.state.data!=null?
-              <View style={{ flex:1}}>
-              <View style={{flexDirection:'row',padding:10}}>
-                <View style={Style.backgroundAvatar} >
-                  <Image style={Style.avatar} source={{uri: this.state.data.avatar}}/>
-                </View>
-                <View style={{justifyContent:'center',marginLeft:10}}>
-                  <Text style={Style.textbold}>
-                    {this.state.data.username}
-                  </Text>
-                  <Text style={Style.textgray}>
-                    {this.state.data.time}
-                  </Text>
-                </View>
-              </View>
-                <Text style={{padding:10,fontSize:13,color:'#1d2129'}}>
-                 {this.state.data.content}
-                </Text>
-                <View style={{flexDirection:'row',padding:10}}>
-                <TouchableOpacity style={{flexDirection:'row'}} onPress={()=>this.onLike(this.state.data)}>
-                {
-                  this.state.data.checklike!='0'?
-                  <Icon name='md-heart' color="rgb(254, 6, 6)" size={20} />
-                  :
-                  <Icon name='md-heart-outline' color="rgba(0, 0, 0, 0.2)" size={20} />
-                }
-                <Text style={[Style.textgray,{marginLeft:5}]}>
-                   {
-                     this.state.data.like!='0'?
-                     this.state.data.like + " Thích"
-                     :
-                     "Thích"
-                   }
-                </Text>
-
-                </TouchableOpacity>
-                  <TouchableOpacity style={{flexDirection:'row',marginLeft:20}}>
-                    <Icon name='md-text' color="rgba(0, 0, 0, 0.2)" size={20} />
-                    <Text style={[Style.textgray,{marginLeft:5}]}>
-                    {
-                      this.state.data.comment!=null?
-                      this.state.data.comment + "Bình Luận"
-                      :
-                      "Bình Luận"
-                    }
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-                <ListView
-                style={{flex:1}}
-                dataSource={this.state.dataSource_cmt}
-                renderRow={this._renderRow_cmt.bind(this)}
-                enableEmptySections
-                />
-                  </View>
-            :
-            <View></View>
-            }
-
-          </View>
-
-          <View style={Style.bottomInput}>
-
-            <TextInput
-            style={Style.input}
-            placeholder="Viết bình luận"
-            onChangeText={(val) => this.setState({contentComment: val, sendColor:'#8e44ad'})}
-            multiline={true}
-            placeholderTextColor= '#90949c'
-            autoCapitalize="none"
-            autoCorrect={false}
-            ref={'contentComment'}/>
-            <TouchableOpacity onPress={()=>this._addComment(this.state.data)}>
-              <Icon name="md-send" size={28} color={this.state.sendColor} style={{paddingLeft:10,paddingRight:10}}/>
+          <View style={Style.toolbar}>
+            <TouchableOpacity activeOpacity={1} onPress={()=>this.onClose()} style={{flex:1,alignItems:'center'}}>
+              <Icon name="md-close" size={24} color="#F5F5F5" style={Style.ico}/>
             </TouchableOpacity>
+            <View style={{flex:8,marginLeft:-20,alignItems:'center'}}>
+              <Text style={Style.title}>
+                BÌNH LUẬN
+              </Text>
             </View>
 
-        </View>
-
-        </Modal>
-        <Modal
-        animationType="fade"
-        transparent={true}
-        visible={this.state.modalVisible_setting1}
-        onRequestClose={()=>this.setModalVisible_Setting1()}
-      >
-        <TouchableOpacity activeOpacity={1}
-              onPress={() => {
-                    this.setModalVisible_Setting1()
-                  }}
-              style={{backgroundColor: 'rgba(0,0,0,.8)',flex:1,justifyContent:'center',alignItems:'center'}} >
-          <TouchableOpacity activeOpacity={1} style={{
-            width:300,
-            backgroundColor:'white',
-          }}>
-          {
-            this.state.user_fr==null?
-              <TouchableOpacity onPress={()=>this._okok()}>
-                <View style={Style._buttonSetting}>
-                    <Text>Xóa bài
+          </View>
+              <View style={{ flex:1}}>
+              {
+                this.state.data!=null?
+                <View style={{ flex:1}}>
+                <View style={{flexDirection:'row',padding:10}}>
+                  <View style={Style.backgroundAvatar} >
+                    <Image style={Style.avatar} source={{uri: this.state.data.avatar}}/>
+                  </View>
+                  <View style={{justifyContent:'center',marginLeft:10}}>
+                    <Text style={Style.textbold}>
+                      {this.state.data.username}
                     </Text>
+                    <Text style={Style.textgray}>
+                      {this.state.data.time}
+                    </Text>
+                  </View>
                 </View>
-              </TouchableOpacity>
+                  <Text style={{padding:10,fontSize:13,color:'#1d2129'}}>
+                   {this.state.data.content}
+                  </Text>
+                  <View style={{flexDirection:'row',padding:10}}>
+                  <TouchableOpacity style={{flexDirection:'row'}} onPress={()=>this.onLike(this.state.data)}>
+                  {
+                    this.state.data.checklike!='0'?
+                    <Icon name='md-heart' color="rgb(254, 6, 6)" size={20} />
+                    :
+                    <Icon name='md-heart-outline' color="rgba(0, 0, 0, 0.2)" size={20} />
+                  }
+                  <Text style={[Style.textgray,{marginLeft:5}]}>
+                     {
+                       this.state.data.like!='0'?
+                       this.state.data.like + " Thích"
+                       :
+                       "Thích"
+                     }
+                  </Text>
+
+                  </TouchableOpacity>
+                    <TouchableOpacity style={{flexDirection:'row',marginLeft:20}}>
+                      <Icon name='md-text' color="rgba(0, 0, 0, 0.2)" size={20} />
+                      <Text style={[Style.textgray,{marginLeft:5}]}>
+                      {
+                        this.state.data.comment!=null?
+                        this.state.data.comment + "Bình Luận"
+                        :
+                        "Bình Luận"
+                      }
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                  <ListView
+                  style={{flex:1}}
+                  dataSource={this.state.dataSource_cmt}
+                  renderRow={this._renderRow_cmt.bind(this)}
+                  enableEmptySections
+                  />
+                    </View>
               :
-              <TouchableOpacity>
-                <View style={Style._buttonSetting}>
-                    <Text>Report
-                    </Text>
-                </View>
+              <View></View>
+              }
+
+            </View>
+
+            <View style={Style.bottomInput}>
+
+              <TextInput
+              style={Style.input}
+              placeholder="Viết bình luận"
+              onChangeText={(val) => this.setState({contentComment: val, sendColor:'#8e44ad'})}
+              multiline={true}
+              placeholderTextColor= '#90949c'
+              autoCapitalize="none"
+              autoCorrect={false}
+              ref={'contentComment'}/>
+              <TouchableOpacity onPress={()=>this._addComment(this.state.data)}>
+                <Icon name="md-send" size={28} color={this.state.sendColor} style={{paddingLeft:10,paddingRight:10}}/>
               </TouchableOpacity>
-          }
+              </View>
 
-        </TouchableOpacity>
-        </TouchableOpacity>
+          </View>
 
-        </Modal>
+          </Modal>
+          <Modal
+          animationType="fade"
+          transparent={true}
+          visible={this.state.modalVisible_setting1}
+          onRequestClose={()=>this.setModalVisible_Setting1()}
+        >
+          <TouchableOpacity activeOpacity={1}
+                onPress={() => {
+                      this.setModalVisible_Setting1()
+                    }}
+                style={{backgroundColor: 'rgba(0,0,0,.8)',flex:1,justifyContent:'center',alignItems:'center'}} >
+            <TouchableOpacity activeOpacity={1} style={{
+              width:300,
+              backgroundColor:'white',
+            }}>
+            {
+              this.state.check_user?
+                <TouchableOpacity onPress={()=>this._okok()}>
+                  <View style={Style._buttonSetting}>
+                      <Text>Xóa bài
+                      </Text>
+                  </View>
+                </TouchableOpacity>
+                :
+                <TouchableOpacity>
+                  <View style={Style._buttonSetting}>
+                      <Text>Report
+                      </Text>
+                  </View>
+                </TouchableOpacity>
+            }
+
+          </TouchableOpacity>
+          </TouchableOpacity>
+
+          </Modal>
+          </View>
+        }
       </View>
     );
   }

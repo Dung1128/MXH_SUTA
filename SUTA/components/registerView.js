@@ -185,7 +185,7 @@ class loginView extends Component{
              result: jsonResponse['result']
 
           });
-          // alert(this.state.message);
+          alert(this.state.message);
           if (this.state.code==0) {
               // show alert & moving screen
 
