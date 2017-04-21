@@ -6,7 +6,7 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
-
+  StatusBar,
 } from 'react-native';
 // import Style from 'Style.js';
 import Iconn from 'react-native-vector-icons/Ionicons';
@@ -14,6 +14,7 @@ import NewFeed from './newFeedView.js';
 import Friends from './friendsView.js';
 import Message from './messageView.js';
 import firebase from './api.js';
+import MyStatusBar from './statusbar.js';
 import { Tabs, Tab, Icon } from 'react-native-elements';
 var items_rooms = [];
 export default class Chat extends Component {
@@ -79,6 +80,7 @@ export default class Chat extends Component {
     const { selectedTab } = this.state
     return(
       <View style={{flex:1}}>
+      <MyStatusBar backgroundColor="#8e178f"/>
         <Tabs>
 
         <Tab

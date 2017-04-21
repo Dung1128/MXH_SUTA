@@ -56,6 +56,18 @@ class loginView extends Component{
       }
     })
   }
+  check_box(){
+    Alert.alert(
+   'Thông báo',
+   'Đăng nhập bằng Facebook đồng nghĩa với việc bạn đồng ý với các điều khoản của ứng dụng, bạn có đồng ý không?',
+   [
+     {text: 'Không', onPress: () => console.log('no')},
+     {text: 'Có', onPress: () => {this._fbAuth();}}
+   ],
+   { cancelable: false }
+  );
+
+  }
   componentWillMount(){
     AsyncStorage.getItem("user").then((value)=>{
       if(value !=null)
@@ -259,7 +271,7 @@ class loginView extends Component{
             <Hr lineColor='#BDBDBD' text='OR' textColor='#F5F5F5'/>
           </View>
 
-          <TouchableOpacity onPress={()=>this.setModalVisible()}>
+          <TouchableOpacity onPress={()=>this.check_box()}>
             <View style={{flexDirection:'row', justifyContent:'center'}}>
                 <Icon name="logo-facebook" size={22} color="#F5F5F5" style={{marginTop:-1}} />
                 <Text style={{color:'#F5F5F5', fontWeight:'bold', paddingLeft:5}} >
@@ -302,114 +314,98 @@ class loginView extends Component{
           transparent={true}
           visible={this.state.modalVisible}>
 
-          <TouchableOpacity activeOpacity={1}
+          <View style={{flex: 1,padding:20}}>
+          <ScrollView style={{flex:1, backgroundColor:'white'}}>
 
-                style={{backgroundColor: 'rgba(0,0,0,.8)',
-                flex:1,justifyContent:'center',
-                alignItems:'center',
-                width: deviceWidth,
-                height: deviceHeight}} >
-            <TouchableOpacity activeOpacity={1} style={{
-              width:300,
-              height: deviceHeight - 200,
-              backgroundColor:'white',
-            }}>
-            <ScrollView>
+          <View style={{padding: 10}}>
+            <View style={{alignItems:'center'}}>
+              <Text style ={{ fontWeight: 'bold'}}> ĐIỀU KHOẢN MẠNG XÃ HỘI SUTA
+              </Text>
+            </View>
+            <View style={{marginTop: 10}}>
 
-            <View style={{padding: 10}}>
-              <View style={{alignItems:'center'}}>
-                <Text style ={{ fontWeight: 'bold'}}> ĐIỀU KHOẢN MẠNG XÃ HỘI SUTA
-                </Text>
-              </View>
-              <View style={{marginTop: 10}}>
-
-                <Text>Vui lòng đọc kĩ điều khoản trước khi tiến hành tải, cài đặt và sử dụng mạng xã hội tâm sự SUTA.
-                Bạn chấp thuận và đồng ý bị ràng buộc bởi các quy định và điều kiện trong Điều khoản này khi thực hiện các thao tác trên đây.
-                Trường hợp bạn không đồng ý với bất kỳ điều khoản sử dụng nào của Ứng dụng (phiên bản này và các phiên bản cập nhật),
-                bạn vui lòng không tải, cài đặt, sử dụng Ứng dụng hoặc tháo gỡ Ứng Dụng ra khỏi thiết bị di động của bạn.
-                </Text>
-                <Text>1.Cập nhật
-                </Text>
-                <Text>Điều khoản này có thể được cập nhật thường xuyên bởi chúng tôi.
-                Phiên bản cập nhật sẽ thay thế cho các quy định và điều kiện trong Điều khoản ban đầu.
-                Bạn có thể truy cập vào Ứng Dụng để xem nội dung chi tiết của phiên bản cập nhật.
-                </Text>
-                <Text>2.Giới Thiệu Về Ứng Dụng
-                </Text>
-                <Text>Mạng xã hội tâm sự SUTA là ứng dụng mạng xã hội giành riêng cho thị trường Việt Nam
-                Mọi người sử dụng ứng dụng có thể kết bạn, nhắn tin hay cập nhật các cảm xúc, cảm nghĩ của mình.
-                </Text>
-                <Text>3.Quyền sở hữu ứng dụng
-                </Text>
-                <Text>
-                Ứng dụng mạng xã hội tâm sự SUTA được phát triển bởi chúng tôi, tất cả các quyền sở hữu trí tuệ liên quan đến Ứng Dụng
-                và các tài liệu hướng dẫn liên quan sẽ thuộc quyền sở hữu duy nhất bởi chúng tôi và không cá nhân,
-                tổ chức nào được phép sao chép, tái tạo, phân phối, hoặc hình thức khác xâm phạm tới quyền của chủ sở hữu nếu không có sự đồng ý
-                và cho phép bằng văn bản của chúng tôi.
-                </Text>
-                <Text>4.Tài khoản
-                </Text>
-                <Text>Để sử dụng Ứng Dụng bạn phải tạo một tài khoản theo yêu cầu của Ứng dụng,
-                bạn cam kết rằng việc sử dụng tài khoản phải tuân thủ các quy định của Ứng dụng,
-                đồng thời tất cả các thông tin bạn cung cấp cho Ứng dụng là đúng,
-                chính xác, đầy đủ với tại thời điểm được yêu cầu. Mọi quyền lợi và nghĩa vụ của bạn
-                sẽ căn cứ trên thông tin tài khoản bạn đã đăng ký, do đó nếu có bất kỳ thông tin sai lệch nào
-                chúng tôi sẽ không chịu trách nhiệm trong trường hợp thông tin đó làm ảnh hưởng hoặc hạn chế quyền lợi của bạn.
-                </Text>
-                <Text>5.Xử lý vi phạm
-                </Text>
-                <Text>Trường hợp bạn vi phạm bất kỳ quy định nào trong Điều khoản này,
-                chúng tôi có quyền ngay lập tức khóa tài khoản của bạn và/hoặc xóa bỏ toàn bộ các thông tin,
-                nội dung vi phạm, đồng thời tùy thuộc vào tính chất,
-                mức độ vi phạm bạn sẽ phải chịu trách nhiệm trước cơ quan có thẩm quyền,
-                chúng tôi và bên thứ ba về mọi thiệt hại gây ra bởi hoặc xuất phát từ hành vi vi phạm của bạn.
-                </Text>
-                <Text>6.Quyền truy cập thông tin
-                </Text>
-                <Text>Khi sử dụng Ứng Dụng, bạn thừa nhận rằng chúng tôi có quyền sử dụng những API hệ thống sau để truy cập vào dữ liệu trên điện thoại của bạn.
-                Chúng tôi cam kết không sử dụng bất kỳ biện pháp nào để theo dõi nội dung tin nhắn, trao đổi hoặc hình thức khác nhằm theo dõi người dùng khi sử dụng Ứng Dụng này.
-                </Text>
-                <Text>7.Cam Kết Bảo Mật Thông Tin
-                </Text>
-                <Text>Chúng tôi sử dụng các phương thức truyền tin an toàn https và mã hóa để truyền tải và lưu trữ các dữ liệu cá nhân
-                 và giao tiếp của bạn. Chúng tôi cam kết giữ bí mật tất cả thông tin mà bạn cung cấp cho Ứng dụng hoặc thông tin thu thập từ bạn và không tiết lộ với bất kỳ bên thứ ba nào trừ khi có yêu cầu từ Cơ quan Nhà nước có thẩm quyền.
-                </Text>
-                <Text>9.Phí và các khoản thu
-                </Text>
-                <Text>Chúng tôi cam kết không thu bất cứ khoản phí nào từ người dùng cho các dịch vụ cơ bản mà hiện tại ứng dụng đang cung cấp.
-                </Text>
-
-              </View>
-
-                <TouchableOpacity style={{marginTop: 10, flexDirection:'row'}} onPress={()=>this.checkOk()} >
-                  <Image
-                    style={{width: 15, height: 15, marginTop: 2}}
-                    source={this.state.checkBox}
-                    />
-                  <Text style={{paddingLeft: 5}}>Tôi đồng ý
-                  </Text>
-                </TouchableOpacity>
-
-              <View style={{marginTop: 10, flexDirection: 'row'}}>
-                <TouchableOpacity onPress={()=> this._cancle()}>
-                  <Text style={{fontWeight: 'bold'}}> HỦY
-                  </Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={{paddingLeft: 20}} onPress={()=> this._next()}>
-                  <Text style={{color:'#8e44ad', fontWeight: 'bold'}}> TIẾP TỤC
-                  </Text>
-                </TouchableOpacity>
-              </View>
+              <Text>Vui lòng đọc kĩ điều khoản trước khi tiến hành tải, cài đặt và sử dụng mạng xã hội tâm sự SUTA.
+              Bạn chấp thuận và đồng ý bị ràng buộc bởi các quy định và điều kiện trong Điều khoản này khi thực hiện các thao tác trên đây.
+              Trường hợp bạn không đồng ý với bất kỳ điều khoản sử dụng nào của Ứng dụng (phiên bản này và các phiên bản cập nhật),
+              bạn vui lòng không tải, cài đặt, sử dụng Ứng dụng hoặc tháo gỡ Ứng Dụng ra khỏi thiết bị di động của bạn.
+              </Text>
+              <Text>1.Cập nhật
+              </Text>
+              <Text>Điều khoản này có thể được cập nhật thường xuyên bởi chúng tôi.
+              Phiên bản cập nhật sẽ thay thế cho các quy định và điều kiện trong Điều khoản ban đầu.
+              Bạn có thể truy cập vào Ứng Dụng để xem nội dung chi tiết của phiên bản cập nhật.
+              </Text>
+              <Text>2.Giới Thiệu Về Ứng Dụng
+              </Text>
+              <Text>Mạng xã hội tâm sự SUTA là ứng dụng mạng xã hội giành riêng cho thị trường Việt Nam
+              Mọi người sử dụng ứng dụng có thể kết bạn, nhắn tin hay cập nhật các cảm xúc, cảm nghĩ của mình.
+              </Text>
+              <Text>3.Quyền sở hữu ứng dụng
+              </Text>
+              <Text>
+              Ứng dụng mạng xã hội tâm sự SUTA được phát triển bởi chúng tôi, tất cả các quyền sở hữu trí tuệ liên quan đến Ứng Dụng
+              và các tài liệu hướng dẫn liên quan sẽ thuộc quyền sở hữu duy nhất bởi chúng tôi và không cá nhân,
+              tổ chức nào được phép sao chép, tái tạo, phân phối, hoặc hình thức khác xâm phạm tới quyền của chủ sở hữu nếu không có sự đồng ý
+              và cho phép bằng văn bản của chúng tôi.
+              </Text>
+              <Text>4.Tài khoản
+              </Text>
+              <Text>Để sử dụng Ứng Dụng bạn phải tạo một tài khoản theo yêu cầu của Ứng dụng,
+              bạn cam kết rằng việc sử dụng tài khoản phải tuân thủ các quy định của Ứng dụng,
+              đồng thời tất cả các thông tin bạn cung cấp cho Ứng dụng là đúng,
+              chính xác, đầy đủ với tại thời điểm được yêu cầu. Mọi quyền lợi và nghĩa vụ của bạn
+              sẽ căn cứ trên thông tin tài khoản bạn đã đăng ký, do đó nếu có bất kỳ thông tin sai lệch nào
+              chúng tôi sẽ không chịu trách nhiệm trong trường hợp thông tin đó làm ảnh hưởng hoặc hạn chế quyền lợi của bạn.
+              </Text>
+              <Text>5.Xử lý vi phạm
+              </Text>
+              <Text>Trường hợp bạn vi phạm bất kỳ quy định nào trong Điều khoản này,
+              chúng tôi có quyền ngay lập tức khóa tài khoản của bạn và/hoặc xóa bỏ toàn bộ các thông tin,
+              nội dung vi phạm, đồng thời tùy thuộc vào tính chất,
+              mức độ vi phạm bạn sẽ phải chịu trách nhiệm trước cơ quan có thẩm quyền,
+              chúng tôi và bên thứ ba về mọi thiệt hại gây ra bởi hoặc xuất phát từ hành vi vi phạm của bạn.
+              </Text>
+              <Text>6.Quyền truy cập thông tin
+              </Text>
+              <Text>Khi sử dụng Ứng Dụng, bạn thừa nhận rằng chúng tôi có quyền sử dụng những API hệ thống sau để truy cập vào dữ liệu trên điện thoại của bạn.
+              Chúng tôi cam kết không sử dụng bất kỳ biện pháp nào để theo dõi nội dung tin nhắn, trao đổi hoặc hình thức khác nhằm theo dõi người dùng khi sử dụng Ứng Dụng này.
+              </Text>
+              <Text>7.Cam Kết Bảo Mật Thông Tin
+              </Text>
+              <Text>Chúng tôi sử dụng các phương thức truyền tin an toàn https và mã hóa để truyền tải và lưu trữ các dữ liệu cá nhân
+               và giao tiếp của bạn. Chúng tôi cam kết giữ bí mật tất cả thông tin mà bạn cung cấp cho Ứng dụng hoặc thông tin thu thập từ bạn và không tiết lộ với bất kỳ bên thứ ba nào trừ khi có yêu cầu từ Cơ quan Nhà nước có thẩm quyền.
+              </Text>
+              <Text>9.Phí và các khoản thu
+              </Text>
+              <Text>Chúng tôi cam kết không thu bất cứ khoản phí nào từ người dùng cho các dịch vụ cơ bản mà hiện tại ứng dụng đang cung cấp.
+              </Text>
 
             </View>
-            </ScrollView>
 
+              <TouchableOpacity style={{marginTop: 10, flexDirection:'row'}} onPress={()=>this.checkOk()} >
+                <Image
+                  style={{width: 15, height: 15, marginTop: 2}}
+                  source={this.state.checkBox}
+                  />
+                <Text style={{paddingLeft: 5}}>Tôi đồng ý
+                </Text>
+              </TouchableOpacity>
 
-            </TouchableOpacity>
+            <View style={{marginTop: 10, flexDirection: 'row'}}>
+              <TouchableOpacity onPress={()=> this._cancle()}>
+                <Text style={{fontWeight: 'bold'}}> HỦY
+                </Text>
+              </TouchableOpacity>
 
+              <TouchableOpacity style={{paddingLeft: 20}} onPress={()=> this._next()}>
+                <Text style={{color:'#8e44ad', fontWeight: 'bold'}}> TIẾP TỤC
+                </Text>
+              </TouchableOpacity>
+            </View>
 
-          </TouchableOpacity>
+          </View>
+          </ScrollView>
+          </View>
 
         </Modal>
 

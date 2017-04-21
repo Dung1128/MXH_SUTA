@@ -22,6 +22,7 @@ import {
 } from 'react-native-popup-menu';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Spinner from 'react-native-loading-spinner-overlay';
+import MyStatusBar from './statusbar.js';
 import dateFormat from 'dateformat';
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
@@ -506,7 +507,7 @@ export default class Anonymous extends Component{
           visible={this.state.modalVisible}
           onRequestClose={()=>this.setModalVisible()}
         >
-
+        <MyStatusBar backgroundColor="#8e178f"/>
         <View style={{flex:1,backgroundColor:'white'}} >
 
         <View style={styles.toolbar}>
@@ -696,10 +697,15 @@ class YourComponent extends React.Component{
 }
 
 const styles = StyleSheet.create({
+  backgroundAvatar:{
+    overflow: 'hidden',
+    borderRadius:200,
+    width:40,
+    height:40,
+  },
     avatar:{
       width:40,
       height:40,
-      borderRadius:200
     },
     bottomInput:{
       flexDirection:'row',

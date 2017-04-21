@@ -11,6 +11,7 @@ import {
 import Iconn from 'react-native-vector-icons/Ionicons';
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
+import MyStatusBar from './statusbar.js';
 import Hr from 'react-native-hr';
 export default class accountManagerView extends Component{
   constructor(props){
@@ -113,8 +114,9 @@ export default class accountManagerView extends Component{
   render(){
     //console.log(this.state.data);
     return(
-      <View style={{flex:1}}>
 
+      <View style={{flex:1}}>
+      <MyStatusBar backgroundColor="#8e178f"/>
         <View style={styles._toolbar}>
           <TouchableOpacity onPress={this.onBack.bind(this)}>
             <Iconn name="md-arrow-back" size={34} color="#F5F5F5"/>
