@@ -17,6 +17,7 @@ import AccountManagerView from './components/accountManagerView.js';
 import ChangePass from './components/changePassView.js';
 import ChangeProfile from './components/changeProfileView.js';
 import Chat from './components/chatView.js';
+import Feedback from './components/feedbackView.js';
 import firebase from './components/api.js';
 class SUTA extends Component {
   constructor(props){
@@ -86,6 +87,9 @@ class SUTA extends Component {
     }
     if(route.name == 'chat'){
       return <Chat navigator = {navigator} {...route.passProps}/>
+    }
+    if(route.name == 'feedback'){
+      return <Feedback navigator = {navigator} {...route.passProps}/>
     }
   }
 

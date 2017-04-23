@@ -75,100 +75,47 @@ export default class changeProfileView extends Component{
 
 
   async _changeprofile(){
-    // let formdata = new FormData();
-    // formdata.append("id_user", this.state.id_user);
-    // formdata.append("phone", this.state.phone);
-    // formdata.append("email", this.state.email);
-    // formdata.append("address", this.state.address);
-    // formdata.append("dob", this.state.dob);
-    // if(this.state.checkBoxNam == require('../images/box.png')){
-    //   formdata.append("gender", 1);
-    // }
-    // else{
-    //   formdata.append("gender", 0);
-    // }
-
-    try {
-      let formdata = new FormData();
-      formdata.append("id_user", this.state.user.id_user);
-      formdata.append("phone", this.state.phone);
-      formdata.append("email", this.state.email);
-      formdata.append("address", this.state.address);
-      formdata.append("dob", this.state.dob);
-      if(this.state.checkBoxNam == require('../images/box.png')){
-        formdata.append("gender", 1);
-      }
-      else{
-        formdata.append("gender", 0);
-      }
-      const res = await fetch('http://suta.esy.es/api/updateprofile.php', {
-        method: 'post',
-        headers: {
-        'Content-Type': 'multipart/form-data',
-        },
-        body: formdata
-      });
-      console.log('res', res);
-      const jsonData = await res.json();
-      console.log('jsonData', jsonData);
-      // var responseJson = JSON.parse(jsonData);
-      // if (response.status >= 200 && response.status < 300 && responseJson.code==0) {
-        Alert.alert('Thông báo','Đổi thông tin thành công, thông tin của bạn sẽ được cập nhật từ lần đăng nhập sau.');
-
-      // }else {
-      //     alert('Đổi không thành công.');
-      // }
-    } catch (error) {
-      console.log('error', error);
+    console.log('test');
+    let formdata = new FormData();
+    formdata.append("id_user", this.state.user.id_user);
+    formdata.append("phone", this.state.phone);
+    formdata.append("email", this.state.email);
+    formdata.append("address", this.state.address);
+    formdata.append("dob", this.state.dob);
+    if(this.state.checkBoxNam == require('../images/box.png')){
+      formdata.append("gender", 1);
+    }
+    else{
+      formdata.append("gender", 0);
     }
 
-    // try {
-    //   let response = await fetch('https://suta.esy.es/api/updateprofile.php', {
-    //     method: 'post',
-    //     headers: {
-    //     'Content-Type': 'multipart/form-data',
-    //     },
-    //     body: formdata
-    //   });
-    //   let responseJson = await response.json();
-    //   console.log(response);
-    //   // var responseJson = JSON.parse(res);
-    //   console.log(responseJson.result);
-    //   if (response.status >= 200 && response.status < 300 && responseJson['code']==0) {
-    //       alert('Đổi thông tin thành công, thông tin của bạn sẽ được cập nhật từ lần đăng nhập sau.');
-    //   }else {
-    //       Alert.alert('Thông báo',this.state.message);
-    //   }
-    // } catch(error) {
-    //     console.log("error " + error);
-    // }
+    fetch('http://suta.esy.es/api/updateprofile.php',{
+      method: 'post',
+      header: {
+        'Content-Type': 'multipart/formdata'
+      },
+      body: formdata
+    })
+    .then((response)=>{response.json(); console.log('test2');})
+    .then((responseJson)=>{
+      // if (flag == true){
+      //   this.setState({
+      //     data: responseJson.result,
+      //   });
+      //
+      // }
+      // else {
+      //   return;
+      // }
+      console.log('okokook');
+      //console.log(responseJson.result);
+      alert('Đổi thông tin thành công, thông tin của bạn sẽ được cập nhật từ lần đăng nhập sau.');
 
+    })
+    .catch(error=>{
+      console.log(error);
+    });
   }
-
-  // async componentDidMount() {
-  //   try {
-  //     let formdata = new FormData();
-  //     formdata.append("id_user", '1488737496');
-  //     formdata.append("phone", '12345');
-  //     formdata.append("email", 'trandung1128@hotmail.com');
-  //     formdata.append("address", 'hnoi');
-  //     formdata.append("dob", '1995-11-28');
-  //     formdata.append("gender", '0');
-  //     const res = await fetch('http://suta.esy.es/api/updateprofile.php', {
-  //       method: 'post',
-  //       headers: {
-  //       'Content-Type': 'multipart/form-data',
-  //       },
-  //       body: formdata
-  //     });
-  //     console.log('res', res);
-  //     const jsonData = await res.json();
-  //     console.log('jsonData', jsonData);
-  //   } catch (error) {
-  //     console.log('error', error);
-  //   }
-  // }
-
 
   render(){
     return(
@@ -196,6 +143,7 @@ export default class changeProfileView extends Component{
                 <TextInput style={styles._input} value = {this.state.email.toString()}
                 onChangeText={(val) => this.setState({email: val})}
                 underlineColorAndroid='transparent'
+                placeholder="Email"
                 />
               </View>
 
@@ -204,6 +152,7 @@ export default class changeProfileView extends Component{
                 onChangeText={(val) => this.setState({phone: val})}
                 keyboardType="phone-pad"
                 underlineColorAndroid='transparent'
+                placeholder="Điện thoại"
                 />
               </View>
 
@@ -211,6 +160,7 @@ export default class changeProfileView extends Component{
                 <TextInput style={styles._input} value = {this.state.address.toString()}
                 onChangeText={(val) => this.setState({address: val})}
                 underlineColorAndroid='transparent'
+                placeholder="Địa chỉ"
                 />
               </View>
 
