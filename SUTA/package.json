@@ -11,6 +11,7 @@
     "react-native": "^0.42.3",
     "react-native-datepicker": "^1.4.6",
     "react-native-dropdown": "0.0.6",
+    "react-native-easy-grid-view": "^0.1.1",
     "react-native-elements": "^0.9.7",
     "react-native-fbsdk": "^0.5.0",
     "react-native-hr": "^1.1.3",
