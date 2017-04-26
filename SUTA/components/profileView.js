@@ -14,8 +14,11 @@ import {
 } from 'react-native';
 // import Style from 'Style.js';
 import Hr from 'react-native-hr';
+import ScrollableTabView from 'react-native-scrollable-tab-view';
 import Iconn from 'react-native-vector-icons/Ionicons';
 import TimeLineView from './tab/timelineView.js';
+import ListImageView from './tab/listImageView.js';
+import DefaultTabBar from './tab/DefaultTabBar';
 import { Tabs, Tab, Icon } from 'react-native-elements';
 var ImagePicker = require('react-native-image-picker');
 import Share, {ShareSheet, Button} from 'react-native-share';
@@ -606,7 +609,15 @@ onOpen() {
           </Image>
         </View>
         <View style={styles._content}>
-          <TimeLineView tabLabel='Nhật Ký' user = {this.state.user}/>
+
+          <ScrollableTabView
+              initialPage={0}
+              renderTabBar={() => <DefaultTabBar />}
+            >
+      <TimeLineView tabLabel='Nhật Ký' user = {this.state.user}/>
+      <ListImageView  tabLabel='Hình ảnh' user = {this.state.user}/>
+
+    </ScrollableTabView>
         </View>
       </View>
 
