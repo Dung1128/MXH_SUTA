@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   Dimensions,
   TextInput,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  Alert
 } from 'react-native';
 import Iconn from 'react-native-vector-icons/Ionicons';
 var deviceWidth = Dimensions.get('window').width;
@@ -27,6 +28,30 @@ export default class feedbackView extends Component{
       }
     })
   }
+  async addfeedback(){
+    let formdata = new FormData();
+    formdata.append('id_user',this.state.data.id_user);
+    formdata.append('title',this.state.title);
+    formdata.append('content',this.state.content);
+
+    try {
+      let response = await fetch('http://suta.esy.es/api/feedback.php',{
+        method: 'post',
+        header: {
+          'Content-Type': 'multipart/formdata'
+        },
+        body: formdata
+      });
+      console.log('success');
+      Alert.alert('Thông báo','Gửi phản hồi thành công!');
+
+    } catch (error) {
+     console.log(error);
+    }
+    this.clearText('tit');
+    this.clearText('cont');
+  }
+
   clearText(fieldName) {
     this.refs[fieldName].setNativeProps({text: ''});
   }
@@ -51,7 +76,9 @@ export default class feedbackView extends Component{
               placeholderTextColor= "#BDBDBD"
               placeholder="Tiêu đề"
               style={styles.input}
-              multiline={false}/>
+              multiline={false}
+              onChangeText={(val) => this.setState({title: val})}
+              ref={'tit'}/>
 
             </View>
 
@@ -70,13 +97,15 @@ export default class feedbackView extends Component{
               maxLength = {40}
               numberOfLines = {4}
               style={styles.content}
-              multiline={true}/>
+              multiline={true}
+              ref={'cont'}
+              onChangeText={(val) => this.setState({content: val})}/>
 
             </View>
 
             <View style={{height:deviceHeight/9,width:deviceWidth-40, paddingTop:30, flexDirection:'row'}}>
 
-              <TouchableOpacity
+              <TouchableOpacity onPress={()=>{this.clearText('tit'); this.clearText('cont');}}
               style={{flex:1,
                 justifyContent:'center',
                 alignItems:'center',
@@ -86,7 +115,12 @@ export default class feedbackView extends Component{
                 </Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={{flex:1, backgroundColor:'#8e44ad', marginLeft:10, justifyContent:'center', alignItems:'center'}}>
+              <TouchableOpacity onPress={()=>{this.addfeedback();}}
+              style={{flex:1,
+                backgroundColor:'#8e44ad',
+                marginLeft:10,
+                justifyContent:'center',
+                alignItems:'center'}}>
                 <Text style={{color:'rgb(255, 255, 255)'}}> Gửi
                 </Text>
               </TouchableOpacity>
