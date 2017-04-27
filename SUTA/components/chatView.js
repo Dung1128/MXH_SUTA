@@ -13,6 +13,7 @@ import {
 import firebase from './api.js';
 import Icon from 'react-native-vector-icons/Ionicons';
 var dateFormat = require('dateformat');
+import MyStatusBar from './statusbar.js';
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
 var items_rooms = [];
@@ -133,10 +134,11 @@ export default class Chat extends Component {
     var time = dateFormat(data.data.time,"h:MM TT");
     return(
       <View style={this.checkstylechat(data.data.user.username)}>
-
+        <View style={Style.backgroundAvatar}>
         <Image source={{uri:data.data.user.avatar}}
           style={Style.avatar}
           />
+          </View>
         <View style={this.checkstyle(data.data.user.username)}>
           <Text style={this.checktext(data.data.user.username)}>
            {data.data.content}
@@ -287,8 +289,9 @@ export default class Chat extends Component {
   }
   render() {
     return (
-      <TouchableOpacity activeOpacity={1} onPress={()=>this.checkStatus(this.state.info_rooms.key)}  style={{flex:1,backgroundColor:'#F5F5F5'}}>
 
+      <TouchableOpacity activeOpacity={1} onPress={()=>this.checkStatus(this.state.info_rooms.key)}  style={{flex:1,backgroundColor:'#F5F5F5'}}>
+      <MyStatusBar backgroundColor="#8e178f"/>
         <View style={Style.toolbar}>
           <TouchableOpacity onPress={()=>this.onBack('home')} style={{flex:1,alignItems:'center'}}>
             <Icon name="md-arrow-back" size={34} color="#F5F5F5" style={Style.ico}/>
@@ -345,10 +348,15 @@ export default class Chat extends Component {
   }
 }
 var Style = StyleSheet.create({
-  avatar:{
+  backgroundAvatar:{
+    overflow: 'hidden',
+    borderRadius:200,
     width:30,
     height:30,
-    borderRadius:200
+  },
+  avatar:{
+    width:30,
+    height:30
   },
   bottomInput:{
     flexDirection:'row',

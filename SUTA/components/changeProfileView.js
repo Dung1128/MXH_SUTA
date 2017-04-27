@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import Iconn from 'react-native-vector-icons/Ionicons';
+import MyStatusBar from './statusbar.js';
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
 import Hr from 'react-native-hr';
@@ -75,7 +76,6 @@ export default class changeProfileView extends Component{
 
 
   async _changeprofile(){
-    console.log('test');
     let formdata = new FormData();
     formdata.append("id_user", this.state.user.id_user);
     formdata.append("phone", this.state.phone);
@@ -119,7 +119,9 @@ export default class changeProfileView extends Component{
 
   render(){
     return(
+
       <View style={{flex:1}}>
+      <MyStatusBar backgroundColor="#8e178f"/>
         <View style={styles._toolbar}>
           <TouchableOpacity onPress={this.onBack.bind(this)}>
             <Iconn name="md-arrow-back" size={34} color="#F5F5F5"/>

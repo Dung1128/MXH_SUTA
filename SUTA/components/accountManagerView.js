@@ -8,6 +8,7 @@ import {
   AsyncStorage
 } from 'react-native';
 import Iconn from 'react-native-vector-icons/Ionicons';
+import MyStatusBar from './statusbar.js';
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
 import Hr from 'react-native-hr';
@@ -81,6 +82,7 @@ export default class accountManagerView extends Component{
     //console.log(this.state.data);
     return(
       <View style={{flex:1}}>
+      <MyStatusBar backgroundColor="#8e178f"/>
         <View style={styles._toolbar}>
           <TouchableOpacity onPress={this.onBack.bind(this)}>
             <Iconn name="md-arrow-back" size={34} color="#F5F5F5"/>

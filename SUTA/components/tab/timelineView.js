@@ -615,10 +615,15 @@ export default class timeLineView extends Component{
   }
 }
 var Style = StyleSheet.create({
+  backgroundAvatar:{
+    overflow: 'hidden',
+    borderRadius:200,
+    width:40,
+    height:40,
+  },
   avatar:{
     width:40,
     height:40,
-    borderRadius:200
   },
   bottomInput:{
     flexDirection:'row',

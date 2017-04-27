@@ -15,7 +15,7 @@ import{
   Modal
 }from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-
+import MyStatusBar from './statusbar.js';
 import TextField from 'react-native-md-textinput';
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
@@ -235,6 +235,9 @@ class loginView extends Component{
 
   render(){
     return(
+
+      <View style={{flex:1}}>
+      <MyStatusBar backgroundColor="#8e178f"/>
       <Image source={require('../images/bgr2.png')} style={styles.container}>
       <View style={styles.toolbar}>
         <TouchableOpacity style={styles.back} onPress={this.onBack.bind(this)} >
@@ -490,7 +493,7 @@ class loginView extends Component{
         </Modal>
 
       </Image>
-
+      </View>
 
 
     );

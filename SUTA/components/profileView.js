@@ -6,7 +6,6 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
-  DrawerLayoutAndroid,
   AsyncStorage,
   Modal,
   Platform,
@@ -21,8 +20,9 @@ import ListImageView from './tab/listImageView.js';
 import DefaultTabBar from './tab/DefaultTabBar';
 import { Tabs, Tab, Icon } from 'react-native-elements';
 var ImagePicker = require('react-native-image-picker');
+import Drawer from 'react-native-drawer';
+import MyStatusBar from './statusbar.js';
 import Share, {ShareSheet, Button} from 'react-native-share';
-
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
 export default class profileView extends Component {
@@ -101,7 +101,7 @@ onOpen() {
    }
 
   openDrawer(){
-    this.refs['DRAWER_REF'].openDrawer();
+    this._drawer.open()
   }
 
   save_user(data){
@@ -392,67 +392,67 @@ onOpen() {
     }
 
 
+    var navigationView = '';
+    if(this.state.check_user)
+    {
+      navigationView = (
+       <View style={{flex: 1, backgroundColor: '#fff'}}>
+         <View>
+           <Text style={{marginTop: 15, margin:10, fontSize: 15, textAlign: 'left',fontWeight:'bold'}}> Thông tin chung </Text>
+         </View>
+         <TouchableOpacity onPress={() => {this.onProfile(this.props.data) }}>
+           <View style={{ flexDirection:'row'}}>
+             <Text style={{margin: 10, fontSize: 15, textAlign: 'left'}}> Thông tin cá nhân </Text>
+             <TouchableOpacity onPress={() => {this.onProfile(this.props.data) }}>
+               <Iconn name="ios-arrow-forward" size={30} color="#BDBDBD" style={{marginTop:5, marginLeft: 100}}/>
+             </TouchableOpacity>
+           </View>
+         </TouchableOpacity>
 
-    var navigationView = (
-    <View style={{flex: 1, backgroundColor: '#fff'}}>
-      <View>
-        <Text style={{marginTop: 15, margin:10, fontSize: 15, textAlign: 'left',fontWeight:'bold'}}> Thông tin chung </Text>
-      </View>
-      <TouchableOpacity onPress={() => {this.onProfile(this.props.data) }}>
-        <View style={{ flexDirection:'row'}}>
-          <Text style={{margin: 10, fontSize: 15, textAlign: 'left'}}> Thông tin cá nhân </Text>
-          <TouchableOpacity onPress={() => {this.onProfile(this.props.data) }}>
-            <Iconn name="ios-arrow-forward" size={30} color="#BDBDBD" style={{marginTop:5, marginLeft: 100}}/>
-          </TouchableOpacity>
-        </View>
-      </TouchableOpacity>
+         <Hr lineColor='#BDBDBD'/>
+         <TouchableOpacity onPress={()=>this.selectPhotoTapped(0)}>
+           <View>
+           <Text style={{margin: 10, fontSize: 15, textAlign: 'left'}}> Cập nhật ảnh đại điện </Text>
+           </View>
+         </TouchableOpacity>
 
-      <Hr lineColor='#BDBDBD'/>
-      <TouchableOpacity onPress={()=>this.selectPhotoTapped(0)}>
-        <View>
-        <Text style={{margin: 10, fontSize: 15, textAlign: 'left'}}> Cập nhật ảnh đại điện </Text>
-        </View>
-      </TouchableOpacity>
+         <Hr lineColor='#BDBDBD'/>
+         <TouchableOpacity onPress={()=>this.selectPhotoTapped(1)}>
+           <View>
+             <Text style={{margin: 10, fontSize: 15, textAlign: 'left'}}> Cập nhật hình nền </Text>
+           </View>
+         </TouchableOpacity>
 
-      <Hr lineColor='#BDBDBD'/>
-      <TouchableOpacity onPress={()=>this.selectPhotoTapped(1)}>
-        <View>
-          <Text style={{margin: 10, fontSize: 15, textAlign: 'left'}}> Cập nhật hình nền </Text>
-        </View>
-      </TouchableOpacity>
-      <Hr lineColor='#BDBDBD'/>
+         <View>
+           <Text style={{marginTop: 25, margin:10, fontSize: 15, textAlign: 'left',fontWeight:'bold'}}> Cài đặt </Text>
+         </View>
 
-      <View>
-        <Text style={{marginTop: 25, margin:10, fontSize: 15, textAlign: 'left',fontWeight:'bold'}}> Cài đặt </Text>
-      </View>
+         <Hr lineColor='#BDBDBD'/>
 
-      <Hr lineColor='#BDBDBD'/>
+         <TouchableOpacity onPress={this.redirect.bind(this,'accountManager')}>
+           <View style={{flexDirection:'row'}}>
+             <Text style={{margin: 10, fontSize: 15, textAlign: 'left'}}> Quản lý tài khoản </Text>
+             <TouchableOpacity onPress={this.redirect.bind(this,'accountManager')}>
+               <Iconn name="ios-arrow-forward" size={30} color="#BDBDBD" style={{marginTop:5, marginLeft: 100}}/>
+             </TouchableOpacity>
+           </View>
+         </TouchableOpacity>
 
-      <TouchableOpacity onPress={this.redirect.bind(this,'accountManager')}>
-        <View style={{flexDirection:'row'}}>
-          <Text style={{margin: 10, fontSize: 15, textAlign: 'left'}}> Quản lý tài khoản </Text>
-          <TouchableOpacity onPress={this.redirect.bind(this,'accountManager')}>
-            <Iconn name="ios-arrow-forward" size={30} color="#BDBDBD" style={{marginTop:5, marginLeft: 100}}/>
-          </TouchableOpacity>
-        </View>
-      </TouchableOpacity>
-
-      <Hr lineColor='#BDBDBD'/>
+         <Hr lineColor='#BDBDBD'/>
 
 
-        <View>
-          <Text style={{margin: 10, marginTop:25, fontSize: 15, textAlign: 'left', fontWeight:'bold'}}> Hỗ trợ </Text>
-        </View>
+           <View>
+             <Text style={{margin: 10, marginTop:25, fontSize: 15, textAlign: 'left', fontWeight:'bold'}}> Hỗ trợ </Text>
+           </View>
 
-      <Hr lineColor='#BDBDBD'/>
+         <Hr lineColor='#BDBDBD'/>
 
-      <TouchableOpacity onPress={this.redirect.bind(this,'feedback')}>
-        <View>
-          <Text style={{margin: 10, fontSize: 15, textAlign: 'left'}}> Phản hồi </Text>
-        </View>
-      </TouchableOpacity>
-
-      <Hr lineColor='#BDBDBD'/>
+         <TouchableOpacity>
+           <View>
+             <Text style={{margin: 10, fontSize: 15, textAlign: 'left'}}> Phản hồi </Text>
+           </View>
+         </TouchableOpacity>
+<Hr lineColor='#BDBDBD'/>
 
 
         <View>
@@ -535,43 +535,48 @@ onOpen() {
                 },300);
               }}>More</Button>
           </ShareSheet>
+       </View>
+     );
+   }else {
+     navigationView = (
+       <View style={{flex: 1, backgroundColor: '#fff'}}>
+         <View>
+           <Text style={{marginTop: 15, margin:10, fontSize: 15, textAlign: 'left',fontWeight:'bold'}}> Thông tin chung </Text>
+         </View>
+         <TouchableOpacity onPress={() => {this.onProfile(this.props.data) }}>
+           <View style={{ flexDirection:'row'}}>
+             <Text style={{margin: 10, fontSize: 15, textAlign: 'left'}}> Thông tin cá nhân </Text>
+             <TouchableOpacity onPress={() => {this.onProfile(this.props.data) }}>
+               <Iconn name="ios-arrow-forward" size={30} color="#BDBDBD" style={{marginTop:5, marginLeft: 100}}/>
+             </TouchableOpacity>
+           </View>
+         </TouchableOpacity>
+         <Hr lineColor='#BDBDBD'/>
+         {friends}
 
-    </View>
+         <Hr lineColor='#BDBDBD'/>
+         <TouchableOpacity onPress={()=>this.navigate('chat',this.state.user)}>
+           <View>
+             <Text style={{margin: 10, fontSize: 15, textAlign: 'left'}}> Nhắn tin </Text>
+           </View>
+         </TouchableOpacity>
+         <Hr lineColor='#BDBDBD'/>
 
-  );
+       </View>
+     )
+   }
 
-    var navigationView_fr = (
-      <View style={{flex: 1, backgroundColor: '#fff'}}>
-        <View>
-          <Text style={{marginTop: 15, margin:10, fontSize: 15, textAlign: 'left',fontWeight:'bold'}}> Thông tin chung </Text>
-        </View>
-        <TouchableOpacity onPress={() => {this.onProfile(this.props.data) }}>
-          <View style={{ flexDirection:'row'}}>
-            <Text style={{margin: 10, fontSize: 15, textAlign: 'left'}}> Thông tin cá nhân </Text>
-            <TouchableOpacity onPress={() => {this.onProfile(this.props.data) }}>
-              <Iconn name="ios-arrow-forward" size={30} color="#BDBDBD" style={{marginTop:5, marginLeft: 100}}/>
-            </TouchableOpacity>
-          </View>
-        </TouchableOpacity>
-        <Hr lineColor='#BDBDBD'/>
-        {friends}
-
-        <Hr lineColor='#BDBDBD'/>
-        <TouchableOpacity onPress={()=>this.navigate('chat',this.state.user)}>
-          <View>
-            <Text style={{margin: 10, fontSize: 15, textAlign: 'left'}}> Nhắn tin </Text>
-          </View>
-        </TouchableOpacity>
-        <Hr lineColor='#BDBDBD'/>
-
-      </View>
-    )
     return(
-      <DrawerLayoutAndroid
-      drawerWidth={270}
-      drawerPosition={DrawerLayoutAndroid.positions.Right}
-      ref={'DRAWER_REF'}
-      renderNavigationView={() => this.state.check_user?navigationView:navigationView_fr}>
+      <Drawer
+      ref={(ref) => this._drawer = ref}
+      type="static"
+      content={navigationView}
+      tapToClose={true}
+      openDrawerOffset={0.2} // 20% gap on the right side of drawer
+      tweenHandler={Drawer.tweenPresets.parallax}
+      side='right'
+      >
+      <MyStatusBar backgroundColor="#90949c"/>
       <View style={{flex:1}}>
         <View style={styles._cover}>
         <Image style={{flex:1, flexDirection:'row'}}
@@ -592,9 +597,11 @@ onOpen() {
             borderWidth:2,
             borderColor:'#f5f5f5',
             borderRadius:200,
+            overflow: 'hidden',
             backgroundColor:'white',
+            borderRadius:200,
             alignItems:'center'}} >
-              <Image style={{width:70, height:70,borderRadius:200}} source={{uri: this.state.user.avatar}}/>
+              <Image style={{width:70, height:70}} source={{uri: this.state.user.avatar}}/>
             </View>
             <Text style={{alignItems:'center',fontSize:14,fontWeight: 'bold',color:'white'}}>
               {this.state.user.username}
@@ -639,8 +646,8 @@ onOpen() {
           }}>
 
             <View>
-            <View style={{width:deviceWidth, height:deviceHeight/4, backgroundColor:'rgb(117, 54, 96)'}}>
-            <Image style={{width:deviceWidth, height:deviceHeight/4}}
+            <View style={{height:deviceHeight/4, backgroundColor:'rgb(117, 54, 96)'}}>
+            <Image style={{width:null, height:deviceHeight/4}}
               source={{uri: this.state.user.background}}
             >
 
@@ -652,14 +659,15 @@ onOpen() {
               alignItems:'center',width:60,height:60,
               borderWidth:0.2,
               borderColor:'#d1d1d1',
-              borderRadius:200,
+              borderRadius:180,
               backgroundColor:'white',
               alignItems:'center',
+              overflow: 'hidden',
               }} >
-                <Image style={{width:60, height:60,borderRadius:180}}
+                <Image style={{width:60, height:60}}
                 source={{uri: this.state.user.avatar}}/>
               </View>
-              <Text style={{alignItems:'center',fontSize:14,
+              <Text style={{fontSize:14,
               fontWeight: 'bold',color:'white', paddingLeft: 10}}>
                 {this.state.user.username}
               </Text>
@@ -675,7 +683,7 @@ onOpen() {
                     </Text>
                   </View>
                   <View sytle={{flex: 2}}>
-                    <Text style={{paddingLeft: 30}}> {this.state.user.dob}
+                    <Text style={{paddingLeft: 30,fontSize:11}}> {this.state.user.dob}
                     </Text>
                   </View>
                 </View>
@@ -701,7 +709,7 @@ onOpen() {
                     </Text>
                   </View>
                   <View sytle={{flex: 2}}>
-                    <Text style={{paddingLeft: 30}}> {this.state.user.phone}
+                    <Text style={{paddingLeft: 30,fontSize:11}}> {this.state.user.phone}
                     </Text>
                   </View>
                 </View>
@@ -714,20 +722,13 @@ onOpen() {
                     </Text>
                   </View>
                   <View sytle={{flex: 2}}>
-                    <Text style={{paddingLeft: 30}}> {this.state.user.email}
+                    <Text style={{paddingLeft: 30,fontSize:11}}> {this.state.user.email}
                     </Text>
                   </View>
                 </View>
               </View>
 
               <View style={{flexDirection: 'row', paddingTop: 15}}>
-                <TouchableOpacity activeOpacity={1}
-                  onPress={() => {
-                        this.setModalVisible()
-                      }}>
-                  <Text style={{marginLeft: 15, marginBottom: 15, fontWeight: 'bold'}}> Đóng
-                  </Text>
-                </TouchableOpacity>
                 {
                   this.state.check_user?
                   <TouchableOpacity onPress={()=>this.changeprofile()}>
@@ -737,8 +738,6 @@ onOpen() {
                   :
                   <View></View>
                 }
-
-
               </View>
 
             </View>
@@ -754,7 +753,7 @@ onOpen() {
         </TouchableOpacity>
       </Modal>
 
-      </DrawerLayoutAndroid>
+      </Drawer>
     )
   }
 }

@@ -117,17 +117,18 @@ export default class Message extends Component{
         <View style={{padding:10,flex:1,borderBottomWidth:0.5,borderBottomColor:'rgba(143, 143, 143, 0.2)'}}>
         <View style={{flex:1, flexDirection:'row',justifyContent:'space-between'}}>
             <TouchableOpacity  onPress={()=>this.showTimeline(data.data.user_1)} style={{flex:1,flexDirection:'row'}}>
-              <View >
+              <View style={Style.backgroundAvatar}>
                 <Image style={Style.avatar} source={{uri: data.data.user_1.avatar}}/>
-                {
-                  data.data.user_1.online === 1?
-                  <View style={{zIndex:1,borderRadius:100,borderWidth:1,borderColor:'white',width:10,height:10,position:'absolute',backgroundColor:'rgb(66, 183, 42)',bottom:0,right:0}}>
-                  </View>
-                  :
-                  <View></View>
-                }
+
 
               </View>
+              {
+                data.data.user_1.online === 1?
+                <View style={{zIndex:1,borderRadius:100,borderWidth:1,borderColor:'white',width:10,height:10,position:'absolute',backgroundColor:'rgb(66, 183, 42)',bottom:0,left:3}}>
+                </View>
+                :
+                <View></View>
+              }
               <View style={{marginLeft:10,justifyContent:'center'}}>
                 <Text style={Style.textbold}>
                  {data.data.user_1.username}
@@ -145,16 +146,17 @@ export default class Message extends Component{
         <View style={{padding:10,flex:1,borderBottomWidth:0.5,borderBottomColor:'rgba(143, 143, 143, 0.2)'}}>
         <View style={{flex:1, flexDirection:'row',justifyContent:'space-between'}}>
             <TouchableOpacity  onPress={()=>this.showTimeline(data.data.user_2)} style={{flex:1,flexDirection:'row'}}>
-              <View >
+              <View style={Style.backgroundAvatar}>
                 <Image style={Style.avatar} source={{uri: data.data.user_2.avatar}}/>
-                {
-                  data.data.user_2.online === 1?
-                  <View style={{zIndex:1,borderRadius:100,borderWidth:1,borderColor:'white',width:10,height:10,position:'absolute',backgroundColor:'rgb(66, 183, 42)',bottom:0,right:0}}>
-                  </View>
-                  :
-                  <View></View>
-                }
+
               </View>
+              {
+                data.data.user_2.online === 1?
+                <View style={{zIndex:1,borderRadius:100,borderWidth:1,borderColor:'white',width:10,height:10,position:'absolute',backgroundColor:'rgb(66, 183, 42)',bottom:0,left:3}}>
+                </View>
+                :
+                <View></View>
+              }
               <View style={{marginLeft:10,justifyContent:'center'}}>
                 <Text style={Style.textbold}>
                  {data.data.user_2.username}
@@ -224,10 +226,15 @@ export default class Message extends Component{
 }
 
 var Style = StyleSheet.create({
+  backgroundAvatar:{
+    overflow: 'hidden',
+    borderRadius:200,
+    width:40,
+    height:40,
+  },
   avatar:{
     width:40,
     height:40,
-    borderRadius:200
   },
   bottomInput:{
     flexDirection:'row',

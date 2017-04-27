@@ -23,6 +23,7 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons';
 import Spinner from 'react-native-loading-spinner-overlay';
 import dateFormat from 'dateformat';
+import MyStatusBar from './statusbar.js';
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
 var listnull = [];
@@ -503,7 +504,7 @@ export default class Public extends Component{
         >
 
         <View style={{flex:1,backgroundColor:'white'}} >
-
+        <MyStatusBar backgroundColor="#8e178f"/>
         <View style={styles.toolbar}>
           <TouchableOpacity activeOpacity={1} onPress={()=>this.onClose()} style={{flex:1,alignItems:'center'}}>
             <Icon name="md-close" size={24} color="#F5F5F5" style={styles.ico}/>
@@ -691,10 +692,16 @@ class YourComponent extends React.Component{
 }
 
 const styles = StyleSheet.create({
+  backgroundAvatar:{
+    overflow: 'hidden',
+    borderRadius:200,
+    width:40,
+    height:40,
+  },
     avatar:{
       width:40,
       height:40,
-      borderRadius:200
+
     },
     bottomInput:{
       flexDirection:'row',

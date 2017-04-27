@@ -18,6 +18,7 @@ import ScrollableTabView from 'react-native-scrollable-tab-view';
 import Spinner from 'react-native-loading-spinner-overlay';
 import Anonymous from './anonymousView.js';
 import Public from './publicView.js';
+import MyStatusBar from './statusbar.js';
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
 var data = [];
@@ -318,7 +319,7 @@ export default class Friends extends Component{
       <View style={{padding:10,flex:1,borderBottomWidth:0.5,borderBottomColor:'rgba(143, 143, 143, 0.2)'}}>
       <View style={{flex:1, flexDirection:'row',justifyContent:'space-between'}}>
           <TouchableOpacity onPress={()=>this.showTimeline(data)} style={{flex:1,flexDirection:'row'}}>
-            <View >
+            <View style={Style.backgroundAvatar}>
               <Image style={Style.avatar} source={{uri: data.avatar}}/>
             </View>
             <TouchableOpacity  onPress={()=>this.showTimeline(data)} style={{marginLeft:10,justifyContent:'center'}}>
@@ -517,14 +518,18 @@ export default class Friends extends Component{
 
   render(){
     return(
+
       <View style={{flex:1,backgroundColor:'#F5F5F5'}}>
+      <MyStatusBar backgroundColor="#8e178f"/>
       <Modal
         animationType="slide"
         transparent={true}
         visible={this.state.modalVisible_noti}
         onRequestClose={()=>this.setModalVisible_noti(!this.state.modalVisible_noti)}
       >
+
       <View style={{flex:1,backgroundColor:'#F5F5F5'}}>
+      <MyStatusBar backgroundColor="#8e178f"/>
         <View style={Style.toolbar}>
           <TouchableOpacity onPress={()=>this.setModalVisible_noti(!this.state.modalVisible_noti)} style={{flex:1,alignItems:'center'}}>
             <Icon name="md-close" size={24} color="#F5F5F5" style={Style.ico}/>
@@ -594,7 +599,7 @@ export default class Friends extends Component{
       <View style={{padding:10,width:deviceWidth,height:deviceHeight/11,borderBottomWidth:0.5,borderBottomColor:'rgba(143, 143, 143, 0.2)'}}>
       <View style={{flex:1, flexDirection:'row',justifyContent:'space-between'}}>
           <View style={{flex:1,flexDirection:'row'}}>
-          <TouchableOpacity onPress={()=> this.showNoti()} style={[Style.avatar,{justifyContent:'center',alignItems:'center',backgroundColor:'#3498db'}]}>
+          <TouchableOpacity onPress={()=> this.showNoti()} style={[Style.backgroundAvatar,{justifyContent:'center',alignItems:'center',backgroundColor:'#3498db'}]}>
             <Icon color='#f5f5f5' name='md-contacts' size={24} />
           </TouchableOpacity>
             <TouchableOpacity onPress={()=> this.showNoti()} style={{marginLeft:10,justifyContent:'center'}}>
@@ -644,7 +649,9 @@ export default class Friends extends Component{
         visible={this.state.modalVisible}
         onRequestClose={()=>this.setModalVisible()}
       >
+
       <View style={{flex:1,backgroundColor:'#F5F5F5'}}>
+      <MyStatusBar backgroundColor="#8e178f"/>
         <View style={Style.toolbar}>
           <TouchableOpacity onPress={()=>this.setModalVisible()} style={{flex:1,alignItems:'center'}}>
             <Icon name="md-close" size={24} color="#F5F5F5" style={Style.ico}/>
@@ -702,10 +709,15 @@ export default class Friends extends Component{
   }
 }
 var Style = StyleSheet.create({
-  avatar:{
+  backgroundAvatar:{
+    overflow: 'hidden',
+    borderRadius:200,
     width:40,
     height:40,
-    borderRadius:200
+  },
+  avatar:{
+    width:40,
+    height:40
   },
   bottomInput:{
     flexDirection:'row',

@@ -15,6 +15,7 @@ import ScrollableTabView from 'react-native-scrollable-tab-view';
 import Anonymous from './anonymousView.js';
 import Public from './publicView.js';
 import DefaultTabBar from './tab/DefaultTabBar';
+import MyStatusBar from './statusbar.js';
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
 var listnull = [];
@@ -259,7 +260,9 @@ export default class NewFeed extends Component{
         visible={this.state.modalVisible}
         onRequestClose={() => {alert("Modal has been closed.")}}
         >
+
           <View  style={{backgroundColor: 'white',flex:1}}>
+          <MyStatusBar backgroundColor="#8e178f"/>
           <View style={Style.toolbar}>
             <TouchableOpacity activeOpacity={1} onPress={()=>this.setModalVisible(!this.state.modalVisible)} style={{flex:1,alignItems:'center'}}>
               <Icon name="md-close" size={24} color="#F5F5F5" style={Style.ico}/>
@@ -355,7 +358,9 @@ export default class NewFeed extends Component{
         visible={this.state.modalVisible_noti}
         onRequestClose={()=>this.setModalVisible_noti(!this.state.modalVisible_noti)}
       >
+
       <View style={{flex:1,backgroundColor:'#F5F5F5'}}>
+      <MyStatusBar backgroundColor="#8e178f"/>
         <View style={Style.toolbar}>
           <TouchableOpacity onPress={()=>this.setModalVisible_noti(!this.state.modalVisible_noti)} style={{flex:1,alignItems:'center'}}>
             <Icon name="md-close" size={24} color="#F5F5F5" style={Style.ico}/>
