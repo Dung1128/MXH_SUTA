@@ -76,41 +76,45 @@ export default class changeProfileView extends Component{
 
 
   async _changeprofile(){
-
-    try {
-      let formdata = new FormData();
-      formdata.append("id_user", this.state.user.id_user);
-      formdata.append("phone", this.state.phone);
-      formdata.append("email", this.state.email);
-      formdata.append("address", this.state.address);
-      formdata.append("dob", this.state.dob);
-      if(this.state.checkBoxNam == require('../images/box.png')){
-        formdata.append("gender", 1);
-      }
-      else{
-        formdata.append("gender", 0);
-      }
-      const res = await fetch('http://suta.esy.es/api/updateprofile.php', {
-        method: 'post',
-        headers: {
-        'Content-Type': 'multipart/form-data',
-        },
-        body: formdata
-      });
-      console.log('res', res);
-      const jsonData = await res.json();
-      console.log('jsonData', jsonData);
-      // var responseJson = JSON.parse(jsonData);
-      // if (response.status >= 200 && response.status < 300 && responseJson.code==0) {
-        Alert.alert('Thông báo','Đổi thông tin thành công, thông tin của bạn sẽ được cập nhật từ lần đăng nhập sau.');
-
-      // }else {
-      //     alert('Đổi không thành công.');
-      // }
-    } catch (error) {
-      console.log('error', error);
+    let formdata = new FormData();
+    formdata.append("id_user", this.state.user.id_user);
+    formdata.append("phone", this.state.phone);
+    formdata.append("email", this.state.email);
+    formdata.append("address", this.state.address);
+    formdata.append("dob", this.state.dob);
+    if(this.state.checkBoxNam == require('../images/box.png')){
+      formdata.append("gender", 1);
+    }
+    else{
+      formdata.append("gender", 0);
     }
 
+    fetch('http://suta.esy.es/api/updateprofile.php',{
+      method: 'post',
+      header: {
+        'Content-Type': 'multipart/formdata'
+      },
+      body: formdata
+    })
+    .then((response)=>{response.json(); console.log('test2');})
+    .then((responseJson)=>{
+      // if (flag == true){
+      //   this.setState({
+      //     data: responseJson.result,
+      //   });
+      //
+      // }
+      // else {
+      //   return;
+      // }
+      console.log('okokook');
+      //console.log(responseJson.result);
+      alert('Đổi thông tin thành công, thông tin của bạn sẽ được cập nhật từ lần đăng nhập sau.');
+
+    })
+    .catch(error=>{
+      console.log(error);
+    });
   }
 
   render(){
@@ -141,6 +145,7 @@ export default class changeProfileView extends Component{
                 <TextInput style={styles._input} value = {this.state.email.toString()}
                 onChangeText={(val) => this.setState({email: val})}
                 underlineColorAndroid='transparent'
+                placeholder="Email"
                 />
               </View>
 
@@ -149,6 +154,7 @@ export default class changeProfileView extends Component{
                 onChangeText={(val) => this.setState({phone: val})}
                 keyboardType="phone-pad"
                 underlineColorAndroid='transparent'
+                placeholder="Điện thoại"
                 />
               </View>
 
@@ -156,6 +162,7 @@ export default class changeProfileView extends Component{
                 <TextInput style={styles._input} value = {this.state.address.toString()}
                 onChangeText={(val) => this.setState({address: val})}
                 underlineColorAndroid='transparent'
+                placeholder="Địa chỉ"
                 />
               </View>
 

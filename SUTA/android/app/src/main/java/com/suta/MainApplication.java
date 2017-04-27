@@ -14,6 +14,7 @@ import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.imagepicker.ImagePickerPackage;
 import java.util.Arrays;
 import java.util.List;
+import cl.json.RNSharePackage;
 public class MainApplication extends Application implements ReactApplication {
 
     private static CallbackManager mCallbackManager = CallbackManager.Factory.create();
@@ -34,7 +35,8 @@ public class MainApplication extends Application implements ReactApplication {
                     new MainReactPackage(),
             new FBSDKPackage(),
                     new FBSDKPackage(mCallbackManager),
-                    new ImagePickerPackage() 
+                    new ImagePickerPackage(),
+                    new RNSharePackage()
             );
         }
     };

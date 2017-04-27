@@ -219,7 +219,7 @@ export default class NewFeed extends Component{
     }
     if(value==3&&this.state.radio3!=this.state.check)
     {
-      this.setState({radio1:this.state.radio3, radio2: this.state.radio3,radio3: this.state.check,flagStatus:1})
+      this.setState({radio1:this.state.radio3, radio2: this.state.radio3,radio3: this.state.check,flagStatus:1, flagConfession:0})
     }
 
   }

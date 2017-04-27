@@ -197,29 +197,28 @@ export default class Public extends Component{
     formdata.append('id_user',data.id_user);
     formdata.append('id_status',data.id_status);
 
-    try {
-      let response = await fetch('http://suta.esy.es/api/getuserstatus_id.php',{
+    fetch('http://suta.esy.es/api/getuserstatus_id.php',{
         method: 'post',
         header: {
           'Content-Type': 'multipart/formdata'
         },
         body: formdata
+      })
+      .then((response)=>response.json())
+      .then((jsonResponse)=>{
+        if (flag == true){
+          this.setState({
+            data: jsonResponse.result['0'],
+          });
+        }
+        else {
+          return;
+        }
+      })
+      .catch(error=>{
+        console.log(error);
       });
 
-      let res = await response.text();
-      if (flag == true){
-      var jsonResponse = JSON.parse(res);
-        this.setState({
-          data: jsonResponse.result['0'],
-        });
-
-      }
-      else {
-        return;
-      }
-    } catch (error) {
-     console.log(error);
-    }
   }
 
   async onLike(data){
@@ -228,32 +227,30 @@ export default class Public extends Component{
     formdata.append('id_user',this.state.user.id_user);
     formdata.append('id_status',data.id_status);
 
-    try {
-      let response = await fetch('http://suta.esy.es/api/checklike.php',{
+    fetch('http://suta.esy.es/api/checklike.php',{
         method: 'post',
         header: {
           'Content-Type': 'multipart/formdata'
         },
         body: formdata
-      });
-
-      let res = await response.text();
-      if (flag == true){
-      var jsonResponse = JSON.parse(res);
-        if(this.state.modalVisible)
-        {
-          this.getInfoUser(data);
-        }else {
-          this.fetchData();
+      })
+      .then((response)=>response.json())
+      .then((responseJson)=>{
+        if (flag == true){
+          if(this.state.modalVisible)
+          {
+            this.getInfoUser(data);
+          }else {
+            this.fetchData();
+          }
         }
-
-      }
-      else {
-        return;
-      }
-    } catch (error) {
-     console.log(error);
-    }
+        else {
+          return;
+        }
+      })
+      .catch(error=>{
+        console.log(error);
+      });
 
   }
 
@@ -273,30 +270,29 @@ export default class Public extends Component{
     formdata.append("username", this.state.user.username);
     formdata.append("id_userFriend", value.id_user);
     formdata.append("id_status", value.id_status);
-    try {
-      let response = await fetch('http://suta.esy.es/api/noti_status.php',{
+
+    fetch('http://suta.esy.es/api/noti_status.php',{
         method: 'post',
         headers: {
         'Content-Type': 'multipart/form-data',
         },
         body: formdata
-      });
-      let res = await response.text();
-      if(flag == true){
-      var jsonResponse = JSON.parse(res);
-      this.setState({
-        dataSource_cmt: jsonResponse['result']!=null?this.state.dataSource_cmt.cloneWithRows(jsonResponse['result']):this.state.dataSource_cmt.cloneWithRows(listnull)
+      })
+      .then((response)=>response.json())
+      .then((jsonResponse)=>{
+        if (flag == true){
+          this.setState({
+            dataSource_cmt: jsonResponse['result']!=null?this.state.dataSource_cmt.cloneWithRows(jsonResponse['result']):this.state.dataSource_cmt.cloneWithRows(listnull)
+          });
+        }
+        else {
+          return;
+        }
+      })
+      .catch(error=>{
+        console.log(error);
       });
 
-      }
-      else {
-        return;
-      }
-    }
-    catch(error)
-    {
-     console.log(error);
-    }
   }
   async _addComment(value){
 
@@ -308,32 +304,31 @@ export default class Public extends Component{
       formdata.append("id_user", this.state.user.id_user);
       formdata.append("content", this.state.contentComment);
       formdata.append("id_status", value.id_status);
-      try {
-        let response = await fetch('http://suta.esy.es/api/addcomment.php',{
+
+      fetch('http://suta.esy.es/api/addcomment.php',{
           method: 'post',
           headers: {
           'Content-Type': 'multipart/form-data',
           },
           body: formdata
-        });
-        let res = await response.text();
-        if(flag == true){
-        var jsonResponse = JSON.parse(res);
-        this.setState({
-          dataSource_cmt: jsonResponse['result']!=null?this.state.dataSource_cmt.cloneWithRows(jsonResponse['result']):this.state.dataSource_cmt.cloneWithRows(listnull)
-        });
-
+        })
+        .then((response)=>response.json())
+      .then((jsonResponse)=>{
+        if (flag == true){
+          this.setState({
+            dataSource_cmt: jsonResponse['result']!=null?this.state.dataSource_cmt.cloneWithRows(jsonResponse['result']):this.state.dataSource_cmt.cloneWithRows(listnull)
+          });
         }
         else {
           return;
         }
-      }
-      catch(error)
-      {
-       console.log(error);
-      }
-    }
+      })
+      .catch(error=>{
+        console.log(error);
+      });
+
   }
+}
   // Get data to list Comment
   getComment(value){
     let formdata = new FormData();
