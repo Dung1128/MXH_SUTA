@@ -343,7 +343,7 @@ var styles = StyleSheet.create({
     paddingTop:0,
     paddingBottom:0,
     fontStyle: 'italic',
-    color:'white'
+    color:'black'
   },
   border: {
     margin:5,
