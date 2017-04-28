@@ -10,9 +10,9 @@ import {
 } from 'react-native';
 // import Style from 'Style.js';
 import Iconn from 'react-native-vector-icons/Ionicons';
-import NewFeed from './newFeedView.js';
-import Friends from './friendsView.js';
-import Message from './messageView.js';
+import NewFeed from './newfeed/newFeedView.js';
+import Friends from './friends/friendsView.js';
+import Message from './message/messageView.js';
 import firebase from './api.js';
 import MyStatusBar from './statusbar.js';
 import { Tabs, Tab, Icon } from 'react-native-elements';

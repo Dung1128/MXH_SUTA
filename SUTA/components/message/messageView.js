@@ -10,13 +10,13 @@ import {
   ListView,
   BackAndroid,
   Alert,
-  Modal
+  Modal,
+  Platform
 } from 'react-native';
-import firebase from './api.js';
+import firebase from '../api.js';
+import MyStatusBar from '../statusbar.js';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
-import Anonymous from './anonymousView.js';
-import Public from './publicView.js';
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
 var items_rooms = [];
@@ -118,7 +118,7 @@ export default class Message extends Component{
         <View style={{flex:1, flexDirection:'row',justifyContent:'space-between'}}>
             <TouchableOpacity  onPress={()=>this.showTimeline(data.data.user_1)} style={{flex:1,flexDirection:'row'}}>
               <View style={Style.backgroundAvatar}>
-                <Image style={Style.avatar} source={{uri: data.data.user_1.avatar}}/>
+                <Image style={Platform.OS=='ios'?Style.avatar:Style.avatar_android} source={{uri: data.data.user_1.avatar}}/>
 
 
               </View>
@@ -147,7 +147,7 @@ export default class Message extends Component{
         <View style={{flex:1, flexDirection:'row',justifyContent:'space-between'}}>
             <TouchableOpacity  onPress={()=>this.showTimeline(data.data.user_2)} style={{flex:1,flexDirection:'row'}}>
               <View style={Style.backgroundAvatar}>
-                <Image style={Style.avatar} source={{uri: data.data.user_2.avatar}}/>
+                <Image style={Platform.OS=='ios'?Style.avatar:Style.avatar_android} source={{uri: data.data.user_2.avatar}}/>
 
               </View>
               {
@@ -175,6 +175,7 @@ export default class Message extends Component{
   render(){
     return(
       <View style={{flex:1}}>
+      <MyStatusBar backgroundColor="#8e178f"/>
       {
         this.state.checksearch?
         <View style={Style.toolbar}>
@@ -235,6 +236,11 @@ var Style = StyleSheet.create({
   avatar:{
     width:40,
     height:40,
+  },
+  avatar_android:{
+    width:40,
+    height:40,
+    borderRadius:200,
   },
   bottomInput:{
     flexDirection:'row',

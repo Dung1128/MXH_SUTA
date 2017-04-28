@@ -36,7 +36,7 @@ class loginView extends Component{
       username:'',
       password:'',
       modalVisible: false,
-      checkBox:require('../images/box.png')
+      checkBox:require('./images/box.png')
     });
     console.disableYellowBox = true;
   }
@@ -186,18 +186,18 @@ class loginView extends Component{
   }
 
   _next(){
-    if(this.state.checkBox == require('../images/ico_tick.png')){
+    if(this.state.checkBox == require('./images/ico_tick.png')){
       this.setModalVisible();
       this._fbAuth();
     }
   }
 
   checkOk(){
-    if(this.state.checkBox == require('../images/box.png')){
-      this.setState({ checkBox: require('../images/ico_tick.png')})
+    if(this.state.checkBox == require('./images/box.png')){
+      this.setState({ checkBox: require('./images/ico_tick.png')})
     }
     else{
-      this.setState({ checkBox: require('../images/box.png')})
+      this.setState({ checkBox: require('./images/box.png')})
     }
   }
 
@@ -208,12 +208,12 @@ class loginView extends Component{
       <SplashScreen duration={3000} backgroundColor={'blue'}>
 
 
-      <Image source={require('../images/bgr2.png')} style={styles.container}>
+      <Image source={require('./images/bgr2.png')} style={styles.container}>
       <KeyboardAvoidingView behavior="padding" style={{flex:1}}>
         <View style={styles.logo}>
           <Image
             style={{width: 145, height: 86}}
-            source={require('../images/logo3.png')}
+            source={require('./images/logo3.png')}
             />
         </View>
         <View style={styles.contentLogin}>

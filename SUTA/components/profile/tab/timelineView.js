@@ -11,7 +11,8 @@ import {
   Modal,
   TextInput,
   Alert,
-  RefreshControl
+  RefreshControl,
+  Platform
 } from 'react-native';
 import dateFormat from 'dateformat';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -171,19 +172,20 @@ export default class timeLineView extends Component{
     }
   }
 
-  onClose(){
-    this.fetchData();
-    this.setModalVisible();
+  navigate(routeName,data){
+    this.props.navigator.push({
+      name: routeName,
+      passProps: {
+        id_status: data.id_status,
+        id_user: data.id_user,
+        user: this.props.user,
+        check: 'public'
+      }
+    })
   }
   onClickComment(data)
   {
-
-    this.setState({
-      data: data,
-      dataSource_cmt: this.state.dataSource_cmt.cloneWithRows(listnull),
-    });
-   this.getComment(data);
-   this.setModalVisible();
+    this.navigate('comment',data)
   }
   async getInfoUser(data){
     let formdata = new FormData();
@@ -250,126 +252,7 @@ export default class timeLineView extends Component{
     }
 
   }
-  clearText(fieldName) {
-    this.refs[fieldName].setNativeProps({text: ''});
-    this.setState({
-      sendColor: '#90949c',
-    })
-  }
-  async _add_noti(value){
-    let formdata = new FormData();
-    formdata.append("id_user", this.state.user.id_user);
-    formdata.append("username", this.state.user.username);
-    formdata.append("id_userFriend", value.id_user);
-    formdata.append("id_status", value.id_status);
-    try {
-      let response = await fetch('http://suta.esy.es/api/noti_status.php',{
-        method: 'post',
-        headers: {
-        'Content-Type': 'multipart/form-data',
-        },
-        body: formdata
-      });
-      let res = await response.text();
-      if(flag == true){
-      var jsonResponse = JSON.parse(res);
-      this.setState({
-        dataSource_cmt: jsonResponse['result']!=null?this.state.dataSource_cmt.cloneWithRows(jsonResponse['result']):this.state.dataSource_cmt.cloneWithRows(listnull)
-      });
 
-      }
-      else {
-        return;
-      }
-    }
-    catch(error)
-    {
-     console.log(error);
-    }
-  }
-  async _addComment(value){
-    if(this.state.sendColor!= '#90949c')
-    {
-      this._add_noti(value);
-      this.clearText('contentComment');
-      let formdata = new FormData();
-      formdata.append("id_user", this.state.id);
-      formdata.append("content", this.state.contentComment);
-      formdata.append("id_status", value.id_status);
-      try {
-        let response = await fetch('http://suta.esy.es/api/addcomment.php',{
-          method: 'post',
-          headers: {
-          'Content-Type': 'multipart/form-data',
-          },
-          body: formdata
-        });
-        let res = await response.text();
-        var jsonResponse = JSON.parse(res);
-        this.setState({
-          code: jsonResponse['code'],
-           message: jsonResponse['message'],
-           result: jsonResponse['result'],
-           dataSource_cmt: this.state.dataSource_cmt.cloneWithRows(jsonResponse['result'])
-        });
-
-
-      }
-      catch(error)
-      {
-       console.log(error);
-      }
-    }
-  }
-  // Get data to list Comment
-  async getComment(value){
-    let formdata = new FormData();
-    formdata.append('id_status',value.id_status);
-    try {
-      let response = await fetch('http://suta.esy.es/api/getcmtstatus_id.php',{
-        method: 'post',
-        header: {
-          'Content-Type': 'multipart/formdata'
-        },
-        body: formdata
-      });
-
-      let res = await response.text();
-      if(flag == true){
-      var jsonResponse = JSON.parse(res);
-      this.setState({
-        dataSource_cmt: this.state.dataSource_cmt.cloneWithRows(jsonResponse['result'])
-      });
-      }
-      else {
-        return;
-      }
-    } catch (error) {
-     console.log(error);
-    }
-  }
-  _renderRow_cmt(data){
-    return (
-      <View style={{borderTopWidth:0.5,borderTopColor:'rgba(143, 143, 143, 0.2)'}}>
-          <View style={{flexDirection:'row',padding:10}}>
-            <View style={Style.backgroundAvatar} >
-              <Image style={Style.avatar} source={{uri: data.avatar}}/>
-            </View>
-            <View style={{justifyContent:'center',marginLeft:10}}>
-              <Text style={Style.textbold}>
-                {data.username}
-              </Text>
-              <Text style={Style.textnormal}>
-               {data.content}
-              </Text>
-              <Text style={Style.textgray}>
-                {data.time}
-              </Text>
-            </View>
-          </View>
-    </View>
-    )
-  }
   _renderRow(data){
     return(
       <View style={{flex:1,
@@ -385,7 +268,7 @@ export default class timeLineView extends Component{
 
       <View style={{flex:1,flexDirection:'row'}}>
         <View style={Style.backgroundAvatar} >
-          <Image style={Style.avatar} source={{uri: data.avatar}}/>
+          <Image style={Platform.OS=='ios'?Style.avatar:Style.avatar_android} source={{uri: data.avatar}}/>
         </View>
         <View style={{justifyContent:'center',marginLeft:10}}>
           <Text style={Style.textbold}>
@@ -470,108 +353,7 @@ export default class timeLineView extends Component{
           renderRow={this._renderRow.bind(this)}
           enableEmptySections
           />
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={this.state.modalVisible}
-            onRequestClose={()=>this.setModalVisible()}
-          >
 
-          <View style={{flex:1,backgroundColor:'white'}} >
-
-          <View style={Style.toolbar}>
-            <TouchableOpacity activeOpacity={1} onPress={()=>this.onClose()} style={{flex:1,alignItems:'center'}}>
-              <Icon name="md-close" size={24} color="#F5F5F5" style={Style.ico}/>
-            </TouchableOpacity>
-            <View style={{flex:8,marginLeft:-20,alignItems:'center'}}>
-              <Text style={Style.title}>
-                BÌNH LUẬN
-              </Text>
-            </View>
-
-          </View>
-              <View style={{ flex:1}}>
-              {
-                this.state.data!=null?
-                <View style={{ flex:1}}>
-                <View style={{flexDirection:'row',padding:10}}>
-                  <View style={Style.backgroundAvatar} >
-                    <Image style={Style.avatar} source={{uri: this.state.data.avatar}}/>
-                  </View>
-                  <View style={{justifyContent:'center',marginLeft:10}}>
-                    <Text style={Style.textbold}>
-                      {this.state.data.username}
-                    </Text>
-                    <Text style={Style.textgray}>
-                      {this.state.data.time}
-                    </Text>
-                  </View>
-                </View>
-                  <Text style={{padding:10,fontSize:13,color:'#1d2129'}}>
-                   {this.state.data.content}
-                  </Text>
-                  <View style={{flexDirection:'row',padding:10}}>
-                  <TouchableOpacity style={{flexDirection:'row'}} onPress={()=>this.onLike(this.state.data)}>
-                  {
-                    this.state.data.checklike!='0'?
-                    <Icon name='md-heart' color="rgb(254, 6, 6)" size={20} />
-                    :
-                    <Icon name='md-heart-outline' color="rgba(0, 0, 0, 0.2)" size={20} />
-                  }
-                  <Text style={[Style.textgray,{marginLeft:5}]}>
-                     {
-                       this.state.data.like!='0'?
-                       this.state.data.like + " Thích"
-                       :
-                       "Thích"
-                     }
-                  </Text>
-
-                  </TouchableOpacity>
-                    <TouchableOpacity style={{flexDirection:'row',marginLeft:20}}>
-                      <Icon name='md-text' color="rgba(0, 0, 0, 0.2)" size={20} />
-                      <Text style={[Style.textgray,{marginLeft:5}]}>
-                      {
-                        this.state.data.comment!=null?
-                        this.state.data.comment + "Bình Luận"
-                        :
-                        "Bình Luận"
-                      }
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                  <ListView
-                  style={{flex:1}}
-                  dataSource={this.state.dataSource_cmt}
-                  renderRow={this._renderRow_cmt.bind(this)}
-                  enableEmptySections
-                  />
-                    </View>
-              :
-              <View></View>
-              }
-
-            </View>
-
-            <View style={Style.bottomInput}>
-
-              <TextInput
-              style={Style.input}
-              placeholder="Viết bình luận"
-              onChangeText={(val) => this.setState({contentComment: val, sendColor:'#8e44ad'})}
-              multiline={true}
-              placeholderTextColor= '#90949c'
-              autoCapitalize="none"
-              autoCorrect={false}
-              ref={'contentComment'}/>
-              <TouchableOpacity onPress={()=>this._addComment(this.state.data)}>
-                <Icon name="md-send" size={28} color={this.state.sendColor} style={{paddingLeft:10,paddingRight:10}}/>
-              </TouchableOpacity>
-              </View>
-
-          </View>
-
-          </Modal>
           <Modal
           animationType="fade"
           transparent={true}
@@ -624,6 +406,11 @@ var Style = StyleSheet.create({
   avatar:{
     width:40,
     height:40,
+  },
+  avatar_android:{
+    width:40,
+    height:40,
+    borderRadius:200,
   },
   bottomInput:{
     flexDirection:'row',

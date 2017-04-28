@@ -12,12 +12,13 @@ import Style from './src/Style.js';
 import Home from './components/homeView.js';
 import Login from './components/loginView.js';
 import Register from './components/registerView.js';
-import Profile from './components/profileView.js';
-import AccountManagerView from './components/accountManagerView.js';
-import ChangePass from './components/changePassView.js';
-import ChangeProfile from './components/changeProfileView.js';
-import Chat from './components/chatView.js';
-import Feedback from './components/feedbackView.js';
+import Profile from './components/profile/profileView.js';
+import AccountManagerView from './components/profile/accountManagerView.js';
+import ChangePass from './components/profile/changePassView.js';
+import ChangeProfile from './components/profile/changeProfileView.js';
+import Chat from './components/message/chatView.js';
+import Feedback from './components/profile/feedbackView.js';
+import Comment from './components/newfeed/commentView.js';
 import firebase from './components/api.js';
 class SUTA extends Component {
   constructor(props){
@@ -90,6 +91,9 @@ class SUTA extends Component {
     }
     if(route.name == 'feedback'){
       return <Feedback navigator = {navigator} {...route.passProps}/>
+    }
+    if(route.name == 'comment'){
+      return <Comment navigator = {navigator} {...route.passProps}/>
     }
   }
 

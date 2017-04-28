@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import Iconn from 'react-native-vector-icons/Ionicons';
-import MyStatusBar from './statusbar.js';
+import MyStatusBar from '../statusbar.js';
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
 import Hr from 'react-native-hr';
