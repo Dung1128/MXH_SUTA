@@ -14,8 +14,8 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import Anonymous from './anonymousView.js';
 import Public from './publicView.js';
-import DefaultTabBar from './tab/DefaultTabBar';
-import MyStatusBar from './statusbar.js';
+import DefaultTabBar from '../tab/DefaultTabBar';
+import MyStatusBar from '../statusbar.js';
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
 var listnull = [];
@@ -45,6 +45,19 @@ export default class NewFeed extends Component{
       radio1: 'md-radio-button-on'
     });
     // this.get_noti();
+  }
+  navigate(routeName,data){
+    this.onRead(data);
+    this.setModalVisible_noti(!this.state.modalVisible_noti);
+    this.props.navigator.push({
+      name: routeName,
+      passProps: {
+        id_status: data.id_status,
+        id_user: data.id_userFriend,
+        user: this.props.data,
+        check: 'public'
+      }
+    })
   }
   componentDidMount(){
     this.get_noti();
@@ -231,7 +244,7 @@ export default class NewFeed extends Component{
   }
   _renderRow_noti(data){
     return(
-      <TouchableOpacity onPress={()=>this.onRead(data)} style={{borderBottomWidth:0.5,borderBottomColor:'#e6dfdf',paddingBottom:10,flex:1,justifyContent:'space-between', flexDirection:'row',padding:10}}>
+      <TouchableOpacity onPress={()=>this.navigate('comment',data)} style={{borderBottomWidth:0.5,borderBottomColor:'#e6dfdf',paddingBottom:10,flex:1,justifyContent:'space-between', flexDirection:'row',padding:10}}>
           <View style={{alignItems:'center',justifyContent:'center'}}>
               {
                 data.new==0?

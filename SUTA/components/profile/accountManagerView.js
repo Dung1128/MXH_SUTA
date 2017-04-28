@@ -8,12 +8,12 @@ import {
   AsyncStorage
 } from 'react-native';
 import Iconn from 'react-native-vector-icons/Ionicons';
-import MyStatusBar from './statusbar.js';
+import MyStatusBar from '../statusbar.js';
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
 import Hr from 'react-native-hr';
 import FBSDK, {LoginManager} from 'react-native-fbsdk';
-import firebase from './api.js';
+import firebase from '../api.js';
 var items_rooms = [];
 export default class accountManagerView extends Component{
   constructor(props){

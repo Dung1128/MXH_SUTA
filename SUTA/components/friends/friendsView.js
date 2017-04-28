@@ -11,14 +11,13 @@ import{
   BackAndroid,
   Alert,
   Modal,
-  RefreshControl
+  RefreshControl,
+  Platform
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import Spinner from 'react-native-loading-spinner-overlay';
-import Anonymous from './anonymousView.js';
-import Public from './publicView.js';
-import MyStatusBar from './statusbar.js';
+import MyStatusBar from '../statusbar.js';
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
 var data = [];
@@ -320,7 +319,7 @@ export default class Friends extends Component{
       <View style={{flex:1, flexDirection:'row',justifyContent:'space-between'}}>
           <TouchableOpacity onPress={()=>this.showTimeline(data)} style={{flex:1,flexDirection:'row'}}>
             <View style={Style.backgroundAvatar}>
-              <Image style={Style.avatar} source={{uri: data.avatar}}/>
+              <Image style={Platform.OS=='ios'?Style.avatar:Style.avatar_android} source={{uri: data.avatar}}/>
             </View>
             <TouchableOpacity  onPress={()=>this.showTimeline(data)} style={{marginLeft:10,justifyContent:'center'}}>
               <Text style={Style.textbold}>
@@ -342,8 +341,8 @@ export default class Friends extends Component{
       <View style={{padding:10,flex:1,borderBottomWidth:0.5,borderBottomColor:'rgba(143, 143, 143, 0.2)'}}>
       <View style={{flex:1, flexDirection:'row',justifyContent:'space-between'}}>
           <TouchableOpacity onPress={()=>this.showTimeline(data)} style={{flex:1,flexDirection:'row'}}>
-            <View>
-              <Image style={Style.avatar} source={{uri: data.avatar}}/>
+            <View style={Style.backgroundAvatar}>
+              <Image style={Platform.OS=='ios'?Style.avatar:Style.avatar_android} source={{uri: data.avatar}}/>
             </View>
             <View style={{marginLeft:10,justifyContent:'center'}}>
               <Text style={Style.textbold}>
@@ -718,6 +717,11 @@ var Style = StyleSheet.create({
   avatar:{
     width:40,
     height:40
+  },
+  avatar_android:{
+    width:40,
+    height:40,
+    borderRadius:200,
   },
   bottomInput:{
     flexDirection:'row',

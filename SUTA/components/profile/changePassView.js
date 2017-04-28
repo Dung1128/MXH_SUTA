@@ -11,7 +11,7 @@ import {
 import Iconn from 'react-native-vector-icons/Ionicons';
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
-import MyStatusBar from './statusbar.js';
+import MyStatusBar from '../statusbar.js';
 import Hr from 'react-native-hr';
 export default class accountManagerView extends Component{
   constructor(props){

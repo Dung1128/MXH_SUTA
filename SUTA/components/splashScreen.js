@@ -30,7 +30,7 @@ export default class SplashScreen extends Component{
       this.state.done ?
         ({...this.props.children} )
         :
-        (<Image style={styles.container} source={require('../images/splash.png')} />)
+        (<Image style={styles.container} source={require('./images/splash.png')} />)
     )
   }
 }

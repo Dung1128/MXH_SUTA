@@ -13,6 +13,7 @@ import Iconn from 'react-native-vector-icons/Ionicons';
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
 import Hr from 'react-native-hr';
+import MyStatusBar from '../statusbar.js';
 export default class feedbackView extends Component{
   constructor(props){
     super(props);
@@ -59,7 +60,7 @@ export default class feedbackView extends Component{
   render(){
     return(
       <View style={{flex:1}}>
-
+      <MyStatusBar backgroundColor="#8e178f"/>
         <View style={styles._toolbar}>
           <TouchableOpacity onPress={this.onBack.bind(this)}>
             <Iconn name="md-arrow-back" size={34} color="#F5F5F5"/>

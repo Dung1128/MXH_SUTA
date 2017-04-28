@@ -8,12 +8,13 @@ import {
   ListView,
   Dimensions,
   TouchableOpacity,
-  Image
+  Image,
+  Platform
 } from 'react-native';
-import firebase from './api.js';
+import firebase from '../api.js';
 import Icon from 'react-native-vector-icons/Ionicons';
 var dateFormat = require('dateformat');
-import MyStatusBar from './statusbar.js';
+import MyStatusBar from '../statusbar.js';
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
 var items_rooms = [];
@@ -32,35 +33,6 @@ export default class Chat extends Component {
       check_rooms: false,
     }
     database = firebase.database();
-
-  }
-  componentWillMount(){
-    // var check = false;
-    // database.ref("rooms").on("value", (snap)=>{
-    //   items_rooms = [];
-    //     snap.forEach((data)=>{
-    //       items_rooms.push({
-    //         key: data.key,
-    //         data: data.val(),
-    //       });
-    //
-    //     })
-    //     for (var i = 0; i < items_rooms.length; i++) {
-    //       if(items_rooms[i].data.user_1.id_user === this.state.data.id_user && items_rooms[i].data.user_2.id_user === this.state.user_login.id_user
-    //       || items_rooms[i].data.user_2.id_user === this.state.data.id_user && items_rooms[i].data.user_1.id_user === this.state.user_login.id_user)
-    //       {
-    //         this.showMess(items_rooms[i].key);
-    //         this.setState({
-    //           check_rooms:true,
-    //           info_rooms: items_rooms[i],
-    //         });
-    //         this.checkStatus(items_rooms[i].key);
-    //       }
-    //
-    //     }
-    //
-    // });
-
 
   }
 
@@ -136,7 +108,7 @@ export default class Chat extends Component {
       <View style={this.checkstylechat(data.data.user.username)}>
         <View style={Style.backgroundAvatar}>
         <Image source={{uri:data.data.user.avatar}}
-          style={Style.avatar}
+          style={Platform.OS=='ios'?Style.avatar:Style.avatar_android}
           />
           </View>
         <View style={this.checkstyle(data.data.user.username)}>
@@ -357,6 +329,11 @@ var Style = StyleSheet.create({
   avatar:{
     width:30,
     height:30
+  },
+  avatar_android:{
+    width:30,
+    height:30,
+    borderRadius:200,
   },
   bottomInput:{
     flexDirection:'row',

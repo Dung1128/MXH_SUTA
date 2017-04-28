@@ -17,11 +17,11 @@ import ScrollableTabView from 'react-native-scrollable-tab-view';
 import Iconn from 'react-native-vector-icons/Ionicons';
 import TimeLineView from './tab/timelineView.js';
 import ListImageView from './tab/listImageView.js';
-import DefaultTabBar from './tab/DefaultTabBar';
+import DefaultTabBar from '../tab/DefaultTabBar';
 import { Tabs, Tab, Icon } from 'react-native-elements';
 var ImagePicker = require('react-native-image-picker');
 import Drawer from 'react-native-drawer';
-import MyStatusBar from './statusbar.js';
+import MyStatusBar from '../statusbar.js';
 import Share, {ShareSheet, Button} from 'react-native-share';
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
@@ -161,7 +161,6 @@ onOpen() {
            check_fr: responseJson.result.check_fr,
            check_noti: responseJson.result.check_noti,
          });
-         console.log(responseJson.result);
        }
        else {
          return;
@@ -593,15 +592,15 @@ onOpen() {
           <View style={{left:20,bottom:20,position:'absolute',justifyContent:'center',alignItems:'center'}}>
             <View style={{justifyContent:'center',
             alignItems:'center',
-            width:70,height:70,
-            borderWidth:2,
+            width:60,height:60,
+            borderWidth:1,
             borderColor:'#f5f5f5',
             borderRadius:200,
             overflow: 'hidden',
             backgroundColor:'white',
             borderRadius:200,
             alignItems:'center'}} >
-              <Image style={{width:70, height:70}} source={{uri: this.state.user.avatar}}/>
+              <Image style={Platform.OS=='ios'?styles.avatar:styles.avatar_android} source={{uri: this.state.user.avatar}}/>
             </View>
             <Text style={{alignItems:'center',fontSize:14,fontWeight: 'bold',color:'white'}}>
               {this.state.user.username}
@@ -621,8 +620,8 @@ onOpen() {
               initialPage={0}
               renderTabBar={() => <DefaultTabBar />}
             >
-      <TimeLineView tabLabel='Nhật Ký' user = {this.state.user}/>
-      <ListImageView  tabLabel='Hình ảnh' user = {this.state.user}/>
+      <TimeLineView tabLabel='Nhật Ký' user = {this.state.user} navigator = {this.props.navigator}/>
+      <ListImageView  tabLabel='Hình ảnh' user = {this.state.user} navigator = {this.props.navigator}/>
 
     </ScrollableTabView>
         </View>
@@ -664,7 +663,7 @@ onOpen() {
               alignItems:'center',
               overflow: 'hidden',
               }} >
-                <Image style={{width:60, height:60}}
+                <Image style={Platform.OS=='ios'?styles.avatar:styles.avatar_android}
                 source={{uri: this.state.user.avatar}}/>
               </View>
               <Text style={{fontSize:14,
@@ -790,6 +789,16 @@ const styles = StyleSheet.create({
   _content:{
     flex:2,
     backgroundColor: '#f8f8f8'
+  },
+  avatar_android:{
+    width:60,
+    height:60,
+    borderRadius:200,
+  },
+  avatar:{
+    width:60,
+    height:60,
+
   },
   toolbar:{
     paddingLeft:10,

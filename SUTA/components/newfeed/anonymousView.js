@@ -11,7 +11,8 @@ import {
   KeyboardAvoidingView,
   TextInput,
   Dimensions,
-  Alert
+  Alert,
+  Platform
 } from 'react-native';
 import {
   Menu,
@@ -22,7 +23,7 @@ import {
 } from 'react-native-popup-menu';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Spinner from 'react-native-loading-spinner-overlay';
-import MyStatusBar from './statusbar.js';
+import MyStatusBar from '../statusbar.js';
 import dateFormat from 'dateformat';
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
@@ -32,7 +33,6 @@ export default class Anonymous extends Component{
     super(props);
     this.state = ({
       dataSource: new ListView.DataSource({rowHasChanged: (r1,r2) => r1!=r2}),
-      dataSource_cmt: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
       refreshing: false,
       modalVisible: false,
       spinnerVisible: false,
@@ -42,16 +42,13 @@ export default class Anonymous extends Component{
 
       sendColor: '#90949c',
       user: this.props.user,
-      flag: true
     });
-    //flag = true;
+    flag = true;
 
     check = 0;
   }
   componentWillUnmount() {
-    this.setState({
-        flag: false,
-      });
+    flag = false;
   }
   componentWillMount(){
     this.setState({
@@ -59,7 +56,17 @@ export default class Anonymous extends Component{
       });
       this.fetchData();
   }
-
+  navigate(routeName,data){
+    this.props.navigator.push({
+      name: routeName,
+      passProps: {
+        id_status: data.id_status,
+        id_user: data.id_user,
+        user: this.props.user,
+        check: 'anonymous'
+      }
+    })
+  }
   componentDidMount(){
     // this.fetchData();
   }
@@ -169,7 +176,7 @@ export default class Anonymous extends Component{
       })
       .then((response)=>response.json())
       .then((responseJson)=>{
-        if (this.state.flag == true){
+        if (flag == true){
           this.setState({
             data: responseJson.result,
             dataSource: this.state.dataSource.cloneWithRows(responseJson.result),
@@ -178,10 +185,6 @@ export default class Anonymous extends Component{
           this.stop_spinner();
         }
         else {
-          this.setState({
-            data: listnull,
-            dataSource: this.state.dataSource.cloneWithRows(listnull),
-          });
           return;
         }
       })
@@ -191,16 +194,7 @@ export default class Anonymous extends Component{
 
 
   }
-  onClickComment(data)
-  {
-    this.setModalVisible();
-    this.setState({
-      data: data,
-      dataSource_cmt: this.state.dataSource_cmt.cloneWithRows(listnull)
-    });
-   this.getComment(data);
 
-  }
   async getInfoUser(data){
     let formdata = new FormData();
     formdata.append('id_user_login',this.state.user.id_user);
@@ -216,16 +210,13 @@ export default class Anonymous extends Component{
       })
       .then((response)=>response.json())
       .then((responseJson)=>{
-        if (this.state.flag == true){
+        if (flag == true){
           this.setState({
             data: responseJson.result['0'],
           });
           this.stop_spinner();
         }
         else {
-          this.setState({
-            data: listnull
-          });
           return;
         }
       })
@@ -250,7 +241,7 @@ export default class Anonymous extends Component{
       })
       .then((response)=>response.json())
       .then((responseJson)=>{
-        if (this.state.flag == true){
+        if (flag == true){
           if(this.state.modalVisible)
           {
             this.getInfoUser(data);
@@ -268,118 +259,6 @@ export default class Anonymous extends Component{
 
   }
 
-  onClose(){
-    this.fetchData();
-    this.setModalVisible();
-  }
-  clearText(fieldName) {
-    this.refs[fieldName].setNativeProps({text: ''});
-    this.setState({
-      sendColor: '#90949c',
-    })
-  }
-  async _add_noti(value){
-    let formdata = new FormData();
-    formdata.append("id_user", this.state.user.id_user);
-    formdata.append("username", this.state.user.username);
-    formdata.append("id_userFriend", value.id_user);
-    formdata.append("id_status", value.id_status);
-
-    fetch('http://suta.esy.es/api/noti_status.php',{
-        method: 'post',
-        headers: {
-        'Content-Type': 'multipart/form-data',
-        },
-        body: formdata
-      })
-      .then((response)=>response.json())
-      .then((jsonResponse)=>{
-        if (this.state.flag == true){
-          this.setState({
-            dataSource_cmt: jsonResponse['result']!=null?this.state.dataSource_cmt.cloneWithRows(jsonResponse['result']):this.state.dataSource_cmt.cloneWithRows(listnull)
-          });
-        }
-        else {
-          this.setState({
-            dataSource_cmt:this.state.dataSource_cmt.cloneWithRows(listnull)
-          });
-          return;
-        }
-      })
-      .catch(error=>{
-        console.log(error);
-      });
-
-  }
-  async _addComment(value){
-
-    if(this.state.sendColor!= '#90949c')
-    {
-      this._add_noti(value);
-      this.clearText('contentComment')
-      let formdata = new FormData();
-      formdata.append("id_user", this.state.user.id_user);
-      formdata.append("content", this.state.contentComment);
-      formdata.append("id_status", value.id_status);
-      fetch('http://suta.esy.es/api/addcomment.php',{
-          method: 'post',
-          headers: {
-          'Content-Type': 'multipart/form-data',
-          },
-          body: formdata
-        })
-        .then((response)=>response.json())
-        .then((jsonResponse)=>{
-          if (this.state.flag == true){
-            this.setState({
-              dataSource_cmt: jsonResponse['result']!=null?this.state.dataSource_cmt.cloneWithRows(jsonResponse['result']):this.state.dataSource_cmt.cloneWithRows(listnull)
-            });
-          }
-          else {
-            this.setState({
-              dataSource_cmt:this.state.dataSource_cmt.cloneWithRows(listnull)
-            });
-            return;
-          }
-        })
-        .catch(error=>{
-        console.log(error);
-      });
-
-    }
-}
-  // Get data to list Comment
-  getComment(value){
-    let formdata = new FormData();
-    formdata.append('id_status',value.id_status);
-      fetch('http://suta.esy.es/api/getcmtstatus_id.php',{
-        method: 'post',
-        header: {
-          'Content-Type': 'multipart/formdata'
-        },
-        body: formdata
-      })
-      .then((response)=>response.json())
-      .then((responseJson)=>{
-        if (this.state.flag == true){
-          this.setState({
-            spinnerVisible: false,
-            dataSource_cmt: this.state.dataSource_cmt.cloneWithRows(responseJson['result']!=null?responseJson['result']:listnull)
-          });
-        }
-        else {
-          this.setState({
-            spinnerVisible: false,
-            dataSource_cmt: this.state.dataSource_cmt.cloneWithRows(listnull)
-          });
-          return;
-        }
-      })
-      .catch(error=>{
-        console.log(error);
-      });
-
-    }
   showTimeline(data){
     this.props.navigator.push({
       name: 'profile',
@@ -393,30 +272,7 @@ export default class Anonymous extends Component{
     }
 
   }
-  _renderRow_cmt(data){
-    return(
-      <View style={{borderTopWidth:0.5,borderTopColor:'rgba(143, 143, 143, 0.2)'}}>
-        <View style={{flexDirection:'row',padding:10}}>
-        <TouchableOpacity onPress={()=>this.showTimeline(data)} style={styles.backgroundAvatar} >
-          <Image style={styles.avatar} source={{uri: data.avatar}}/>
-        </TouchableOpacity>
-        <View style={{justifyContent:'center',marginLeft:10}}>
-          <TouchableOpacity onPress={()=>this.showTimeline(data)}>
-            <Text style={styles.textbold}>
-              {data.username}
-            </Text>
-          </TouchableOpacity>
-            <Text style={styles.textnormal}>
-             {data.content}
-            </Text>
-            <Text style={styles.textgray}>
-              {data.time}
-            </Text>
-          </View>
-        </View>
-    </View>
-    )
-  }
+
   _renderRow(data){
     return(
     <View style={{flex:1,
@@ -438,7 +294,7 @@ export default class Anonymous extends Component{
         <Text style={styles.textbold}>
           Anonymous
         </Text>
-        <Text style={styles.textgray}>
+        <Text style={[styles.textgray,{fontSize:8}]}>
           {data.time}
         </Text>
       </View>
@@ -465,7 +321,7 @@ export default class Anonymous extends Component{
           </Text>
 
           </TouchableOpacity>
-          <TouchableOpacity onPress={()=>this.onClickComment(data)} style={{flexDirection:'row',marginLeft:20}}>
+          <TouchableOpacity onPress={()=>this.navigate('comment',data)} style={{flexDirection:'row',marginLeft:20}}>
             <Icon name='md-text' color="rgba(0, 0, 0, 0.2)" size={20} />
             <Text style={[styles.textgray,{marginLeft:5}]}>
             {
@@ -516,108 +372,7 @@ export default class Anonymous extends Component{
           dataSource={this.state.dataSource}
           renderRow={this._renderRow.bind(this)}
         />
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={this.state.modalVisible}
-          onRequestClose={()=>this.setModalVisible()}
-        >
-        <MyStatusBar backgroundColor="#8e178f"/>
-        <View style={{flex:1,backgroundColor:'white'}} >
 
-        <View style={styles.toolbar}>
-          <TouchableOpacity activeOpacity={1} onPress={()=>this.onClose()} style={{flex:1,alignItems:'center'}}>
-            <Icon name="md-close" size={24} color="#F5F5F5" style={styles.ico}/>
-          </TouchableOpacity>
-          <View style={{flex:8,marginLeft:-20,alignItems:'center'}}>
-            <Text style={styles.title}>
-              BÌNH LUẬN
-            </Text>
-          </View>
-
-        </View>
-            <View style={{ flex:1}}>
-            {
-              this.state.data!=null?
-              <View style={{ flex:1}}>
-              <View style={{flexDirection:'row',padding:10}}>
-                <View style={styles.backgroundAvatar} >
-                  <Image style={styles.avatar} source={require('../images/logo2.png')}/>
-                </View>
-                <View style={{justifyContent:'center',marginLeft:10}}>
-                  <Text style={styles.textbold}>
-                    Anonymous
-                  </Text>
-                  <Text style={styles.textgray}>
-                    {this.state.data.time}
-                  </Text>
-                </View>
-              </View>
-                <Text style={{padding:10,fontSize:13,color:'#1d2129'}}>
-                 {this.state.data.content}
-                </Text>
-                <View style={{flexDirection:'row',padding:10}}>
-                <TouchableOpacity style={{flexDirection:'row'}} onPress={()=>this.onLike(this.state.data)}>
-                {
-                  this.state.data.checklike!='0'?
-                  <Icon name='md-heart' color="rgb(254, 6, 6)" size={20} />
-                  :
-                  <Icon name='md-heart-outline' color="rgba(0, 0, 0, 0.2)" size={20} />
-                }
-                <Text style={[styles.textgray,{marginLeft:5}]}>
-                   {
-                     this.state.data.like!='0'?
-                     this.state.data.like + " Thích"
-                     :
-                     "Thích"
-                   }
-                </Text>
-
-                </TouchableOpacity>
-                  <TouchableOpacity style={{flexDirection:'row',marginLeft:20}}>
-                    <Icon name='md-text' color="rgba(0, 0, 0, 0.2)" size={20} />
-                    <Text style={[styles.textgray,{marginLeft:5}]}>
-                    {
-                      this.state.data.comment!=null?
-                      this.state.data.comment + "Bình Luận"
-                      :
-                      "Bình Luận"
-                    }
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-                <ListView
-                style={{flex:1}}
-                dataSource={this.state.dataSource_cmt}
-                renderRow={this._renderRow_cmt.bind(this)}
-                enableEmptySections
-                />
-                  </View>
-            :
-            <View></View>
-            }
-
-          </View>
-
-          <View style={styles.bottomInput}>
-            <TextInput
-            underlineColorAndroid='transparent'
-            style={styles.input}
-            placeholder="Viết bình luận"
-            onChangeText={(val) => this.setState({contentComment: val, sendColor:val!=''?'#8e44ad':'#90949c'})}
-            multiline={true}
-            placeholderTextColor= '#90949c'
-            autoCapitalize="none"
-            autoCorrect={false}
-            ref={'contentComment'}/>
-            <TouchableOpacity onPress={()=>this._addComment(this.state.data)}>
-              <Icon name="md-send" size={28} color={this.state.sendColor} style={{paddingLeft:10,paddingRight:10}}/>
-            </TouchableOpacity>
-          </View>
-
-        </View>
-
-        </Modal>
         <Modal
         animationType="fade"
         transparent={true}
@@ -721,6 +476,11 @@ const styles = StyleSheet.create({
     avatar:{
       width:40,
       height:40,
+    },
+    avatar_android:{
+      width:40,
+      height:40,
+      borderRadius:200,
     },
     bottomInput:{
       flexDirection:'row',
