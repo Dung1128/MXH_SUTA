@@ -155,62 +155,60 @@ class loginView extends Component{
     }
 
   }
+
+  test(){
+      console.log('cái quái gì đây!');
+  }
+
   async onRegisterPressed(){
+    console.log('register');
 
     if(this.state.warning_user=='' && this.state.warning_phone==''
       && this.state.warning_pass=='' && this.state.warning_repass==''
       && this.state.username != '' && this.state.password != ''
       && this.state.phone != ''  )
     {
-      this.setModalVisible();
-      if(this.state.checkBox == require('../images/ico_tick.png'))
-      {
+
         let formdata = new FormData();
         formdata.append("username", this.state.username);
         formdata.append("password", this.state.password);
         formdata.append("phone", this.state.phone);
         try {
           let response = await fetch('http://suta.esy.es/api/register.php',{
-            method: 'post',
-            headers: {
-            'Content-Type': 'multipart/form-data',
-            },
-            body: formdata
-          });
-          let res = await response.text();
-          var jsonResponse = JSON.parse(res);
-          this.setState({
-            code: jsonResponse['code'],
-             message: jsonResponse['message'],
-             result: jsonResponse['result']
+              method: 'post',
+              headers: {
+              'Content-Type': 'multipart/form-data',
+              },
+              body: formdata
+            });
 
-          });
-          alert(this.state.message);
-          if (this.state.code==0) {
-              // show alert & moving screen
+            let res = await response.text();
+            console.log(res);
+            var jsonResponse = JSON.parse(res);
+            this.setState({
+                code: jsonResponse['code'],
+               message: jsonResponse['message'],
+               result: jsonResponse['result']
+            });
+            console.log('b1');
+            if (response.status >= 200 && response.status < 300 && jsonResponse['code'] == 0) {
+                Alert.alert('Thông báo','Đăng kí thành công!');
+                this.redirect('login','OK');
+            } else {
+                Alert.alert('Thông báo','Đăng kí không thành công!');
+            }
 
-              this.redirect('login','OK');
-          } else {
-              //Handle error
-              Alert.alert('Thông báo',this.state.message);
-              let error = res;
-              throw error;
+          }catch(error) {
+              console.log("error " + error);
           }
-        }
-        catch(error)
-        {
-        //  console.log(error);
-        }
-      }
-
-
 
     }else {
       Alert.alert('Thông báo',"Bạn cần điền đúng thông tin.!");
     }
-  }
-  componentWillMount(){
 
+}
+  componentWillMount(){
+    console.log('hello register');
   }
 
   _cancle(){
@@ -221,6 +219,7 @@ class loginView extends Component{
   _next(){
     if(this.state.checkBox == require('../images/ico_tick.png')){
       this.setModalVisible();
+      this.onRegisterPressed();
     }
   }
 
@@ -369,7 +368,9 @@ class loginView extends Component{
         </View>
         </KeyboardAvoidingView>
         <View style={{flex:0.3,alignItems:'center'}}>
-          <TouchableOpacity onPress={()=>this.onRegisterPressed()} style={styles.button}>
+          <TouchableOpacity onPress={()=>
+            this.setModalVisible()}
+           style={styles.button}>
             <Text style={{color:'#F5F5F5'}}>ĐĂNG KÝ</Text>
           </TouchableOpacity>
         </View>
