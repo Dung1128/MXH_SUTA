@@ -42,13 +42,16 @@ export default class Anonymous extends Component{
 
       sendColor: '#90949c',
       user: this.props.user,
+      flag: true
     });
-    flag = true;
+    //flag = true;
 
     check = 0;
   }
   componentWillUnmount() {
-    flag = false;
+    this.setState({
+        flag: false,
+      });
   }
   componentWillMount(){
     this.setState({
@@ -166,7 +169,7 @@ export default class Anonymous extends Component{
       })
       .then((response)=>response.json())
       .then((responseJson)=>{
-        if (flag == true){
+        if (this.state.flag == true){
           this.setState({
             data: responseJson.result,
             dataSource: this.state.dataSource.cloneWithRows(responseJson.result),
@@ -175,6 +178,10 @@ export default class Anonymous extends Component{
           this.stop_spinner();
         }
         else {
+          this.setState({
+            data: listnull,
+            dataSource: this.state.dataSource.cloneWithRows(listnull),
+          });
           return;
         }
       })
@@ -209,13 +216,16 @@ export default class Anonymous extends Component{
       })
       .then((response)=>response.json())
       .then((responseJson)=>{
-        if (flag == true){
+        if (this.state.flag == true){
           this.setState({
             data: responseJson.result['0'],
           });
           this.stop_spinner();
         }
         else {
+          this.setState({
+            data: listnull
+          });
           return;
         }
       })
@@ -240,7 +250,7 @@ export default class Anonymous extends Component{
       })
       .then((response)=>response.json())
       .then((responseJson)=>{
-        if (flag == true){
+        if (this.state.flag == true){
           if(this.state.modalVisible)
           {
             this.getInfoUser(data);
@@ -284,12 +294,15 @@ export default class Anonymous extends Component{
       })
       .then((response)=>response.json())
       .then((jsonResponse)=>{
-        if (flag == true){
+        if (this.state.flag == true){
           this.setState({
             dataSource_cmt: jsonResponse['result']!=null?this.state.dataSource_cmt.cloneWithRows(jsonResponse['result']):this.state.dataSource_cmt.cloneWithRows(listnull)
           });
         }
         else {
+          this.setState({
+            dataSource_cmt:this.state.dataSource_cmt.cloneWithRows(listnull)
+          });
           return;
         }
       })
@@ -317,12 +330,15 @@ export default class Anonymous extends Component{
         })
         .then((response)=>response.json())
         .then((jsonResponse)=>{
-          if (flag == true){
+          if (this.state.flag == true){
             this.setState({
               dataSource_cmt: jsonResponse['result']!=null?this.state.dataSource_cmt.cloneWithRows(jsonResponse['result']):this.state.dataSource_cmt.cloneWithRows(listnull)
             });
           }
           else {
+            this.setState({
+              dataSource_cmt:this.state.dataSource_cmt.cloneWithRows(listnull)
+            });
             return;
           }
         })
@@ -345,13 +361,17 @@ export default class Anonymous extends Component{
       })
       .then((response)=>response.json())
       .then((responseJson)=>{
-        if (flag == true){
+        if (this.state.flag == true){
           this.setState({
             spinnerVisible: false,
             dataSource_cmt: this.state.dataSource_cmt.cloneWithRows(responseJson['result']!=null?responseJson['result']:listnull)
           });
         }
         else {
+          this.setState({
+            spinnerVisible: false,
+            dataSource_cmt: this.state.dataSource_cmt.cloneWithRows(listnull)
+          });
           return;
         }
       })

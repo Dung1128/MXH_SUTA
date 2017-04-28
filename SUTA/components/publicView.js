@@ -42,13 +42,16 @@ export default class Public extends Component{
 
       sendColor: '#90949c',
       user: this.props.user,
+      flag: true
     });
-    flag = true;
+    //flag = true;
 
     check = 0;
   }
   componentWillUnmount() {
-    flag = false;
+    this.setState({
+        flag: false,
+      });
   }
   componentWillMount(){
     this.setState({
@@ -165,7 +168,7 @@ export default class Public extends Component{
     })
     .then((response)=>response.json())
     .then((responseJson)=>{
-      if (flag == true){
+      if (this.state.flag == true){
         this.setState({
           data: responseJson.result,
           dataSource: this.state.dataSource.cloneWithRows(responseJson.result),
@@ -173,6 +176,10 @@ export default class Public extends Component{
         this.stop_spinner();
       }
       else {
+        this.setState({
+          data: listnull,
+          dataSource: this.state.dataSource.cloneWithRows(listnull),
+        });
         return;
       }
     })
@@ -206,12 +213,15 @@ export default class Public extends Component{
       })
       .then((response)=>response.json())
       .then((jsonResponse)=>{
-        if (flag == true){
+        if (this.state.flag == true){
           this.setState({
             data: jsonResponse.result['0'],
           });
         }
         else {
+          this.setState({
+            data: listnull,
+          });
           return;
         }
       })
@@ -236,7 +246,7 @@ export default class Public extends Component{
       })
       .then((response)=>response.json())
       .then((responseJson)=>{
-        if (flag == true){
+        if (this.state.flag == true){
           if(this.state.modalVisible)
           {
             this.getInfoUser(data);
@@ -280,12 +290,15 @@ export default class Public extends Component{
       })
       .then((response)=>response.json())
       .then((jsonResponse)=>{
-        if (flag == true){
+        if (this.state.flag == true){
           this.setState({
             dataSource_cmt: jsonResponse['result']!=null?this.state.dataSource_cmt.cloneWithRows(jsonResponse['result']):this.state.dataSource_cmt.cloneWithRows(listnull)
           });
         }
         else {
+          this.setState({
+            dataSource_cmt: this.state.dataSource_cmt.cloneWithRows(listnull)
+          });
           return;
         }
       })
@@ -314,12 +327,15 @@ export default class Public extends Component{
         })
         .then((response)=>response.json())
       .then((jsonResponse)=>{
-        if (flag == true){
+        if (this.state.flag == true){
           this.setState({
             dataSource_cmt: jsonResponse['result']!=null?this.state.dataSource_cmt.cloneWithRows(jsonResponse['result']):this.state.dataSource_cmt.cloneWithRows(listnull)
           });
         }
         else {
+          this.setState({
+            dataSource_cmt: this.state.dataSource_cmt.cloneWithRows(listnull)
+          });
           return;
         }
       })
@@ -342,13 +358,17 @@ export default class Public extends Component{
     })
     .then((response)=>response.json())
     .then((responseJson)=>{
-      if (flag == true){
+      if (this.state.flag == true){
         this.setState({
           spinnerVisible: false,
           dataSource_cmt: this.state.dataSource_cmt.cloneWithRows(responseJson['result']!=null?responseJson['result']:listnull)
         });
       }
       else {
+        this.setState({
+          spinnerVisible: false,
+          dataSource_cmt: this.state.dataSource_cmt.cloneWithRows(listnull)
+        });
         return;
       }
     })
@@ -480,6 +500,7 @@ export default class Public extends Component{
     return(
       <View style={{flex:1,backgroundColor:'#F5F5F5'}}>
       <Spinner visible={this.state.spinnerVisible} textContent={"Vui lòng chờ..."} textStyle={{color: '#FFF'}} />
+      {this.state.flag?
         <ListView
           refreshControl={
             <RefreshControl
@@ -496,6 +517,11 @@ export default class Public extends Component{
           dataSource={this.state.dataSource}
           renderRow={this._renderRow.bind(this)}
         />
+        :
+        <View>null
+        </View>
+      }
+
         <Modal
           animationType="slide"
           transparent={true}
