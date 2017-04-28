@@ -170,7 +170,15 @@ export default class Friends extends Component{
           })
           .then((response)=>response.json())
           .then((responseJson)=>{
+            console.log(responseJson);
             if (flag == true){
+              if (responseJson['code']==0) {
+                console.log('ok');
+                Alert.alert('Thông báo', 'Đã thêm bạn bè.');
+              }
+              else {
+                Alert.alert('Thông báo', 'Thêm không thành công');
+              }
               this.getListUser();
             }
             else {
