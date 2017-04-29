@@ -153,7 +153,7 @@ export default class NewFeed extends Component{
     this.get_noti();
     this.setModalVisible_noti(!this.state.modalVisible_noti);
   }
-  get_noti(){
+  async get_noti(){
       let formdata = new FormData();
       formdata.append('id_userFriend',this.state.data.id_user);
         fetch('http://suta.esy.es/api/get_noti_status.php',{
