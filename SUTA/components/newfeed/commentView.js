@@ -166,6 +166,7 @@ export default class Comment extends Component {
               this.setState({
                 dataSource_cmt: this.state.dataSource_cmt.cloneWithRows(jsonResponse['result'])
               });
+              this.getComment();
             }
             else {
               return;
@@ -342,7 +343,6 @@ var styles = StyleSheet.create({
     margin:5,
     paddingTop:0,
     paddingBottom:0,
-    fontStyle: 'italic',
     color:'black'
   },
   border: {
