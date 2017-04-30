@@ -77,7 +77,7 @@ export default class Comment extends Component {
       });
 
   }
-  getComment(){
+  async getComment(){
     let formdata = new FormData();
     formdata.append('id_status',this.state.id_status);
       fetch('http://suta.esy.es/api/getcmtstatus_id.php',{
@@ -343,6 +343,7 @@ var styles = StyleSheet.create({
     margin:5,
     paddingTop:0,
     paddingBottom:0,
+    color:'black'
   },
   border: {
     margin:5,

@@ -54,7 +54,7 @@ export default class Anonymous extends Component{
     this.setState({
         spinnerVisible: true,
       });
-      this.fetchData();
+      //this.fetchData();
   }
   navigate(routeName,data){
     this.props.navigator.push({
@@ -68,7 +68,7 @@ export default class Anonymous extends Component{
     })
   }
   componentDidMount(){
-    // this.fetchData();
+    this.fetchData();
   }
   _onRefresh() {
     this.setState({refreshing: true});
@@ -163,7 +163,7 @@ export default class Anonymous extends Component{
       });
     },2000)
   }
-  fetchData() {
+  async fetchData() {
     let formdata = new FormData();
     formdata.append('id_user',this.state.user.id_user);
 
