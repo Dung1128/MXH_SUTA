@@ -26,6 +26,7 @@ export default class timeLineView extends Component{
   constructor(props){
     super(props);
     this.state={
+      user: this.props.user,
       dataSource_gidview : new GridView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
       spinnerVisible: false,
       refreshing: false,
@@ -34,6 +35,17 @@ export default class timeLineView extends Component{
     }
     flag = true;
     console.disableYellowBox = true;
+  }
+
+  navigate(routeName,data){
+    this.props.navigator.push({
+      name: routeName,
+      passProps: {
+        data: data,
+        user: this.state.user,
+        id_user: data.id_user,
+      }
+    })
   }
 
   componentWillMount(){
@@ -115,11 +127,17 @@ export default class timeLineView extends Component{
     },2000)
   }
 
+
   onShow(data){
-    this.setModalVisible_show();
+    Image.getSize(data.img, (width, height) => {
+      this.setState({width, height});
+    });
+    this.navigate('commentimg', data)
+    // this.setModalVisible_show();
     this.setState({
       data_link: data.img,
     });
+
   }
 
   setModalVisible_show() {
@@ -186,7 +204,7 @@ export default class timeLineView extends Component{
        <TouchableOpacity onPress={() => {this.onShow(data)}}>
          <View>
            <Image
-            style={{height:150,flex:1}}
+            style={{height:200, height: 100}}
              source={{uri: data.img} }>
            </Image>
          </View>
@@ -230,9 +248,11 @@ export default class timeLineView extends Component{
                       onPress={() => {
                             this.setModalVisible_show()
                           }}
-                      style={{  width: deviceWidth, height: deviceHeight}} >
+                      style={{  width: deviceWidth, height: deviceHeight }} >
 
-          <Image style={{width:deviceWidth, height:deviceHeight}}
+          <Image style={{
+            width: deviceWidth,
+            height: deviceWidth * this.state.height / this.state.width}}
             source={{uri: this.state.data_link}}>
           </Image>
           </TouchableOpacity>
