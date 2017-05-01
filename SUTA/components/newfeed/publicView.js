@@ -163,7 +163,7 @@ export default class Public extends Component{
       });
     },2000)
   }
-  async fetchData() {
+  fetchData() {
     let formdata = new FormData();
     formdata.append('id_user',this.state.user.id_user);
 
@@ -195,7 +195,7 @@ export default class Public extends Component{
 
   }
 
-  async getInfoUser(data){
+  getInfoUser(data){
     let formdata = new FormData();
     formdata.append('id_user_login',this.state.user.id_user);
     formdata.append('id_user',data.id_user);
@@ -226,7 +226,7 @@ export default class Public extends Component{
 
   }
 
-  async onLike(data){
+  onLike(data){
 
     let formdata = new FormData();
     formdata.append('id_user',this.state.user.id_user);
