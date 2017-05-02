@@ -18,7 +18,7 @@ import MyStatusBar from '../statusbar.js';
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
 var items_rooms = [];
-export default class Chat extends Component {
+export default class ChatAnonymous extends Component {
   constructor(props){
     super(props);
     items=[];
@@ -64,14 +64,14 @@ export default class Chat extends Component {
           if(items_rooms[i].data.user_1.id_user === this.state.data.id_user && items_rooms[i].data.user_2.id_user === this.state.user_login.id_user
           || items_rooms[i].data.user_2.id_user === this.state.data.id_user && items_rooms[i].data.user_1.id_user === this.state.user_login.id_user)
           {
-            if (!items_rooms[i].data.anonymous) {
-              this.showMess(items_rooms[i].key);
-              this.setState({
-                check_rooms:true,
-                info_rooms: items_rooms[i],
-              });
-              this.checkStatus(items_rooms[i].key);
-            }
+            if (items_rooms[i].data.anonymous) {
+            this.showMess(items_rooms[i].key);
+            this.setState({
+              check_rooms:true,
+              info_rooms: items_rooms[i],
+            });
+            this.checkStatus(items_rooms[i].key);
+          }
           }
 
         }
@@ -209,7 +209,8 @@ export default class Chat extends Component {
     var datetime = new Date().toLocaleString('en-US');
     database.ref('rooms').push({
       user_1: this.state.data,
-      user_2: this.state.user_login
+      user_2: this.state.user_login,
+      anonymous:true,
     });
     database.ref("rooms").once("value", (snap)=>{
         snap.forEach((data)=>{
@@ -238,11 +239,6 @@ export default class Chat extends Component {
     var time = dateFormat(data.data.time,"h:MM TT");
     return(
       <View style={this.checkstylechat(data.data.user.username)}>
-        <View style={Style.backgroundAvatar}>
-        <Image source={{uri:data.data.user.avatar}}
-          style={Platform.OS=='ios'?Style.avatar:Style.avatar_android}
-          />
-          </View>
         <View style={this.checkstyle(data.data.user.username)}>
           <Text style={this.checktext(data.data.user.username)}>
            {data.data.content}
@@ -273,7 +269,7 @@ export default class Chat extends Component {
           </TouchableOpacity>
           <View style={{flex:8,marginLeft:-20,alignItems:'center'}}>
             <Text style={Style.title}>
-              {this.state.data.username}
+              Anonymous
             </Text>
           </View>
 

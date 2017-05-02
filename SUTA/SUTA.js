@@ -17,6 +17,8 @@ import AccountManagerView from './components/profile/accountManagerView.js';
 import ChangePass from './components/profile/changePassView.js';
 import ChangeProfile from './components/profile/changeProfileView.js';
 import Chat from './components/message/chatView.js';
+import ChatAnonymous from './components/message/chat_anonymousView.js';
+import MessageAnonymous from './components/message/message_anonymousView.js';
 import Feedback from './components/profile/feedbackView.js';
 import Comment from './components/newfeed/commentView.js';
 import CommentImage from './components/newfeed/commentImage.js';
@@ -96,6 +98,11 @@ class SUTA extends Component {
     if(route.name == 'comment'){
       return <Comment navigator = {navigator} {...route.passProps}/>
     }
+    if(route.name == 'chat_anonymous'){
+      return <ChatAnonymous navigator = {navigator} {...route.passProps}/>
+    }
+    if(route.name == 'message_anonymous'){
+      return <MessageAnonymous navigator = {navigator} {...route.passProps}/>
     if(route.name == 'commentimg'){
       return <CommentImage navigator = {navigator} {...route.passProps}/>
     }
