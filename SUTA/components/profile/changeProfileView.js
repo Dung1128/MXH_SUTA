@@ -96,7 +96,7 @@ export default class changeProfileView extends Component{
       },
       body: formdata
     })
-    .then((response)=>{response.json(); console.log('test2');})
+    .then((response)=>{response.json();})
     .then((responseJson)=>{
       // if (flag == true){
       //   this.setState({
@@ -107,9 +107,7 @@ export default class changeProfileView extends Component{
       // else {
       //   return;
       // }
-      console.log('okokook');
-      //console.log(responseJson.result);
-      alert('Đổi thông tin thành công, thông tin của bạn sẽ được cập nhật từ lần đăng nhập sau.');
+      alert('Đổi thông tin thành công, thông tin của bạn sẽ được cập nhật sau.');
 
     })
     .catch(error=>{

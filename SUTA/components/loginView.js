@@ -61,6 +61,7 @@ class loginView extends Component{
    'Thông báo',
    'Đăng nhập bằng Facebook đồng nghĩa với việc bạn đồng ý với các điều khoản của ứng dụng, bạn có đồng ý không?',
    [
+     {text: 'Điều Khoản', onPress: () => {this.navigate('rules');}},
      {text: 'Không', onPress: () => console.log('no')},
      {text: 'Có', onPress: () => {this._fbAuth();}}
    ],
