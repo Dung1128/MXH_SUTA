@@ -273,6 +273,45 @@ export default class Public extends Component{
 
   }
 
+  _report(){
+    Alert.alert(
+   'Thông báo',
+   'Bạn có muốn report bài viết không?',
+   [
+     {text: 'No', onPress: () => console.log('no')},
+     {text: 'Yes', onPress: () => {this._okreport();}}
+   ],
+   { cancelable: false }
+  );
+
+  this.setModalVisible_Setting2();
+  }
+  _okreport(){
+    let formdata = new FormData();
+    formdata.append('id_status',this.state.ID);
+
+    fetch('http://suta.esy.es/api/reportstatus.php',{
+        method: 'post',
+        header: {
+          'Content-Type': 'multipart/formdata'
+        },
+        body: formdata
+      })
+      .then((response)=>response.json())
+      .then((responseJson)=>{
+        console.log('ok, report');
+        if (flag == true){
+          Alert.alert('Thông báo','Bạn đã report thành công!');
+        }
+        else {
+          return;
+        }
+      })
+      .catch(error=>{
+        console.log(error);
+      });
+  }
+
   _renderRow(data){
     return(
     <View style={{flex:1,
@@ -418,7 +457,7 @@ export default class Public extends Component{
             backgroundColor:'white',
           }}>
 
-              <TouchableOpacity>
+              <TouchableOpacity onPress={()=>this._report()}>
                 <View style={styles._buttonSetting}>
                     <Text>Report
                     </Text>
