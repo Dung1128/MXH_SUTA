@@ -121,23 +121,58 @@ export default class Anonymous extends Component{
       data_status: data
     })
   }
-  async _deleteStatus(){
+  _okreport(){
     let formdata = new FormData();
     formdata.append('id_status',this.state.ID);
 
-    try {
-      let response = await fetch('http://suta.esy.es/api/deletestatus.php',{
+    fetch('http://suta.esy.es/api/reportstatus.php',{
         method: 'post',
         header: {
           'Content-Type': 'multipart/formdata'
         },
         body: formdata
+      })
+      .then((response)=>response.json())
+      .then((responseJson)=>{
+        console.log('ok, report');
+        if (flag == true){
+          Alert.alert('Thông báo','Bạn đã report thành công!');
+        }
+        else {
+          return;
+        }
+      })
+      .catch(error=>{
+        console.log(error);
       });
-      this.fetchData();
+  }
 
-    } catch (error) {
-     console.log(error);
-    }
+   _deleteStatus(){
+    let formdata = new FormData();
+    formdata.append('id_status',this.state.ID);
+
+    fetch('http://suta.esy.es/api/deletestatus.php',{
+        method: 'post',
+        header: {
+          'Content-Type': 'multipart/formdata'
+        },
+        body: formdata
+      })
+      .then((response)=>response.json())
+      .then((responseJson)=>{
+        console.log('ok, report');
+        if (flag == true){
+          Alert.alert('Thông báo','Bạn đã xóa thành công!');
+          this.fetchData();
+        }
+        else {
+          return;
+        }
+      })
+      .catch(error=>{
+        console.log(error);
+      });
+
   }
 
   _okok(){
@@ -160,6 +195,20 @@ export default class Anonymous extends Component{
         user_login: this.props.user,
       }
     })
+  }
+
+  _report(){
+    Alert.alert(
+   'Thông báo',
+   'Bạn có muốn report bài viết không?',
+   [
+     {text: 'No', onPress: () => console.log('no')},
+     {text: 'Yes', onPress: () => {this._okreport();}}
+   ],
+   { cancelable: false }
+  );
+
+  this.setModalVisible_Setting2();
   }
 
   componentWillReceiveProps(){
@@ -409,7 +458,9 @@ export default class Anonymous extends Component{
                   }}
               style={{backgroundColor: 'rgba(0,0,0,0.1)',flex:1,alignItems:'center',justifyContent:'center',}} >
           <View style={styles._buttonSetting}>
-            <TouchableOpacity style={{
+            <TouchableOpacity 
+              onPress={()=>this._report()}
+              style={{
               overflow: 'hidden',
               alignItems:'center',
               flexDirection:'row',

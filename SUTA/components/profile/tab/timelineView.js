@@ -253,6 +253,45 @@ export default class timeLineView extends Component{
 
   }
 
+  _report(){
+    Alert.alert(
+   'Thông báo',
+   'Bạn có muốn report bài viết không?',
+   [
+     {text: 'No', onPress: () => console.log('no')},
+     {text: 'Yes', onPress: () => {this._okreport();}}
+   ],
+   { cancelable: false }
+  );
+
+  this.setModalVisible_Setting1();
+  }
+  _okreport(){
+    let formdata = new FormData();
+    formdata.append('id_status',this.state.ID);
+
+    fetch('http://suta.esy.es/api/reportstatus.php',{
+        method: 'post',
+        header: {
+          'Content-Type': 'multipart/formdata'
+        },
+        body: formdata
+      })
+      .then((response)=>response.json())
+      .then((responseJson)=>{
+        console.log('ok, report');
+        if (flag == true){
+          Alert.alert('Thông báo','Bạn đã report thành công!');
+        }
+        else {
+          return;
+        }
+      })
+      .catch(error=>{
+        console.log(error);
+      });
+  }
+
   _renderRow(data){
     return(
       <View style={{flex:1,
@@ -383,6 +422,7 @@ export default class timeLineView extends Component{
               :
               <View style={Style._buttonSetting}>
                 <TouchableOpacity
+                onPress={()=>this._report()}
                 style={{
                   overflow: 'hidden',
                   alignItems:'center',
@@ -391,6 +431,7 @@ export default class timeLineView extends Component{
                 }}>
                 <Icon name="ios-alert" size={24} color="#BDBDBD" style={{marginRight:10}}/>
                 <Text style={Style.textnormal}>Báo cáo bài viết này</Text>
+
                 </TouchableOpacity>
               </View>
             }
