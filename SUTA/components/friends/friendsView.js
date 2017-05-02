@@ -367,6 +367,7 @@ export default class Friends extends Component{
     )
   }
   async onRead(data){
+
     let formdata = new FormData();
     formdata.append("id_notificationAddFriends",data.id_notificationAddFriends);
     try {
@@ -383,6 +384,10 @@ export default class Friends extends Component{
       if(jsonResponse['code']==0)
       {
         this.get_noti();
+
+        this.showTimeline(data);
+        this.setModalVisible_noti(!this.state.modalVisible_noti);
+
       }
   }
   else {
