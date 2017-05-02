@@ -48,7 +48,7 @@ export default class Comment extends Component {
       }
     })
   }
-  async getInfoUser(){
+  getInfoUser(){
     let formdata = new FormData();
     formdata.append('id_user_login',this.state.user.id_user);
     formdata.append('id_user',this.state.id_user);
@@ -77,7 +77,7 @@ export default class Comment extends Component {
       });
 
   }
-  async getComment(){
+  getComment(){
     let formdata = new FormData();
     formdata.append('id_status',this.state.id_status);
       fetch('http://suta.esy.es/api/getcmtstatus_id.php',{
@@ -110,7 +110,7 @@ export default class Comment extends Component {
         sendColor: '#90949c',
       })
     }
-    async _add_noti(){
+    _add_noti(){
       let formdata = new FormData();
       formdata.append("id_user", this.state.user.id_user);
       formdata.append("username", this.state.user.username);
@@ -140,7 +140,7 @@ export default class Comment extends Component {
         });
 
     }
-    async _addComment(){
+    _addComment(){
 
       if(this.state.sendColor!= '#90949c')
       {
@@ -177,6 +177,47 @@ export default class Comment extends Component {
         });
 
       }
+  }
+  onLike(data){
+
+    let formdata = new FormData();
+    formdata.append('id_user',this.state.user.id_user);
+    formdata.append('id_status',data.id_status);
+
+      fetch('http://suta.esy.es/api/checklike.php',{
+        method: 'post',
+        header: {
+          'Content-Type': 'multipart/formdata'
+        },
+        body: formdata
+      })
+      .then((response)=>response.json())
+      .then((responseJson)=>{
+        if (flag == true){
+          this.getInfoUser();
+        }
+        else {
+          return;
+        }
+      })
+      .catch(error=>{
+        console.log(error);
+      });
+
+  }
+
+  showTimeline(data){
+    this.props.navigator.push({
+      name: 'profile',
+      passProps: {
+        data: data
+      }
+    })
+    if(this.state.modalVisible){
+      this.setModalVisible();
+
+    }
+
   }
   _renderRow_cmt(data){
     return(
@@ -252,7 +293,7 @@ export default class Comment extends Component {
                {this.state.data_cmt.content}
               </Text>
               <View style={{flexDirection:'row',padding:10}}>
-              <TouchableOpacity style={{flexDirection:'row'}} onPress={()=>this.onLike(this.state.data)}>
+              <TouchableOpacity style={{flexDirection:'row'}} onPress={()=>this.onLike(this.state.data_cmt)}>
               {
                 this.state.data_cmt.checklike!='0'?
                 <Icon name='md-heart' color="rgb(254, 6, 6)" size={20} />

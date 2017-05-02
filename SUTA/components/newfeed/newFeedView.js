@@ -90,36 +90,7 @@ export default class NewFeed extends Component{
       console.log(error);
     }
   }
-  async onOk(data){
-    let formdata = new FormData();
-    formdata.append("userid1",this.state.data.id_user);
-    formdata.append("userid2",data.id_user);
-    formdata.append("id_notificationStatus",data.id_notificationStatus);
-    try {
-      let response = await fetch('http://suta.esy.es/api/confirmFriend.php',{
-        method: 'post',
-        headers: {
-        'Content-Type': 'multipart/form-data',
-        },
-        body: formdata
-      });
-      let res = await response.text();
-      if(flag == true){
-      var jsonResponse = JSON.parse(res);
-      if(jsonResponse['code']==0)
-      {
-        this.get_noti();
-      }
-    }
-    else {
-      return;
-    }
-    }
-    catch(error)
-    {
-     console.log(error);
-    }
-  }
+  
 
   async onDelete(data){
     let formdata = new FormData();
@@ -153,7 +124,7 @@ export default class NewFeed extends Component{
     this.get_noti();
     this.setModalVisible_noti(!this.state.modalVisible_noti);
   }
-  async get_noti(){
+  get_noti(){
       let formdata = new FormData();
       formdata.append('id_userFriend',this.state.data.id_user);
         fetch('http://suta.esy.es/api/get_noti_status.php',{

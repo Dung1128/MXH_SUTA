@@ -526,7 +526,7 @@ export default class Friends extends Component{
   render(){
     return(
 
-      <View style={{flex:1,backgroundColor:'#F5F5F5'}}>
+      <View style={{flex:1,backgroundColor:'#fff'}}>
       <MyStatusBar backgroundColor="#8e178f"/>
       <Modal
         animationType="slide"

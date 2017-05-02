@@ -163,7 +163,7 @@ export default class Public extends Component{
       });
     },2000)
   }
-  async fetchData() {
+  fetchData() {
     let formdata = new FormData();
     formdata.append('id_user',this.state.user.id_user);
 
@@ -195,7 +195,7 @@ export default class Public extends Component{
 
   }
 
-  async getInfoUser(data){
+  getInfoUser(data){
     let formdata = new FormData();
     formdata.append('id_user_login',this.state.user.id_user);
     formdata.append('id_user',data.id_user);
@@ -226,7 +226,7 @@ export default class Public extends Component{
 
   }
 
-  async onLike(data){
+  onLike(data){
 
     let formdata = new FormData();
     formdata.append('id_user',this.state.user.id_user);
@@ -379,26 +379,25 @@ export default class Public extends Component{
         visible={this.state.modalVisible_setting1}
         onRequestClose={()=>this.setModalVisible_Setting1()}
       >
-        <TouchableOpacity activeOpacity={1}
-              onPress={() => {
-                    this.setModalVisible_Setting1()
-                  }}
-              style={{backgroundColor: 'rgba(0,0,0,.8)',flex:1,justifyContent:'center',alignItems:'center'}} >
-          <TouchableOpacity activeOpacity={1} style={{
-            width:300,
-            backgroundColor:'white',
+      <TouchableOpacity activeOpacity={1}
+            onPress={() => {
+                  this.setModalVisible_Setting1()
+                }}
+            style={{backgroundColor: 'rgba(0,0,0,0.1)',flex:1,justifyContent:'center',alignItems:'center'}} >
+        <View style={styles._buttonSetting}>
+          <TouchableOpacity
+          onPress={()=>this._okok()}
+          style={{
+            overflow: 'hidden',
+            alignItems:'center',
+            flexDirection:'row',
+            padding:10
           }}>
-
-              <TouchableOpacity onPress={()=>this._okok()}>
-                <View style={styles._buttonSetting}>
-                    <Text>Xóa bài
-                    </Text>
-                </View>
-              </TouchableOpacity>
-
-
+            <Icon name="ios-trash" size={24} color="#BDBDBD" style={{marginRight:10}}/>
+            <Text style={styles.textnormal}>Xóa bài viết này</Text>
         </TouchableOpacity>
-        </TouchableOpacity>
+      </View>
+      </TouchableOpacity>
 
         </Modal>
 
@@ -408,26 +407,24 @@ export default class Public extends Component{
         visible={this.state.modalVisible_setting2}
         onRequestClose={()=>this.setModalVisible_Setting2()}
       >
-        <TouchableOpacity activeOpacity={1}
-              onPress={() => {
-                    this.setModalVisible_Setting2()
-                  }}
-              style={{backgroundColor: 'rgba(0,0,0,.8)',flex:1,justifyContent:'center',alignItems:'center'}} >
-          <TouchableOpacity activeOpacity={1} style={{
-            width:300,
-            backgroundColor:'white',
+      <TouchableOpacity activeOpacity={1}
+            onPress={() => {
+                  this.setModalVisible_Setting2()
+                }}
+            style={{backgroundColor: 'rgba(0,0,0,0.1)',flex:1,alignItems:'center',justifyContent:'center',}} >
+        <View style={styles._buttonSetting}>
+          <TouchableOpacity style={{
+            overflow: 'hidden',
+            alignItems:'center',
+            flexDirection:'row',
+            padding:10
           }}>
-
-              <TouchableOpacity>
-                <View style={styles._buttonSetting}>
-                    <Text>Report
-                    </Text>
-                </View>
-              </TouchableOpacity>
-
-
+            <Icon name="ios-alert" size={24} color="#BDBDBD" style={{marginRight:10}}/>
+            <Text style={styles.textnormal}>Báo cáo bài viết này</Text>
         </TouchableOpacity>
-        </TouchableOpacity>
+
+      </View>
+      </TouchableOpacity>
 
         </Modal>
       </View>
@@ -531,11 +528,15 @@ const styles = StyleSheet.create({
       justifyContent: 'space-between',
     },
     _buttonSetting:{
-      alignItems:'center',
-      justifyContent:'center',
-      borderBottomWidth: 1,
-      borderBottomColor:'#F5F5F5',
-      paddingTop: 10,
-      paddingBottom: 10
+      width:deviceWidth,
+      paddingLeft:5,
+      paddingRight:5,
+      backgroundColor:'white',
+      borderTopWidth: 2,
+      borderTopColor:'#dedbdb',
+      shadowColor:'#2E272B',
+      shadowOffset:{width:0,height:3},
+      shadowOpacity:0.2,
+      zIndex:1,position:'absolute',bottom:49,
     }
   });

@@ -24,6 +24,7 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons';
 import Spinner from 'react-native-loading-spinner-overlay';
 import MyStatusBar from '../statusbar.js';
+import Hr from 'react-native-hr';
 import dateFormat from 'dateformat';
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
@@ -116,7 +117,8 @@ export default class Anonymous extends Component{
   _setting2(data){
     this.setModalVisible_Setting2();
     this.setState({
-      ID: data.id_status
+      ID: data.id_status,
+      data_status: data
     })
   }
   async _deleteStatus(){
@@ -148,9 +150,16 @@ export default class Anonymous extends Component{
    ],
    { cancelable: false }
   );
-
-  this.setModalVisible_Setting1();
-
+  }
+  chat_anonymous(){
+    this.setModalVisible_Setting2();
+    this.props.navigator.push({
+      name: 'chat_anonymous',
+      passProps: {
+        data: this.state.data_status,
+        user_login: this.props.user,
+      }
+    })
   }
 
   componentWillReceiveProps(){
@@ -163,7 +172,7 @@ export default class Anonymous extends Component{
       });
     },2000)
   }
-  async fetchData() {
+  fetchData() {
     let formdata = new FormData();
     formdata.append('id_user',this.state.user.id_user);
 
@@ -195,7 +204,7 @@ export default class Anonymous extends Component{
 
   }
 
-  async getInfoUser(data){
+  getInfoUser(data){
     let formdata = new FormData();
     formdata.append('id_user_login',this.state.user.id_user);
     formdata.append('id_user',data.id_user);
@@ -226,7 +235,7 @@ export default class Anonymous extends Component{
 
   }
 
-  async onLike(data){
+  onLike(data){
 
     let formdata = new FormData();
     formdata.append('id_user',this.state.user.id_user);
@@ -259,19 +268,6 @@ export default class Anonymous extends Component{
 
   }
 
-  showTimeline(data){
-    this.props.navigator.push({
-      name: 'profile',
-      passProps: {
-        data: data
-      }
-    })
-    if(this.state.modalVisible){
-      this.setModalVisible();
-
-    }
-
-  }
 
   _renderRow(data){
     return(
@@ -379,26 +375,25 @@ export default class Anonymous extends Component{
         visible={this.state.modalVisible_setting1}
         onRequestClose={()=>this.setModalVisible_Setting1()}
       >
-        <TouchableOpacity activeOpacity={1}
-              onPress={() => {
-                    this.setModalVisible_Setting1()
-                  }}
-              style={{backgroundColor: 'rgba(0,0,0,.8)',flex:1,justifyContent:'center',alignItems:'center'}} >
-          <TouchableOpacity activeOpacity={1} style={{
-            width:300,
-            backgroundColor:'white',
+      <TouchableOpacity activeOpacity={1}
+            onPress={() => {
+                  this.setModalVisible_Setting1()
+                }}
+            style={{backgroundColor: 'rgba(0,0,0,0.1)',flex:1,justifyContent:'center',alignItems:'center'}} >
+        <View style={styles._buttonSetting}>
+          <TouchableOpacity
+          onPress={()=>this._okok()}
+          style={{
+            overflow: 'hidden',
+            alignItems:'center',
+            flexDirection:'row',
+            padding:10
           }}>
-
-              <TouchableOpacity onPress={()=>this._okok()}>
-                <View style={styles._buttonSetting}>
-                    <Text>Xóa bài
-                    </Text>
-                </View>
-              </TouchableOpacity>
-
-
+            <Icon name="ios-trash" size={24} color="#BDBDBD" style={{marginRight:10}}/>
+            <Text style={styles.textnormal}>Xóa bài viết này</Text>
         </TouchableOpacity>
-        </TouchableOpacity>
+      </View>
+      </TouchableOpacity>
 
         </Modal>
 
@@ -412,21 +407,30 @@ export default class Anonymous extends Component{
               onPress={() => {
                     this.setModalVisible_Setting2()
                   }}
-              style={{backgroundColor: 'rgba(0,0,0,.8)',flex:1,justifyContent:'center',alignItems:'center'}} >
-          <TouchableOpacity activeOpacity={1} style={{
-            width:300,
-            backgroundColor:'white',
+              style={{backgroundColor: 'rgba(0,0,0,0.1)',flex:1,alignItems:'center',justifyContent:'center',}} >
+          <View style={styles._buttonSetting}>
+            <TouchableOpacity style={{
+              overflow: 'hidden',
+              alignItems:'center',
+              flexDirection:'row',
+              padding:10
+            }}>
+              <Icon name="ios-alert" size={24} color="#BDBDBD" style={{marginRight:10}}/>
+              <Text style={styles.textnormal}>Báo cáo bài viết này</Text>
+          </TouchableOpacity>
+           <Hr lineColor='#BDBDBD'/>
+          <TouchableOpacity
+          onPress={()=>this.chat_anonymous()}
+          style={{
+            overflow: 'hidden',
+            alignItems:'center',
+            flexDirection:'row',
+            padding:10
           }}>
-
-              <TouchableOpacity>
-                <View style={styles._buttonSetting}>
-                    <Text>Report
-                    </Text>
-                </View>
-              </TouchableOpacity>
-
-
+            <Icon name="ios-chatbubbles" size={24} color="#BDBDBD" style={{marginRight:10}}/>
+            <Text style={styles.textnormal}>Chat ẩn danh với người này</Text>
         </TouchableOpacity>
+        </View>
         </TouchableOpacity>
 
         </Modal>
@@ -437,34 +441,6 @@ export default class Anonymous extends Component{
 
 }
 
-
-
-class YourComponent extends React.Component{
-  render(){
-    return(
-      <MenuContext>
-      <Menu>
-      <MenuTrigger>
-        <TouchableOpacity>
-          <Icon name="ios-more-outline" size={30} color="#BDBDBD" style={{marginLeft:deviceWidth/6}}/>
-        </TouchableOpacity>
-      </MenuTrigger>
-
-      <MenuOptions>
-        <MenuOption >
-        <Text>logout</Text>
-        </MenuOption>
-
-        <MenuOption>
-        <Text>logout</Text>
-        </MenuOption>
-
-      </MenuOptions>
-  </Menu>
-  </MenuContext>
-    )
-  }
-}
 
 const styles = StyleSheet.create({
   backgroundAvatar:{
@@ -531,11 +507,15 @@ const styles = StyleSheet.create({
       justifyContent: 'space-between',
     },
     _buttonSetting:{
-      alignItems:'center',
-      justifyContent:'center',
-      borderBottomWidth: 1,
-      borderBottomColor:'#F5F5F5',
-      paddingTop: 10,
-      paddingBottom: 10
+      width:deviceWidth,
+      paddingLeft:5,
+      paddingRight:5,
+      backgroundColor:'white',
+      borderTopWidth: 2,
+      borderTopColor:'#dedbdb',
+      shadowColor:'#2E272B',
+      shadowOffset:{width:0,height:3},
+      shadowOpacity:0.2,
+      zIndex:1,position:'absolute',bottom:49,
     }
   });
