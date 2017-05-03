@@ -103,6 +103,7 @@ class SUTA extends Component {
     }
     if(route.name == 'message_anonymous'){
       return <MessageAnonymous navigator = {navigator} {...route.passProps}/>
+    }
     if(route.name == 'commentimg'){
       return <CommentImage navigator = {navigator} {...route.passProps}/>
     }
