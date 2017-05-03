@@ -532,7 +532,7 @@ export default class Friends extends Component{
     return(
 
       <View style={{flex:1,backgroundColor:'#fff'}}>
-      <MyStatusBar backgroundColor="#8e178f"/>
+
       <Modal
         animationType="slide"
         transparent={true}
@@ -572,14 +572,13 @@ export default class Friends extends Component{
           <TouchableOpacity style={{flex:1,alignItems:'center'}}>
             <Icon name="md-search" size={24} color="#F5F5F5" style={Style.ico}/>
           </TouchableOpacity>
-          <View style={{flex:5,alignItems:'center'}}>
           <TextInput
             placeholder="Tìm Kiếm"
             placeholderTextColor='white'
             underlineColorAndroid = 'transparent'
             autoCapitalize="none"
             autoCorrect={false}
-            style={{width:deviceWidth-100,margin:5,
+            style={{width:deviceWidth-100,margin:10,
                 paddingTop:0,
                 paddingBottom:0,
                 fontStyle: 'italic',
@@ -587,7 +586,6 @@ export default class Friends extends Component{
             multiline={true}
             onChange={this.setSearchFriends.bind(this)}
           />
-          </View>
           <TouchableOpacity onPress={()=> this.setCheckSearch(!this.state.checksearch)} style={{flex:1,alignItems:'center'}}>
             <Icon name="md-close" size={24} color="#F5F5F5" style={Style.ico}/>
           </TouchableOpacity>

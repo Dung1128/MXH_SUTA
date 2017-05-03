@@ -46,7 +46,6 @@ export default class Message extends Component{
   render(){
     return(
       <View style={{flex:1}}>
-      <MyStatusBar backgroundColor="#8e178f"/>
       <View style={Style.toolbar}>
         <View style={{flex:8,marginLeft:-20,alignItems:'center'}}>
           <Text style={Style.title}>
