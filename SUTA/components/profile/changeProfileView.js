@@ -7,7 +7,8 @@ import {
   Dimensions,
   AsyncStorage,
   Image,
-  TextInput
+  TextInput,
+  Platform
 } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import Iconn from 'react-native-vector-icons/Ionicons';
@@ -134,8 +135,8 @@ export default class changeProfileView extends Component{
 
         <View style={styles._content}>
           <View style={{padding:10, flexDirection:'row', flex: 1}}>
-            <View style={{flex: 1.3, alignItems:'center'}}>
-              <Image style={{width:80, height:80,borderRadius:200}} source={{uri: this.state.user.avatar}}/>
+            <View style={styles.backgroundAvatar}>
+              <Image style={Platform.OS=='ios'?styles.avatar:styles.avatar_android} source={{uri: this.state.user.avatar}}/>
             </View>
 
             <View style={{flex:2.5, paddingLeft: 10}}>
@@ -239,6 +240,21 @@ export default class changeProfileView extends Component{
 }
 
 const styles = StyleSheet.create({
+  backgroundAvatar:{
+    overflow: 'hidden',
+    borderRadius:200,
+    width:80,
+    height:80,
+  },
+  avatar:{
+    width:80,
+    height:80,
+  },
+  avatar_android:{
+    width:80,
+    height:80,
+    borderRadius:200,
+  },
   _toolbar:{
     flex:1,
     backgroundColor:'#8e44ad',

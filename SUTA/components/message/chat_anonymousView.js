@@ -298,7 +298,6 @@ export default class ChatAnonymous extends Component {
             paddingTop:0,
             paddingBottom:0,
             height:40,
-            backgroundColor:'#fff'
           }}
           placeholder="Nhập tin nhắn"
           onChangeText={(val)=>this.setState({message:val, sendColor:'#8e44ad'})}

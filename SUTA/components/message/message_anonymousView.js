@@ -49,7 +49,7 @@ export default class MessageAnonymous extends Component{
     array = items_rooms;
     arrayFilter = array.filter(function (el) {
         if (searchText!='') {
-          return (el.data.user_1.username.toLowerCase().indexOf(searchText.toLowerCase()) >=0);
+          return (el.key.toLowerCase().indexOf(searchText.toLowerCase()) >=0);
         }else {
           return array;
         }
@@ -184,7 +184,7 @@ export default class MessageAnonymous extends Component{
       }}>
         <Icon name="md-search" size={24} color="white" style={[Style.ico,{marginLeft:20}]}/>
         <TextInput
-          placeholder="Tìm Kiếm"
+          placeholder="Tìm Kiếm mã ẩn danh"
           placeholderTextColor='white'
           underlineColorAndroid = 'transparent'
           autoCapitalize="none"

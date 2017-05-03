@@ -375,7 +375,7 @@ export default class timeLineView extends Component{
           </Text>
           </View>
           :
-          <View>
+          <View style={{flex:1}}>
           <ListView
           refreshControl={
             <RefreshControl
