@@ -193,7 +193,7 @@ class loginView extends Component{
                 Alert.alert('Thông báo','Đăng kí thành công!');
                 this.redirect('login','OK');
             } else {
-                Alert.alert('Thông báo','Đăng kí không thành công!');
+                Alert.alert('Thông báo','Đăng kí không thành công, mật khẩu phải từ 6 kí tự trở lên!');
             }
 
           }catch(error) {

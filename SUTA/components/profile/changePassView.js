@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   Dimensions,
   TextInput,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  Alert
 } from 'react-native';
 import Iconn from 'react-native-vector-icons/Ionicons';
 var deviceWidth = Dimensions.get('window').width;
@@ -32,39 +33,39 @@ export default class accountManagerView extends Component{
     this.refs[fieldName].setNativeProps({text: ''});
   }
 
-  async changePass(){
-    this.clearText('pass');
-    this.clearText('newpass');
-    this.clearText('renewpass');
-    if(this.state.newpass.length >=6){
-      if(this.state.newpass == this.state.renewpass){
+  changePass(){
+    this.clearText('password');
+    this.clearText('newpassword');
+    this.clearText('renewpassword');
+    if(this.state.newpassword.length >=6){
+      if(this.state.newpassword == this.state.renewpassword){
         let formdata = new FormData();
         formdata.append("id_user", this.state.data.id_user);
-        formdata.append("password", this.state.renewpass);
-        try {
-          let response = await fetch('http://suta.esy.es/api/changepass.php', {
+        formdata.append("password", this.state.password);
+        formdata.append("newpassword", this.state.newpassword);
+
+        fetch('http://suta.esy.es/api/changepass.php', {
             method: 'post',
             headers: {
             'Content-Type': 'multipart/form-data',
             },
             body: formdata
 
-          });
-          let res = await response.text(); //tra lai json
-           var jsonResponse = JSON.parse(res);
-          this.setState({
-            code: jsonResponse['code'],
-            message: jsonResponse['message'],
+          })
+          .then((response)=>response.json())
+          .then((responseJson)=>{
+            console.log('okok, changepass');
+            if (responseJson['code']==0) {
+              Alert.alert('Thông báo','Đổi mật khẩu thành công!');
+            }
+            else {
+              Alert.alert('Thông báo','Mật khẩu hiện tại không chính xác!');
+            }
+          })
+          .catch(error=>{
+            console.log(error);
           });
 
-          if (response.status >= 200 && response.status < 300 && jsonResponse['code']==0) {
-            alert('Đổi mật khẩu thành công!');
-          }
-        } catch(error) {
-            console.log("error " + error);
-          //  console.log(this.state.username + " & " + this.state.password);
-
-        }
       }
       else {
         alert('Mật khẩu không trùng!');
@@ -75,40 +76,6 @@ export default class accountManagerView extends Component{
     }
 
 
-  }
-
-  async checkPass(){
-    let formdata = new FormData();
-    formdata.append("id_user", this.state.data.id_user);
-    formdata.append("password", this.state.password);
-    try {
-      let response = await fetch('http://suta.esy.es/api/checkchangepass.php', {
-        method: 'post',
-        headers: {
-        'Content-Type': 'multipart/form-data',
-        },
-        body: formdata
-
-      });
-      let res = await response.text(); //tra lai json
-       var jsonResponse = JSON.parse(res);
-      this.setState({
-        code: jsonResponse['code'],
-        message: jsonResponse['message'],
-      });
-
-      if (response.status >= 200 && response.status < 300 && jsonResponse['code']==0) {
-
-        alert('đúng');
-      }
-      else {
-        alert('Mật khẩu không đúng!');
-      }
-    } catch(error) {
-        console.log("error " + error);
-      //  console.log(this.state.username + " & " + this.state.password);
-
-    }
   }
 
   render(){
@@ -133,7 +100,7 @@ export default class accountManagerView extends Component{
             underlineColorAndroid="#ffffff" placeholderTextColor= "#BDBDBD"
             style={{color:'#313231', paddingLeft:20}} placeholder='Mật khẩu đang dùng'
             returnKeyType="next"
-            ref={'pass'}
+            ref={'password'}
             onChangeText={(val) => this.setState({password: val})}
             />
           </View>
@@ -144,17 +111,17 @@ export default class accountManagerView extends Component{
             secureTextEntry
             returnKeyType="next"
             underlineColorAndroid="#ffffff" placeholderTextColor= "#BDBDBD"
-            onChangeText={(val) => this.setState({newpass: val})}
-            ref={'newpass'}
+            onChangeText={(val) => this.setState({newpassword: val})}
+            ref={'newpassword'}
             style={{color:'#313231',borderBottomWidth:0.5,borderBottomColor:'#dde9dc', paddingLeft:20}} placeholder='Mật khẩu mới'/>
           </View>
           <View style={styles._inputChange}>
             <TextInput
             secureTextEntry
             underlineColorAndroid="#ffffff" placeholderTextColor= "#BDBDBD"
-            onChangeText={(val) => this.setState({renewpass: val})}
+            onChangeText={(val) => this.setState({renewpassword: val})}
             returnKeyType="done"
-            ref={'renewpass'}
+            ref={'renewpassword'}
             style={{color:'#313231', paddingLeft:20}} placeholder='Nhập lại mật khẩu'/>
           </View>
 

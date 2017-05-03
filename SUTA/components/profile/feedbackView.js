@@ -29,28 +29,32 @@ export default class feedbackView extends Component{
       }
     })
   }
-  async addfeedback(){
+
+   addfeedback(){
     let formdata = new FormData();
     formdata.append('id_user',this.state.data.id_user);
     formdata.append('title',this.state.title);
     formdata.append('content',this.state.content);
 
-    try {
-      let response = await fetch('http://suta.esy.es/api/feedback.php',{
+    fetch('http://suta.esy.es/api/feedback.php',{
         method: 'post',
         header: {
           'Content-Type': 'multipart/formdata'
         },
         body: formdata
+      })
+      .then((response)=>response.json())
+      .then((responseJson)=>{
+        console.log('success');
+        Alert.alert('Thông báo','Gửi phản hồi thành công!');
+        this.clearText('tit');
+        this.clearText('cont');
+      })
+      .catch(error=>{
+        console.log(error);
       });
-      console.log('success');
-      Alert.alert('Thông báo','Gửi phản hồi thành công!');
 
-    } catch (error) {
-     console.log(error);
-    }
-    this.clearText('tit');
-    this.clearText('cont');
+
   }
 
   clearText(fieldName) {
