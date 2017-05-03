@@ -27,12 +27,14 @@ export default class commentImage extends Component {
       id_user: this.props.id_user,
       user: this.props.user,
       data: this.props.data,
+      dataSource_cmt: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
     }
     Image.getSize(this.props.data.img, (width, height) => {
       this.setState({width, height});
     });
   }
   componentDidMount(){
+    this.getComment();
     this.getInfoUser();
   }
 
@@ -114,7 +116,98 @@ export default class commentImage extends Component {
         });
 
     }
+    showTimeline(data){
+      this.props.navigator.push({
+        name: 'profile',
+        passProps: {
+          data: data
+        }
+      })
+    }
 
+    getComment(){
+      let formdata = new FormData();
+      formdata.append('id_backgroundUser',this.state.data.id_backgroundUser);
+        fetch('http://suta.esy.es/api/getcmtimage_id.php',{
+          method: 'post',
+          header: {
+            'Content-Type': 'multipart/formdata'
+          },
+          body: formdata
+        })
+        .then((response)=>response.json())
+        .then((responseJson)=>{
+          if (flag == true){
+            this.setState({
+              dataSource_cmt: this.state.dataSource_cmt.cloneWithRows(responseJson['result']!=null?responseJson['result']:listnull)
+            });
+            this.stop_spinner();
+          }
+          else {
+            return;
+          }
+        })
+        .catch(error=>{
+          console.log(error);
+        });
+
+      }
+
+      _addComment(){
+          this.clearText('contentComment')
+          let formdata = new FormData();
+          formdata.append("id_user", this.state.user.id_user);
+          formdata.append("content", this.state.contentComment);
+          formdata.append('id_backgroundUser',this.state.data.id_backgroundUser);
+          fetch('http://suta.esy.es/api/addcommentimage.php',{
+              method: 'post',
+              headers: {
+              'Content-Type': 'multipart/form-data',
+              },
+              body: formdata
+            })
+            .then((response)=>response.json())
+            .then((jsonResponse)=>{
+              if (flag == true){
+                this.setState({
+                  dataSource_cmt: this.state.dataSource_cmt.cloneWithRows(jsonResponse['result'])
+                });
+                this.getComment();
+              }
+              else {
+                return;
+              }
+            })
+            .catch(error=>{
+            console.log(error);
+          });
+
+        }
+
+    _renderRow_cmt(data){
+      return(
+        <View style={{borderTopWidth:0.5,borderTopColor:'rgba(143, 143, 143, 0.2)'}}>
+          <View style={{flexDirection:'row',padding:10}}>
+          <TouchableOpacity onPress={()=>this.showTimeline(data)} style={styles.backgroundAvatar} >
+            <Image style={Platform.OS=='ios'?styles.avatar:styles.avatar_android} source={{uri: data.avatar}}/>
+          </TouchableOpacity>
+          <View style={{justifyContent:'center',marginLeft:10}}>
+            <TouchableOpacity onPress={()=>this.showTimeline(data)}>
+              <Text style={styles.textbold}>
+                {data.username}
+              </Text>
+            </TouchableOpacity>
+              <Text style={styles.textnormal}>
+               {data.content}
+              </Text>
+              <Text style={[styles.textgray,{fontSize:8}]}>
+                {data.time}
+              </Text>
+            </View>
+          </View>
+      </View>
+      )
+    }
 
   render() {
     return (
@@ -174,11 +267,17 @@ export default class commentImage extends Component {
                   </Text>
                 </TouchableOpacity>
               </View>
-
+              <ListView
+              style={{flex:1}}
+              dataSource={this.state.dataSource_cmt}
+              renderRow={this._renderRow_cmt.bind(this)}
+              enableEmptySections
+              />
             </View>
         :
         <View></View>
         }
+
 
 
 
@@ -196,7 +295,7 @@ export default class commentImage extends Component {
       autoCapitalize="none"
       autoCorrect={false}
       ref={'contentComment'}/>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={()=>this._addComment()}>
         <Icon name="md-send" size={28} color={this.state.sendColor} style={{paddingLeft:10,paddingRight:10}}/>
       </TouchableOpacity>
     </View>
