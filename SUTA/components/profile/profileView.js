@@ -446,7 +446,7 @@ onOpen() {
 
          <Hr lineColor='#BDBDBD'/>
 
-         <TouchableOpacity>
+         <TouchableOpacity onPress={()=>this.redirect('feedback')}>
            <View>
              <Text style={{margin: 10, fontSize: 15, textAlign: 'left'}}> Phản hồi </Text>
            </View>
