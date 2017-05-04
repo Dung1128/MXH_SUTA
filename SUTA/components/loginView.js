@@ -107,9 +107,9 @@ class loginView extends Component{
     let formdata = new FormData();
     formdata.append("id", json.id);
     formdata.append("name", json.name);
-    formdata.append("email", json.email);
+    formdata.append("email", json.email==null?'':json.email);
     formdata.append("gender", json.gender);
-    formdata.append("dob", json.birthday);
+    formdata.append("dob", json.birthday==null?'':json.birthday);
     formdata.append("avatar", json.picture.data.url);
     formdata.append("background", json.cover.source);
 
@@ -123,6 +123,7 @@ class loginView extends Component{
       });
       let res = await response.text();
       var jsonResponse = JSON.parse(res);
+      console.log(formdata);
       this.redirect('home',JSON.stringify(jsonResponse['result']));
       AsyncStorage.setItem("user",JSON.stringify(jsonResponse['result']));
     }

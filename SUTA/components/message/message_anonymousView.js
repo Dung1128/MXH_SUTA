@@ -180,6 +180,7 @@ export default class MessageAnonymous extends Component{
         bottom:0,
         left:0,
         zIndex:0,
+        height:deviceHeight/18,
         backgroundColor: "#bdc3c7",
       }}>
         <Icon name="md-search" size={24} color="white" style={[Style.ico,{marginLeft:20}]}/>
@@ -190,7 +191,6 @@ export default class MessageAnonymous extends Component{
           autoCapitalize="none"
           autoCorrect={false}
           style={{width:deviceWidth-30,
-            height:30,
             margin:5,
               paddingTop:0,
               paddingBottom:0,
