@@ -400,10 +400,10 @@ onOpen() {
            <Text style={{marginTop: 15, margin:10, fontSize: 15, textAlign: 'left',fontWeight:'bold'}}> Thông tin chung </Text>
          </View>
          <TouchableOpacity onPress={() => {this.onProfile(this.props.data) }}>
-           <View style={{ flexDirection:'row'}}>
+           <View style={{ flexDirection:'row',justifyContent:'space-between'}}>
              <Text style={{margin: 10, fontSize: 15, textAlign: 'left'}}> Thông tin cá nhân </Text>
              <TouchableOpacity onPress={() => {this.onProfile(this.props.data) }}>
-               <Iconn name="ios-arrow-forward" size={30} color="#BDBDBD" style={{marginTop:5, marginLeft: 100}}/>
+               <Iconn name="ios-arrow-forward" size={30} color="#BDBDBD" style={{marginTop:5,marginRight:10}}/>
              </TouchableOpacity>
            </View>
          </TouchableOpacity>
@@ -429,10 +429,10 @@ onOpen() {
          <Hr lineColor='#BDBDBD'/>
 
          <TouchableOpacity onPress={this.redirect.bind(this,'accountManager')}>
-           <View style={{flexDirection:'row'}}>
+           <View style={{flexDirection:'row',justifyContent:'space-between'}}>
              <Text style={{margin: 10, fontSize: 15, textAlign: 'left'}}> Quản lý tài khoản </Text>
              <TouchableOpacity onPress={this.redirect.bind(this,'accountManager')}>
-               <Iconn name="ios-arrow-forward" size={30} color="#BDBDBD" style={{marginTop:5, marginLeft: 100}}/>
+               <Iconn name="ios-arrow-forward" size={30} color="#BDBDBD" style={{marginTop:5, marginRight:10}}/>
              </TouchableOpacity>
            </View>
          </TouchableOpacity>
