@@ -378,13 +378,16 @@ var styles = StyleSheet.create({
     alignItems:'center',
     borderTopWidth:0.5,
     borderTopColor:'rgba(0,0,0,0.5)',
+    height:deviceHeight/16,
   },
   input:{
     flex:1,
     margin:5,
     paddingTop:0,
     paddingBottom:0,
-    color:'black'
+    color:'black',
+    marginLeft:10,
+    fontSize:13
   },
   border: {
     margin:5,

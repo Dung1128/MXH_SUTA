@@ -276,37 +276,20 @@ export default class ChatAnonymous extends Component {
 
         </View>
         <ListView
-        style={{flex:1,marginBottom:40,backgroundColor:'#fff'}}
+        style={{flex:1,backgroundColor:'#fff'}}
           dataSource={this.state.dataSource}
           renderRow={this._renderRow.bind(this)}
           enableEmptySections={true}
         />
-        <View style={{
-          flexDirection:'row',
-          justifyContent:'center',
-          alignItems:'center',
-          borderTopWidth:0.5,
-          borderTopColor:'rgba(0,0,0,0.5)',
-          position: 'absolute',
-          bottom:0,
-          left:0,
-
-        }}>
-          <TextInput style={{
-            flex:1,
-            marginTop:0,
-            paddingTop:0,
-            paddingBottom:0,
-            height:40,
-          }}
+        <View style={Style.bottomInput}>
+          <TextInput style={Style.input}
           placeholder="Nhập tin nhắn"
           onChangeText={(val)=>this.setState({message:val, sendColor:'#8e44ad'})}
-          placeholderTextColor='rgb(171, 171, 171)'
-          underlineColorAndroid = 'transparent'
-          autoCapitalize="none"
           multiline={true}
-          autoFocus={true}
+          placeholderTextColor= '#90949c'
+          autoCapitalize="none"
           autoCorrect={false}
+          autoFocus={true}
           ref={'content'}/>
           <TouchableOpacity onPress={()=>this.onSend()} style={{alignItems:'center',paddingRight:10}}>
             <Icon name="md-send" size={24} color={this.state.sendColor} style={Style.ico}/>
@@ -340,14 +323,16 @@ var Style = StyleSheet.create({
     alignItems:'center',
     borderTopWidth:0.5,
     borderTopColor:'rgba(0,0,0,0.5)',
+    height:deviceHeight/16,
   },
   input:{
     flex:1,
     margin:5,
     paddingTop:0,
     paddingBottom:0,
-    fontStyle: 'italic',
-    color:'white'
+    color:'black',
+    marginLeft:10,
+    fontSize:13
   },
   border: {
     margin:5,
