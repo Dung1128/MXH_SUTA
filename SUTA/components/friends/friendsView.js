@@ -469,6 +469,9 @@ export default class Friends extends Component{
       });
     },2000)
   }
+  componentWillReceiveProps(){
+    this.get_noti();
+  }
   async get_noti(){
       let formdata = new FormData();
       formdata.append('id_userFriend',this.state.user.id_user);

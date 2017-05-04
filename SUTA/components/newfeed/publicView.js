@@ -311,7 +311,19 @@ export default class Public extends Component{
         console.log(error);
       });
   }
+  showTimeline(data){
+    this.props.navigator.push({
+      name: 'profile',
+      passProps: {
+        data: data
+      }
+    })
+    if(this.state.modalVisible){
+      this.setModalVisible();
 
+    }
+
+  }
   _renderRow(data){
     return(
     <View style={{flex:1,
@@ -326,17 +338,17 @@ export default class Public extends Component{
     <View style={{padding: 10}}>
 
     <View style={{flex:1,flexDirection:'row'}}>
-      <View style={styles.backgroundAvatar} >
+      <TouchableOpacity onPress={()=>this.showTimeline(data)} style={styles.backgroundAvatar} >
         <Image style={Platform.OS=='ios'?styles.avatar:styles.avatar_android} source={{uri: data.avatar}}/>
-      </View>
-      <View style={{justifyContent:'center',marginLeft:10}}>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={()=>this.showTimeline(data)} style={{justifyContent:'center',marginLeft:10}}>
         <Text style={styles.textbold}>
           {data.username}
         </Text>
         <Text style={[styles.textgray,{fontSize:8}]}>
           {data.time}
         </Text>
-      </View>
+      </TouchableOpacity>
     </View>
       <Text style={{paddingTop:10,paddingBottom:10,fontSize:13,color:'#1d2129'}}>
        {data.content}
@@ -452,7 +464,7 @@ export default class Public extends Component{
                 }}
             style={{backgroundColor: 'rgba(0,0,0,0.1)',flex:1,alignItems:'center',justifyContent:'center',}} >
         <View style={styles._buttonSetting}>
-          <TouchableOpacity 
+          <TouchableOpacity
              onPress={()=>this._report()}
             style={{
             overflow: 'hidden',
