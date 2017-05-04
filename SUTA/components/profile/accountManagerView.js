@@ -5,7 +5,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
-  AsyncStorage
+  AsyncStorage,
+  Alert
 } from 'react-native';
 import Iconn from 'react-native-vector-icons/Ionicons';
 import MyStatusBar from '../statusbar.js';
@@ -78,6 +79,27 @@ export default class accountManagerView extends Component{
    alert("Đăng xuất thành công!");
  }
 
+ _delete_account(){
+   let formdata = new FormData();
+   formdata.append('id_user', this.state.data.id_user);
+   fetch('http://suta.esy.es/api/deleteaccount.php',{
+     method: 'post',
+     header:{
+       'Content-Type': 'multipart/formdata'
+     },
+     body: formdata
+   })
+   .then((response)=>response.json())
+   .then((responseJson)=>{
+      console.log('delete success');
+        Alert.alert('Thông báo','Đã xóa tài khoản!');
+        this.clearId();
+   })
+   .catch(error=>{
+     console.log(error);
+   })
+ }
+
   render(){
     //console.log(this.state.data);
     return(
@@ -103,11 +125,11 @@ export default class accountManagerView extends Component{
             </TouchableOpacity>
             <Hr lineColor='#BDBDBD'/>
 
-            <TouchableOpacity>
+            <TouchableOpacity onPress={()=>this._delete_account()}>
               <View style={{paddingBottom:5}}>
                   <View style={{ flexDirection:'row', paddingTop:10}}>
                     <Text style={{paddingLeft:5, paddingTop:2,fontSize: 15, textAlign: 'left'}}> Xóa tài khoản </Text>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={()=>this._delete_account()}>
                       <Iconn name="ios-arrow-forward" size={25} color="#BDBDBD" style={{marginLeft:215}}/>
                     </TouchableOpacity>
                   </View>
