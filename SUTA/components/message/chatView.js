@@ -80,7 +80,7 @@ export default class Chat extends Component {
 
   }
   checkStatus(key){
-
+    if (key!=null) {
       var items_message = [];
       database.ref('message').child(key).once("value", (snap)=>{
         items_message = [];
@@ -102,6 +102,8 @@ export default class Chat extends Component {
 
         }
       });
+    }
+
 
   }
 
@@ -265,7 +267,7 @@ export default class Chat extends Component {
   render() {
     return (
 
-      <TouchableOpacity activeOpacity={1} onPress={()=>this.checkStatus(this.state.info_rooms.key)}  style={{flex:1,backgroundColor:'#F5F5F5'}}>
+      <TouchableOpacity activeOpacity={1} onPress={()=>this.checkStatus(this.state.info_rooms!=null?this.state.info_rooms.key:null)}  style={{flex:1,backgroundColor:'#F5F5F5'}}>
       <MyStatusBar backgroundColor="#8e178f"/>
         <View style={Style.toolbar}>
           <TouchableOpacity onPress={()=>this.onBack('home')} style={{flex:1,alignItems:'center'}}>

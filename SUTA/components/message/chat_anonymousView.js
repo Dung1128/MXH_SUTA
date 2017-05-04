@@ -80,7 +80,7 @@ export default class ChatAnonymous extends Component {
 
   }
   checkStatus(key){
-
+    if (key!=null) {
       var items_message = [];
       database.ref('message').child(key).once("value", (snap)=>{
         items_message = [];
@@ -102,6 +102,8 @@ export default class ChatAnonymous extends Component {
 
         }
       });
+    }
+
 
   }
 
@@ -261,7 +263,7 @@ export default class ChatAnonymous extends Component {
   render() {
     return (
 
-      <TouchableOpacity activeOpacity={1} onPress={()=>this.checkStatus(this.state.info_rooms.key)}  style={{flex:1,backgroundColor:'#F5F5F5'}}>
+      <TouchableOpacity activeOpacity={1} onPress={()=>this.checkStatus(this.state.info_rooms!=null?this.state.info_rooms.key:null)}  style={{flex:1,backgroundColor:'#F5F5F5'}}>
       <MyStatusBar backgroundColor="#8e178f"/>
         <View style={Style.toolbar}>
           <TouchableOpacity onPress={()=>this.onBack('home')} style={{flex:1,alignItems:'center'}}>
@@ -276,20 +278,37 @@ export default class ChatAnonymous extends Component {
 
         </View>
         <ListView
-        style={{flex:1,backgroundColor:'#fff'}}
+        style={{flex:1,marginBottom:40,backgroundColor:'#fff'}}
           dataSource={this.state.dataSource}
           renderRow={this._renderRow.bind(this)}
           enableEmptySections={true}
         />
-        <View style={Style.bottomInput}>
-          <TextInput style={Style.input}
+        <View style={{
+          flexDirection:'row',
+          justifyContent:'center',
+          alignItems:'center',
+          borderTopWidth:0.5,
+          borderTopColor:'rgba(0,0,0,0.5)',
+          position: 'absolute',
+          bottom:0,
+          left:0,
+
+        }}>
+          <TextInput style={{
+            flex:1,
+            marginTop:0,
+            paddingTop:0,
+            paddingBottom:0,
+            height:40,
+          }}
           placeholder="Nhập tin nhắn"
           onChangeText={(val)=>this.setState({message:val, sendColor:'#8e44ad'})}
-          multiline={true}
-          placeholderTextColor= '#90949c'
+          placeholderTextColor='rgb(171, 171, 171)'
+          underlineColorAndroid = 'transparent'
           autoCapitalize="none"
-          autoCorrect={false}
+          multiline={true}
           autoFocus={true}
+          autoCorrect={false}
           ref={'content'}/>
           <TouchableOpacity onPress={()=>this.onSend()} style={{alignItems:'center',paddingRight:10}}>
             <Icon name="md-send" size={24} color={this.state.sendColor} style={Style.ico}/>
@@ -323,16 +342,14 @@ var Style = StyleSheet.create({
     alignItems:'center',
     borderTopWidth:0.5,
     borderTopColor:'rgba(0,0,0,0.5)',
-    height:deviceHeight/16,
   },
   input:{
     flex:1,
     margin:5,
     paddingTop:0,
     paddingBottom:0,
-    color:'black',
-    marginLeft:10,
-    fontSize:13
+    fontStyle: 'italic',
+    color:'white'
   },
   border: {
     margin:5,
